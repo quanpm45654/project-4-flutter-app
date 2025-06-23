@@ -41,7 +41,11 @@ class StudentListWidget extends StatelessWidget {
                           spacing: CustomSize.medium,
                           children: [
                             Image.asset(CustomImagePath.noStudentImage),
-                            const Text("Add students to your class"),
+                            const Text(
+                              "Add students to your class",
+                              style: TextStyle(fontSize: CustomFontSize.medium),
+                              textAlign: TextAlign.center,
+                            ),
                           ],
                         ),
                       )
