@@ -51,7 +51,7 @@ class SubmissionRepository {
 
   Future<Submission> updateSubmission(Submission submission) async {
     final http.Response httpResponse = await http.put(
-      Uri.parse('$apiBaseUrl/submissions/${submission.id}'),
+      Uri.parse('$apiBaseUrl/submissions/${submission.submission_id}'),
       headers: <String, String>{
         HttpHeaders.authorizationHeader: 'token',
         HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',

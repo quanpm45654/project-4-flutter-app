@@ -6,8 +6,8 @@ A new Flutter project.
 
 ### Prerequisites
 
-- Dart SDK version 3.8.1
-- Flutter SDK version 3.32.2
+- Dart SDK version ^3.8.0
+- Flutter SDK version ^3.32.0
 - Android SDK version 35
 - Android NDK version 27.0.12077973
 

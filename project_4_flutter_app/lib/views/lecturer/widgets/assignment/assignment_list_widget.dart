@@ -2,6 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/repositories/assignment_repository.dart';
+import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/utils/functions.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/assignment/assignment_page.dart';
 
@@ -22,9 +23,9 @@ class AssignmentListWidget extends StatelessWidget {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 16.0,
+                spacing: CustomSize.medium,
                 children: [
-                  Image.asset('assets/images/studying.png'),
+                  Image.asset(CustomImagePath.noAssignmentImage),
                   const Text("Start creating assignments to your class"),
                 ],
               ),
@@ -37,9 +38,9 @@ class AssignmentListWidget extends StatelessWidget {
               return GestureDetector(
                 child: Card(
                   clipBehavior: Clip.antiAliasWithSaveLayer,
-                  margin: const EdgeInsets.only(bottom: 16.0),
+                  margin: const EdgeInsets.only(bottom: CustomSize.medium),
                   child: Container(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(CustomSize.medium),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -48,23 +49,23 @@ class AssignmentListWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: CustomFontSize.medium,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const Text(
                           'Class name',
                           overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
+                          maxLines: 2,
                         ),
                         const Divider(
                           height: 32.0,
                         ),
                         Row(
-                          spacing: 8.0,
+                          spacing: CustomSize.small,
                           children: [
                             const Icon(Icons.access_time),
-                            Text('Due ${dateFormatter(assignmentList[index].due_at)}'),
+                            Text('Due ${CustomFormatter.formatDateTime(assignmentList[index].due_at)}'),
                           ],
                         ),
                       ],
@@ -86,10 +87,18 @@ class AssignmentListWidget extends StatelessWidget {
           );
         } else if (asyncSnapshot.hasError) {
           developer.log('${DateTime.now()}: ${asyncSnapshot.error}');
-          return const Center(
-            child: Text(
-              'There was an error, please try again later',
-              textAlign: TextAlign.center,
+          return SingleChildScrollView(
+            child: Center(
+              child: Column(
+                children: [
+                  Image.asset(CustomImagePath.errorImage),
+                  const Text(
+                    'There was an error, please try again later',
+                    style: TextStyle(fontSize: CustomFontSize.medium),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           );
         } else {

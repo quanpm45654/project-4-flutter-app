@@ -8,7 +8,7 @@ class SubmissionListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Assignment name'),
+        title: const Text('Assignment 1'),
       ),
       body: const SafeArea(
         child: SubmissionListWidget(),

@@ -51,7 +51,7 @@ class ClassRepository {
 
   Future<Class> updateClass(Class classObject) async {
     final http.Response httpResponse = await http.put(
-      Uri.parse('$apiBaseUrl/classes/${classObject.id}'),
+      Uri.parse('$apiBaseUrl/classes/${classObject.class_id}'),
       headers: <String, String>{
         HttpHeaders.authorizationHeader: 'token',
         HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',

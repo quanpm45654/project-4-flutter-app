@@ -1,5 +1,5 @@
 class Submission {
-  final int id;
+  final int submission_id;
   final int assignment_id;
   final int student_id;
   final int attempt;
@@ -13,7 +13,7 @@ class Submission {
   final DateTime graded_at;
 
   Submission({
-    required this.id,
+    required this.submission_id,
     required this.assignment_id,
     required this.student_id,
     required this.attempt,
@@ -28,7 +28,7 @@ class Submission {
   });
 
   Map<String, dynamic> toJson() => {
-    'id': id,
+    'submission_id': submission_id,
     'assignment_id': assignment_id,
     'student_id': student_id,
     'attempt': attempt,
@@ -44,18 +44,18 @@ class Submission {
 
   factory Submission.fromJson(Map<String, dynamic> json) {
     return Submission(
-      id: json['id'] as int,
-      assignment_id: json['assignment_id'] as int,
-      student_id: json['student_id'] as int,
-      attempt: json['attempt'] as int,
-      submitted_at: json['submitted_at'] as DateTime,
+      submission_id: int.parse(json['submission_id'] as String),
+      assignment_id: int.parse(json['submission_id'] as String),
+      student_id: int.parse(json['submission_id'] as String),
+      attempt: int.parse(json['submission_id'] as String),
+      submitted_at: DateTime.parse(json['submitted_at'] as String),
       note: json['note'] as String,
       file_url: json['file_url'] as String,
-      score: json['score'] as double,
+      score: double.parse(json['submission_id'] as String),
       feedback_text: json['feedback_text'] as String,
       feedback_file_url: json['feedback_file_url'] as String,
-      graded_by: json['graded_by'] as int,
-      graded_at: json['graded_at'] as DateTime,
+      graded_by: int.parse(json['submission_id'] as String),
+      graded_at: DateTime.parse(json['graded_at'] as String),
     );
   }
 }

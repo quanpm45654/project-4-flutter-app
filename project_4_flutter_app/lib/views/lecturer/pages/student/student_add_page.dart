@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/student/student_add_widget.dart';
 
 class StudentAddPage extends StatelessWidget {
@@ -15,7 +16,7 @@ class StudentAddPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: CustomSize.medium),
           child: StudentAddWidget(title: title),
         ),
       ),

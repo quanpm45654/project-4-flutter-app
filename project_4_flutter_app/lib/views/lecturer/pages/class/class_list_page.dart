@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/class/class_create_edit_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/class/class_list_widget.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/lecturer_navigation_bar.dart';
@@ -11,14 +12,20 @@ class ClassListPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Class'),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.search),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: CustomSize.medium),
           child: const ClassListWidget(),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
@@ -29,8 +36,7 @@ class ClassListPage extends StatelessWidget {
             ),
           );
         },
-        icon: const Icon(Icons.add),
-        label: const Text('Create class'),
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: const LecturerNavigationBar(),
     );

@@ -2,6 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/repositories/class_repository.dart';
+import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/class/class_create_edit_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/student/student_list_page.dart';
 
@@ -22,9 +23,9 @@ class ClassListWidget extends StatelessWidget {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 16.0,
+                spacing: CustomSize.medium,
                 children: [
-                  Image.asset('assets/images/class.png'),
+                  Image.asset(CustomImagePath.noClassImage),
                   const Text('Create a class to get started'),
                 ],
               ),
@@ -35,12 +36,13 @@ class ClassListWidget extends StatelessWidget {
             itemCount: classList.length,
             itemBuilder: (context, index) {
               return Card(
-                margin: const EdgeInsets.symmetric(vertical: 8.0),
+                margin: const EdgeInsets.symmetric(vertical: CustomSize.small),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 child: ListTile(
                   title: Text(
                     classList[index].name,
                     style: const TextStyle(
+                      fontSize: CustomFontSize.medium,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -89,10 +91,18 @@ class ClassListWidget extends StatelessWidget {
           );
         } else if (asyncSnapshot.hasError) {
           developer.log('${DateTime.now()}: ${asyncSnapshot.error}');
-          return const Center(
-            child: Text(
-              'There was an error, please try again later',
-              textAlign: TextAlign.center,
+          return SingleChildScrollView(
+            child: Center(
+              child: Column(
+                children: [
+                  Image.asset(CustomImagePath.errorImage),
+                  const Text(
+                    'There was an error, please try again later',
+                    style: TextStyle(fontSize: CustomFontSize.medium),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           );
         } else {

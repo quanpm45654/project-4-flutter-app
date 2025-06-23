@@ -6,9 +6,9 @@ import 'package:project_4_flutter_app/models/user.dart';
 import 'package:project_4_flutter_app/utils/constants.dart';
 
 class StudentRepository {
-  Future<List<User>> fetchStudentList() async {
+  Future<List<User>> fetchStudentList(int class_id) async {
     final http.Response httpResponse = await http.get(
-      Uri.parse('$apiBaseUrl/users'),
+      Uri.parse('$apiBaseUrl/classes/$class_id/students'),
     );
 
     if (httpResponse.statusCode == 200) {

@@ -1,4 +1,4 @@
-class Validator {
+class CustomValidator {
   static String? combine(List<String?> validators) {
     for (final validator in validators) {
       final result = validator;

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project_4_flutter_app/utils/constants.dart';
+import 'package:project_4_flutter_app/views/lecturer/pages/class/class_create_edit_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/student/student_add_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/lecturer_navigation_bar.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/student/student_list_widget.dart';
@@ -13,18 +15,27 @@ class StudentListPage extends StatelessWidget {
         title: const Text('Class name'),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<dynamic>(
+                  builder: (context) {
+                    return const ClassCreateEditPage(title: 'Edit class');
+                  },
+                ),
+              );
+            },
+            icon: const Icon(Icons.edit),
           ),
         ],
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: CustomSize.medium),
           child: const StudentListWidget(),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
@@ -35,8 +46,7 @@ class StudentListPage extends StatelessWidget {
             ),
           );
         },
-        icon: const Icon(Icons.add),
-        label: const Text('Add student'),
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: const LecturerNavigationBar(),
     );

@@ -51,7 +51,7 @@ class AssignmentRepository {
 
   Future<Assignment> updateAssignment(Assignment assignment) async {
     final http.Response httpResponse = await http.put(
-      Uri.parse('$apiBaseUrl/assignments/${assignment.id}'),
+      Uri.parse('$apiBaseUrl/assignments/${assignment.assignment_id}'),
       headers: <String, String>{
         HttpHeaders.authorizationHeader: 'token',
         HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',

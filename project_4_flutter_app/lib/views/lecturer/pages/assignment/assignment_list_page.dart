@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/assignment/assignment_create_edit_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/assignment/assignment_list_widget.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/lecturer_navigation_bar.dart';
@@ -8,17 +9,24 @@ class AssignmentListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Assignment'),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.search),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: CustomSize.medium),
           child: const AssignmentListWidget(),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
@@ -29,8 +37,7 @@ class AssignmentListPage extends StatelessWidget {
             ),
           );
         },
-        icon: const Icon(Icons.add),
-        label: const Text('Create assignment'),
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: const LecturerNavigationBar(),
     );
