@@ -14,7 +14,7 @@ class AssignmentPage extends StatelessWidget {
         title: const Text('Assignment detail'),
       ),
       body: SafeArea(
-        child: AssignmentWidget(assignment: assignment,),
+        child: AssignmentWidget(assignment: assignment),
       ),
     );
   }

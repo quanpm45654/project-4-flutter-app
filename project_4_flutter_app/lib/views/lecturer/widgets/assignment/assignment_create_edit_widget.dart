@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/utils/validator.dart';
 
 class AssignmentCreateEditWidget extends StatefulWidget {
@@ -24,28 +25,27 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 16.0,
       children: [
         Expanded(
           child: SingleChildScrollView(
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              padding: const EdgeInsets.symmetric(vertical: CustomSize.medium),
               child: Form(
                 key: _formKey,
                 child: Column(
-                  spacing: 16.0,
+                  spacing: CustomSize.medium,
                   children: [
                     TextFormField(
                       controller: _assignmentTitleController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
                         ),
                         label: Text('Assignment title*'),
                       ),
                       validator: (value) {
-                        return Validator.combine([
-                          Validator.required(value, 'Assignment title'),
+                        return CustomValidator.combine([
+                          CustomValidator.required(value, 'Assignment title'),
                         ]);
                       },
                     ),
@@ -53,13 +53,13 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                       controller: _assignmentDescriptionController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
                         ),
                         label: Text('Description*'),
                       ),
                       validator: (value) {
-                        return Validator.combine([
-                          Validator.required(value, 'Description'),
+                        return CustomValidator.combine([
+                          CustomValidator.required(value, 'Description'),
                         ]);
                       },
                     ),
@@ -67,13 +67,13 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                       controller: _assignmentDueAtController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
                         ),
                         label: Text('Due at*'),
                       ),
                       validator: (value) {
-                        return Validator.combine([
-                          Validator.required(value, 'Due at'),
+                        return CustomValidator.combine([
+                          CustomValidator.required(value, 'Due at'),
                         ]);
                       },
                     ),
@@ -81,13 +81,13 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                       controller: _assignmentMaxScoreController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
                         ),
                         label: Text('Max score*'),
                       ),
                       validator: (value) {
-                        return Validator.combine([
-                          Validator.required(value, 'Max score'),
+                        return CustomValidator.combine([
+                          CustomValidator.required(value, 'Max score'),
                         ]);
                       },
                     ),
@@ -95,13 +95,13 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                       controller: _assignmentTypeController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
                         ),
                         label: Text('Type*'),
                       ),
                       validator: (value) {
-                        return Validator.combine([
-                          Validator.required(value, 'Type'),
+                        return CustomValidator.combine([
+                          CustomValidator.required(value, 'Type'),
                         ]);
                       },
                     ),
@@ -109,13 +109,13 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                       controller: _assignmentTimeboundController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
                         ),
                         label: Text('Time bound*'),
                       ),
                       validator: (value) {
-                        return Validator.combine([
-                          Validator.required(value, 'Time bound'),
+                        return CustomValidator.combine([
+                          CustomValidator.required(value, 'Time bound'),
                         ]);
                       },
                     ),
@@ -123,13 +123,13 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                       controller: _assignmentAllowResubmitController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
                         ),
                         label: Text('Allow resubmit*'),
                       ),
                       validator: (value) {
-                        return Validator.combine([
-                          Validator.required(value, 'Allow resubmit'),
+                        return CustomValidator.combine([
+                          CustomValidator.required(value, 'Allow resubmit'),
                         ]);
                       },
                     ),
@@ -137,13 +137,13 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                       controller: _assignmentClassController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
                         ),
                         label: Text('Class*'),
                       ),
                       validator: (value) {
-                        return Validator.combine([
-                          Validator.required(value, 'Class'),
+                        return CustomValidator.combine([
+                          CustomValidator.required(value, 'Class'),
                         ]);
                       },
                     ),
@@ -153,19 +153,31 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
             ),
           ),
         ),
-        Container(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          width: 10000,
-          child: FilledButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
-              }
-            },
-            child: Text(widget.title),
-          ),
+        Column(
+          children: [
+            SizedBox(
+              width: double.maxFinite,
+              child: FilledButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Processing Data')),
+                    );
+                  }
+                },
+                child: Text(widget.title),
+              ),
+            ),
+            SizedBox(
+              width: double.maxFinite,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel'),
+              ),
+            ),
+          ],
         ),
       ],
     );

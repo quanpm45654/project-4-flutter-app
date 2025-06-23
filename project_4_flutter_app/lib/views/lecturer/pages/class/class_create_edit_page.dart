@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/class.dart';
+import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/class/class_create_edit_widget.dart';
 
 class ClassCreateEditPage extends StatelessWidget {
@@ -17,7 +18,7 @@ class ClassCreateEditPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: CustomSize.medium),
           child: ClassCreateEditWidget(
             title: title,
             classObject: classObject,

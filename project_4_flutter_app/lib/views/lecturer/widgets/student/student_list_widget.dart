@@ -2,6 +2,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/repositories/student_repository.dart';
+import 'package:project_4_flutter_app/utils/constants.dart';
 
 class StudentListWidget extends StatelessWidget {
   const StudentListWidget({super.key});
@@ -11,7 +12,7 @@ class StudentListWidget extends StatelessWidget {
     final userRepository = StudentRepository();
 
     return FutureBuilder(
-      future: userRepository.fetchStudentList(),
+      future: userRepository.fetchStudentList(1),
       builder: (context, asyncSnapshot) {
         if (asyncSnapshot.hasData) {
           final studentList = asyncSnapshot.requireData;
@@ -25,7 +26,7 @@ class StudentListWidget extends StatelessWidget {
                     const Text(
                       'Student',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: CustomFontSize.medium,
                       ),
                     ),
                     Text('${studentList.length}'),
@@ -37,9 +38,9 @@ class StudentListWidget extends StatelessWidget {
                     ? Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 16.0,
+                          spacing: CustomSize.medium,
                           children: [
-                            Image.asset('assets/images/students.png'),
+                            Image.asset(CustomImagePath.noStudentImage),
                             const Text("Add students to your class"),
                           ],
                         ),
@@ -56,12 +57,12 @@ class StudentListWidget extends StatelessWidget {
                             title: Text(
                               studentList[index].full_name,
                               overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                              maxLines: 2,
                             ),
                             subtitle: Text(
                               studentList[index].email,
                               overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                              maxLines: 2,
                             ),
                           );
                         },
@@ -71,10 +72,18 @@ class StudentListWidget extends StatelessWidget {
           );
         } else if (asyncSnapshot.hasError) {
           developer.log('${DateTime.now()}: ${asyncSnapshot.error}');
-          return const Center(
-            child: Text(
-              'There was an error, please try again later',
-              textAlign: TextAlign.center,
+          return SingleChildScrollView(
+            child: Center(
+              child: Column(
+                children: [
+                  Image.asset(CustomImagePath.errorImage),
+                  const Text(
+                    'There was an error, please try again later',
+                    style: TextStyle(fontSize: CustomFontSize.medium),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           );
         } else {

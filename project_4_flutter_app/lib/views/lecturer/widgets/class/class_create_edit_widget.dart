@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/class.dart';
+import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/utils/validator.dart';
 
 class ClassCreateEditWidget extends StatefulWidget {
@@ -30,28 +31,27 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
     }
 
     return Column(
-      spacing: 16.0,
       children: [
         Expanded(
           child: SingleChildScrollView(
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              padding: const EdgeInsets.symmetric(vertical: CustomSize.medium),
               child: Form(
                 key: _formKey,
                 child: Column(
-                  spacing: 16.0,
+                  spacing: CustomSize.medium,
                   children: [
                     TextFormField(
                       controller: _classNameController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
                         ),
                         label: Text('Class name*'),
                       ),
                       validator: (value) {
-                        return Validator.combine([
-                          Validator.required(value, 'Class name'),
+                        return CustomValidator.combine([
+                          CustomValidator.required(value, 'Class name'),
                         ]);
                       },
                     ),
@@ -59,13 +59,13 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
                       controller: _classCodeController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
                         ),
                         label: Text('Code*'),
                       ),
                       validator: (value) {
-                        return Validator.combine([
-                          Validator.required(value, 'Code'),
+                        return CustomValidator.combine([
+                          CustomValidator.required(value, 'Code'),
                         ]);
                       },
                     ),
@@ -73,13 +73,13 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
                       controller: _classDescriptionController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
                         ),
                         label: Text('Description*'),
                       ),
                       validator: (value) {
-                        return Validator.combine([
-                          Validator.required(value, 'Description'),
+                        return CustomValidator.combine([
+                          CustomValidator.required(value, 'Description'),
                         ]);
                       },
                     ),
@@ -87,13 +87,13 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
                       controller: _classSemesterController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
                         ),
                         label: Text('Semester*'),
                       ),
                       validator: (value) {
-                        return Validator.combine([
-                          Validator.required(value, 'Semester'),
+                        return CustomValidator.combine([
+                          CustomValidator.required(value, 'Semester'),
                         ]);
                       },
                     ),
@@ -103,19 +103,31 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
             ),
           ),
         ),
-        Container(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          width: 10000,
-          child: FilledButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
-              }
-            },
-            child: Text(widget.title),
-          ),
+        Column(
+          children: [
+            SizedBox(
+              width: double.maxFinite,
+              child: FilledButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Processing Data')),
+                    );
+                  }
+                },
+                child: Text(widget.title),
+              ),
+            ),
+            SizedBox(
+              width: double.maxFinite,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel'),
+              ),
+            ),
+          ],
         ),
       ],
     );

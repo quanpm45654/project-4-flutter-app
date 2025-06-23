@@ -1,14 +1,15 @@
 import 'package:project_4_flutter_app/utils/enums.dart';
+import 'package:project_4_flutter_app/utils/functions.dart';
 
 class User {
-  final int id;
+  final int user_id;
   final String full_name;
   final String email;
   final String password_hash;
   final Role role;
 
   User({
-    required this.id,
+    required this.user_id,
     required this.full_name,
     required this.email,
     required this.password_hash,
@@ -16,7 +17,7 @@ class User {
   });
 
   Map<String, dynamic> toJson() => {
-    'id': id,
+    'user_id': user_id,
     'full_name': full_name,
     'email': email,
     'password_hash': password_hash,
@@ -25,11 +26,11 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'] as int,
+      user_id: int.parse(json['user_id'] as String),
       full_name: json['full_name'] as String,
       email: json['email'] as String,
       password_hash: json['password_hash'] as String,
-      role: json['role'] as Role,
+      role: CustomParser.parseRole(json['role'] as String),
     );
   }
 }

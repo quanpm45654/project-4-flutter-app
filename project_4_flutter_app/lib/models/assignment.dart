@@ -1,7 +1,8 @@
 import 'package:project_4_flutter_app/utils/enums.dart';
+import 'package:project_4_flutter_app/utils/functions.dart';
 
 class Assignment {
-  final int id;
+  final int assignment_id;
   final String title;
   final String description;
   final DateTime due_at;
@@ -12,7 +13,7 @@ class Assignment {
   final int class_id;
 
   Assignment({
-    required this.id,
+    required this.assignment_id,
     required this.title,
     required this.description,
     required this.due_at,
@@ -24,7 +25,7 @@ class Assignment {
   });
 
   Map<String, dynamic> toJson() => {
-    'id': id,
+    'assignment_id': assignment_id,
     'title': title,
     'description': description,
     'due_at': due_at,
@@ -32,20 +33,20 @@ class Assignment {
     'assignment_type': assignment_type,
     'time_bound': time_bound,
     'allow_resubmit': allow_resubmit,
-    'classroom_id': class_id,
+    'class_id': class_id,
   };
 
   factory Assignment.fromJson(Map<String, dynamic> json) {
     return Assignment(
-      id: json['id'] as int,
+      assignment_id: int.parse(json['assignment_id'] as String),
       title: json['title'] as String,
       description: json['description'] as String,
-      due_at: json['due_at'] as DateTime,
-      max_score: json['max_score'] as double,
-      assignment_type: json['assignment_type'] as AssignmentType,
-      time_bound: json['time_bound'] as int,
-      allow_resubmit: json['allow_resubmit'] as int,
-      class_id: json['classroom_id'] as int,
+      due_at: DateTime.parse(json['due_at'] as String),
+      max_score: double.parse(json['max_score'] as String),
+      assignment_type: CustomParser.parseAssignmentType(['max_score'] as String),
+      time_bound: int.parse(json['time_bound'] as String),
+      allow_resubmit: int.parse(json['allow_resubmit'] as String),
+      class_id: int.parse(json['class_id'] as String),
     );
   }
 }
