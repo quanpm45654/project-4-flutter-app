@@ -11,7 +11,7 @@ class CustomTheme {
     onError: Colors.white,
     surface: Colors.white,
     onSurface: Colors.black87,
-    surfaceContainer: Colors.white70,
+    surfaceContainer: const Color(0xFFFAFAFA),
   );
 
   static final darkColorScheme = ColorScheme(
@@ -24,6 +24,7 @@ class CustomTheme {
     onError: Colors.black,
     surface: const Color(0xFF1E1E1E),
     onSurface: Colors.white,
+    surfaceContainer: const Color(0xFF252525),
   );
 
   static final lightTheme = ThemeData(
@@ -33,18 +34,6 @@ class CustomTheme {
     appBarTheme: AppBarTheme(
       backgroundColor: lightColorScheme.primary,
       foregroundColor: lightColorScheme.onPrimary,
-    ),
-    scaffoldBackgroundColor: Colors.white,
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: lightColorScheme.primary,
-        foregroundColor: lightColorScheme.onPrimary,
-      ),
-    ),
-    cardTheme: CardThemeData(
-      color: lightColorScheme.surface,
-      elevation: 1,
-      margin: const EdgeInsets.all(12),
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: lightColorScheme.surface,
@@ -71,6 +60,12 @@ class CustomTheme {
       }),
       height: 72,
     ),
+    cardTheme: CardThemeData(
+      color: lightColorScheme.surfaceContainer,
+    ),
+    listTileTheme: ListTileThemeData(
+      tileColor: lightColorScheme.surfaceContainer,
+    ),
   );
 
   static final darkTheme = ThemeData(
@@ -78,20 +73,8 @@ class CustomTheme {
     colorScheme: darkColorScheme,
     useMaterial3: true,
     appBarTheme: AppBarTheme(
-      backgroundColor: darkColorScheme.surface,
-      foregroundColor: darkColorScheme.onSurface,
-    ),
-    scaffoldBackgroundColor: Colors.black,
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: darkColorScheme.primary,
-        foregroundColor: darkColorScheme.onPrimary,
-      ),
-    ),
-    cardTheme: CardThemeData(
-      color: darkColorScheme.surface,
-      elevation: 1,
-      margin: const EdgeInsets.all(12),
+      backgroundColor: darkColorScheme.primary,
+      foregroundColor: darkColorScheme.onPrimary,
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: darkColorScheme.surface,
@@ -118,5 +101,11 @@ class CustomTheme {
       }),
       height: 72,
     ),
+    cardTheme: CardThemeData(
+      color: darkColorScheme.surfaceContainer,
+    ),
+    listTileTheme: ListTileThemeData(
+      tileColor: darkColorScheme.surfaceContainer,
+    )
   );
 }

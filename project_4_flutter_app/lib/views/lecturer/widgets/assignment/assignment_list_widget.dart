@@ -26,7 +26,11 @@ class AssignmentListWidget extends StatelessWidget {
                 spacing: CustomSize.medium,
                 children: [
                   Image.asset(CustomImagePath.noAssignmentImage),
-                  const Text("Start creating assignments to your class"),
+                  const Text(
+                    "Start creating assignments to your class",
+                    style: TextStyle(fontSize: CustomFontSize.medium),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
             );
@@ -65,7 +69,9 @@ class AssignmentListWidget extends StatelessWidget {
                           spacing: CustomSize.small,
                           children: [
                             const Icon(Icons.access_time),
-                            Text('Due ${CustomFormatter.formatDateTime(assignmentList[index].due_at)}'),
+                            Text(
+                              'Due ${CustomFormatter.formatDateTime(assignmentList[index].due_at)}',
+                            ),
                           ],
                         ),
                       ],

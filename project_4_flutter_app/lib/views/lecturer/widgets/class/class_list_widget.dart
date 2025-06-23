@@ -26,7 +26,11 @@ class ClassListWidget extends StatelessWidget {
                 spacing: CustomSize.medium,
                 children: [
                   Image.asset(CustomImagePath.noClassImage),
-                  const Text('Create a class to get started'),
+                  const Text(
+                    'Create a class to get started',
+                    style: TextStyle(fontSize: CustomFontSize.medium),
+                    textAlign: TextAlign.center,
+                  ),
                 ],
               ),
             );
