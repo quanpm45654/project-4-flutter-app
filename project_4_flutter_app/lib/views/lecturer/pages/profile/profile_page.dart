@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/utils/constants.dart';
-import 'package:project_4_flutter_app/views/lecturer/widgets/student/student_add_widget.dart';
+import 'package:project_4_flutter_app/views/lecturer/widgets/lecturer_navigation_bar.dart';
 
-class StudentAddPage extends StatelessWidget {
-  const StudentAddPage({super.key, required this.title});
-
-  final String title;
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(title),
+        title: const Text('Profile'),
       ),
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(CustomSize.medium),
-          child: StudentAddWidget(title: title),
+          child: const Text('Under construction'),
         ),
       ),
+      bottomNavigationBar: const LecturerNavigationBar(),
     );
   }
 }

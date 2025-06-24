@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/utils/custom_theme.dart';
+import 'package:project_4_flutter_app/views/lecturer/pages/home/home_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/states/lecturer_navigation_bar_state.dart';
-import 'package:project_4_flutter_app/views/lecturer/pages/class/class_list_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -25,7 +25,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       theme: CustomTheme.lightTheme,
       darkTheme: CustomTheme.darkTheme,
-      home: const ClassListPage(),
+      home: const HomePage(),
     );
   }
 }

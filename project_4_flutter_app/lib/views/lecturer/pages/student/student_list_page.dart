@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/class/class_create_edit_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/student/student_add_page.dart';
-import 'package:project_4_flutter_app/views/lecturer/widgets/lecturer_navigation_bar.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/student/student_list_widget.dart';
 
 class StudentListPage extends StatelessWidget {
@@ -31,7 +30,7 @@ class StudentListPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: CustomSize.medium),
+          padding: const EdgeInsets.all(CustomSize.medium),
           child: const StudentListWidget(),
         ),
       ),
@@ -48,7 +47,6 @@ class StudentListPage extends StatelessWidget {
         },
         child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: const LecturerNavigationBar(),
     );
   }
 }

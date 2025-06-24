@@ -33,6 +33,7 @@ class CustomTheme {
     appBarTheme: AppBarTheme(
       backgroundColor: lightColorScheme.surfaceContainer,
       foregroundColor: lightColorScheme.onSurface,
+      scrolledUnderElevation: 0.0,
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: lightColorScheme.surfaceContainer,
@@ -72,6 +73,9 @@ class CustomTheme {
       ),
       color: lightColorScheme.surfaceContainer,
     ),
+    dividerTheme: DividerThemeData(
+      color: const Color(0xFF808080),
+    ),
   );
 
   static final darkTheme = ThemeData(
@@ -79,6 +83,7 @@ class CustomTheme {
     appBarTheme: AppBarTheme(
       backgroundColor: darkColorScheme.surfaceContainer,
       foregroundColor: darkColorScheme.onSurface,
+      scrolledUnderElevation: 0.0,
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: darkColorScheme.surfaceContainer,
@@ -117,6 +122,9 @@ class CustomTheme {
         borderRadius: BorderRadius.circular(CustomRadius.medium),
       ),
       color: darkColorScheme.surfaceContainer,
+    ),
+    dividerTheme: DividerThemeData(
+      color: const Color(0xFFBEBEBE),
     ),
   );
 }

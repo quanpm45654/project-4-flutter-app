@@ -1,5 +1,4 @@
 import 'dart:developer' as developer;
-
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/repositories/assignment_repository.dart';
 import 'package:project_4_flutter_app/utils/constants.dart';
@@ -40,8 +39,17 @@ class AssignmentListWidget extends StatelessWidget {
             itemCount: assignmentList.length,
             itemBuilder: (context, index) {
               return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<dynamic>(
+                      builder: (context) {
+                        return AssignmentPage(assignment: assignmentList[index]);
+                      },
+                    ),
+                  );
+                },
                 child: Card(
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
                   margin: const EdgeInsets.only(bottom: CustomSize.medium),
                   child: Container(
                     padding: const EdgeInsets.all(CustomSize.medium),
@@ -54,7 +62,7 @@ class AssignmentListWidget extends StatelessWidget {
                           maxLines: 2,
                           style: const TextStyle(
                             fontSize: CustomFontSize.medium,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         const Text(
@@ -78,16 +86,6 @@ class AssignmentListWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<dynamic>(
-                      builder: (context) {
-                        return AssignmentPage(assignment: assignmentList[index]);
-                      },
-                    ),
-                  );
-                },
               );
             },
           );
