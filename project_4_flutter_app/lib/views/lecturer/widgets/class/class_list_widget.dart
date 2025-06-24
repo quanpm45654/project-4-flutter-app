@@ -39,56 +39,62 @@ class ClassListWidget extends StatelessWidget {
           return ListView.builder(
             itemCount: classList.length,
             itemBuilder: (context, index) {
-              return Card(
-                margin: const EdgeInsets.symmetric(vertical: CustomSize.small),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: ListTile(
-                  title: Text(
-                    classList[index].name,
-                    style: const TextStyle(
-                      fontSize: CustomFontSize.medium,
-                      fontWeight: FontWeight.bold,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<dynamic>(
+                      builder: (context) {
+                        return const StudentListPage();
+                      },
                     ),
-                  ),
-                  trailing: MenuAnchor(
-                    builder: (context, controller, child) {
-                      return IconButton(
-                        onPressed: () {
-                          controller.isOpen ? controller.close() : controller.open();
-                        },
-                        icon: const Icon(Icons.more_vert),
-                      );
-                    },
-                    menuChildren: [
-                      MenuItemButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<dynamic>(
-                              builder: (context) {
-                                return ClassCreateEditPage(
-                                  title: 'Edit class',
-                                  classObject: classList[index],
+                  );
+                },
+                child: Card(
+                  margin: const EdgeInsets.symmetric(vertical: CustomSize.small),
+                  child: Container(
+                    padding: const EdgeInsets.all(CustomSize.medium),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          classList[index].name,
+                          style: const TextStyle(
+                            fontSize: CustomFontSize.medium,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        MenuAnchor(
+                          builder: (context, controller, child) {
+                            return IconButton(
+                              onPressed: () {
+                                controller.isOpen ? controller.close() : controller.open();
+                              },
+                              icon: const Icon(Icons.more_vert),
+                            );
+                          },
+                          menuChildren: [
+                            MenuItemButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                    builder: (context) {
+                                      return ClassCreateEditPage(
+                                        title: 'Edit class',
+                                        classObject: classList[index],
+                                      );
+                                    },
+                                  ),
                                 );
                               },
+                              child: const Text('Edit class'),
                             ),
-                          );
-                        },
-                        child: const Text('Edit class'),
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  isThreeLine: true,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<dynamic>(
-                        builder: (context) {
-                          return const StudentListPage();
-                        },
-                      ),
-                    );
-                  },
                 ),
               );
             },

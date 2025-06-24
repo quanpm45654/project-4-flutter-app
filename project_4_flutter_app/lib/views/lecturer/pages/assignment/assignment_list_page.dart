@@ -22,7 +22,7 @@ class AssignmentListPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: CustomSize.medium),
+          padding: const EdgeInsets.all(CustomSize.medium),
           child: const AssignmentListWidget(),
         ),
       ),
