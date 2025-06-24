@@ -1,111 +1,122 @@
 import 'package:flutter/material.dart';
+import 'package:project_4_flutter_app/utils/constants.dart';
 
 class CustomTheme {
-  static final lightColorScheme = ColorScheme(
+  static const lightColorScheme = ColorScheme(
     brightness: Brightness.light,
-    primary: const Color(0xFF3F51B5),
-    onPrimary: Colors.white,
-    secondary: const Color(0xFFFF7043),
-    onSecondary: Colors.white,
-    error: Colors.red.shade700,
-    onError: Colors.white,
-    surface: Colors.white,
-    onSurface: Colors.black87,
-    surfaceContainer: const Color(0xFFFAFAFA),
+    primary: Color(0xFF0080FF),
+    onPrimary: Color(0xFFFFFFFF),
+    secondary: Color(0xFFFF8000),
+    onSecondary: Color(0xFFFFFFFF),
+    error: Color(0xFFFF0000),
+    onError: Color(0xFFFFFFFF),
+    surface: Color(0xFFFFFFFF),
+    onSurface: Color(0xFF000000),
+    surfaceContainer: Color(0xFFFAFAFA),
   );
 
-  static final darkColorScheme = ColorScheme(
+  static const darkColorScheme = ColorScheme(
     brightness: Brightness.dark,
-    primary: const Color(0xFF9FA8DA),
-    onPrimary: Colors.black,
-    secondary: const Color(0xFFFFAB91),
-    onSecondary: Colors.black,
-    error: Colors.red.shade400,
-    onError: Colors.black,
-    surface: const Color(0xFF1E1E1E),
-    onSurface: Colors.white,
-    surfaceContainer: const Color(0xFF252525),
+    primary: Color(0xFF80C0FF),
+    onPrimary: Color(0xFF000000),
+    secondary: Color(0xFFFFC080),
+    onSecondary: Color(0xFF000000),
+    error: Color(0xFFFF8080),
+    onError: Color(0xFF000000),
+    surface: Color(0xFF343434),
+    onSurface: Color(0xFFFFFFFF),
+    surfaceContainer: Color(0xFF404040),
   );
 
   static final lightTheme = ThemeData(
-    visualDensity: VisualDensity.adaptivePlatformDensity,
     colorScheme: lightColorScheme,
-    useMaterial3: true,
     appBarTheme: AppBarTheme(
-      backgroundColor: lightColorScheme.primary,
-      foregroundColor: lightColorScheme.onPrimary,
+      backgroundColor: lightColorScheme.surfaceContainer,
+      foregroundColor: lightColorScheme.onSurface,
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: lightColorScheme.surface,
+      backgroundColor: lightColorScheme.surfaceContainer,
       indicatorColor: Colors.transparent,
       labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
         if (states.contains(WidgetState.selected)) {
           return TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
             color: lightColorScheme.primary,
+            fontSize: CustomFontSize.extraSmall,
+            fontWeight: FontWeight.w600,
           );
         }
         return const TextStyle(
-          fontSize: 12,
+          color: Color(0xFF808080),
+          fontSize: CustomFontSize.extraSmall,
           fontWeight: FontWeight.w500,
-          color: Colors.black54,
         );
       }),
       iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((states) {
         if (states.contains(WidgetState.selected)) {
-          return IconThemeData(color: lightColorScheme.primary, size: 32);
+          return IconThemeData(
+            color: lightColorScheme.primary,
+            size: CustomIconSize.large,
+          );
         }
-        return IconThemeData(color: Colors.grey[600], size: 24);
+        return const IconThemeData(
+          color: Color(0xFF808080),
+          size: CustomIconSize.medium,
+        );
       }),
       height: 72,
     ),
     cardTheme: CardThemeData(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(CustomRadius.medium),
+      ),
       color: lightColorScheme.surfaceContainer,
-    ),
-    listTileTheme: ListTileThemeData(
-      tileColor: lightColorScheme.surfaceContainer,
     ),
   );
 
   static final darkTheme = ThemeData(
-    visualDensity: VisualDensity.adaptivePlatformDensity,
     colorScheme: darkColorScheme,
-    useMaterial3: true,
     appBarTheme: AppBarTheme(
-      backgroundColor: darkColorScheme.primary,
-      foregroundColor: darkColorScheme.onPrimary,
+      backgroundColor: darkColorScheme.surfaceContainer,
+      foregroundColor: darkColorScheme.onSurface,
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: darkColorScheme.surface,
+      backgroundColor: darkColorScheme.surfaceContainer,
       indicatorColor: Colors.transparent,
       labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
         if (states.contains(WidgetState.selected)) {
           return TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
             color: darkColorScheme.primary,
+            fontSize: CustomFontSize.extraSmall,
+            fontWeight: FontWeight.w600,
           );
         }
         return const TextStyle(
-          fontSize: 12,
+          color: Color(0xFFBEBEBE),
+          fontSize: CustomFontSize.extraSmall,
           fontWeight: FontWeight.w500,
-          color: Colors.white70,
         );
       }),
       iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((states) {
         if (states.contains(WidgetState.selected)) {
-          return IconThemeData(color: darkColorScheme.primary, size: 32);
+          return IconThemeData(
+            color: darkColorScheme.primary,
+            size: CustomIconSize.large,
+          );
         }
-        return IconThemeData(color: Colors.grey[400], size: 24);
+        return const IconThemeData(
+          color: Color(0xFFBEBEBE),
+          size: CustomIconSize.medium,
+        );
       }),
       height: 72,
     ),
     cardTheme: CardThemeData(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(CustomRadius.medium),
+      ),
       color: darkColorScheme.surfaceContainer,
     ),
-    listTileTheme: ListTileThemeData(
-      tileColor: darkColorScheme.surfaceContainer,
-    )
   );
 }
