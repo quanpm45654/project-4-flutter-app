@@ -14,11 +14,15 @@ class ClassCreateEditPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(title),
+        title: Text(
+          title,
+        ),
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(CustomSize.medium),
+          padding: const EdgeInsets.all(
+            CustomSize.medium,
+          ),
           child: ClassCreateEditWidget(
             title: title,
             classObject: classObject,

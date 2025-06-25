@@ -11,17 +11,23 @@ class ClassListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Class'),
+        title: const Text(
+          'Class',
+        ),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.search),
+            icon: const Icon(
+              Icons.search,
+            ),
           ),
         ],
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(CustomSize.medium),
+          padding: const EdgeInsets.all(
+            CustomSize.medium,
+          ),
           child: const ClassListWidget(),
         ),
       ),
@@ -31,12 +37,16 @@ class ClassListPage extends StatelessWidget {
             context,
             MaterialPageRoute<dynamic>(
               builder: (context) {
-                return const ClassCreateEditPage(title: 'Create class');
+                return const ClassCreateEditPage(
+                  title: 'Create class',
+                );
               },
             ),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+        ),
       ),
       bottomNavigationBar: const LecturerNavigationBar(),
     );

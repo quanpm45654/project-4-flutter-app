@@ -1,81 +1,103 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:project_4_flutter_app/models/class.dart';
 import 'package:project_4_flutter_app/utils/constants.dart';
 
 class ClassRepository {
-  Future<List<Class>> fetchClassList(int lecturer_id) async {
-    final http.Response httpResponse = await http.get(
-      Uri.parse('$apiBaseUrl/classes?lecturer_id=$lecturer_id'),
-    );
+  Future<List<Class>> fetchClassList({required int lecturer_id}) async {
+    final httpResponse = await http
+        .get(
+          Uri.parse('$apiBaseUrl/classes?lecturer_id=$lecturer_id'),
+        )
+        .timeout(
+          const Duration(seconds: 10),
+        );
 
     if (httpResponse.statusCode == 200) {
       return (jsonDecode(httpResponse.body) as List)
           .map((json) => Class.fromJson(json as Map<String, dynamic>))
           .toList();
     } else {
-      throw Exception('${httpResponse.statusCode} error');
+      throw Exception('${httpResponse.statusCode} error fetchClassList');
     }
   }
 
   Future<Class> fetchClass(int id) async {
-    final http.Response httpResponse = await http.get(
-      Uri.parse('$apiBaseUrl/classes/$id'),
-    );
+    final httpResponse = await http
+        .get(
+          Uri.parse('$apiBaseUrl/classes/$id'),
+        )
+        .timeout(
+          const Duration(seconds: 10),
+        );
 
     if (httpResponse.statusCode == 200) {
       return Class.fromJson(jsonDecode(httpResponse.body) as Map<String, dynamic>);
     } else {
-      throw Exception('${httpResponse.statusCode} error');
+      throw Exception('${httpResponse.statusCode} error fetchClass');
     }
   }
 
   Future<Class> createClass(Class classObject) async {
-    final http.Response httpResponse = await http.post(
-      Uri.parse('$apiBaseUrl/classes'),
-      headers: <String, String>{
-        HttpHeaders.authorizationHeader: 'token',
-        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(classObject.toJson()),
-    );
+    final httpResponse = await http
+        .post(
+          Uri.parse('$apiBaseUrl/classes'),
+          headers: <String, String>{
+            HttpHeaders.authorizationHeader: 'token',
+          },
+          body: jsonEncode(
+            classObject.toJson(),
+          ),
+        )
+        .timeout(
+          const Duration(seconds: 10),
+        );
 
     if (httpResponse.statusCode == 201) {
       return Class.fromJson(jsonDecode(httpResponse.body) as Map<String, dynamic>);
     } else {
-      throw Exception('${httpResponse.statusCode} error');
+      throw Exception('${httpResponse.statusCode} error createClass');
     }
   }
 
   Future<Class> updateClass(Class classObject) async {
-    final http.Response httpResponse = await http.put(
-      Uri.parse('$apiBaseUrl/classes/${classObject.class_id}'),
-      headers: <String, String>{
-        HttpHeaders.authorizationHeader: 'token',
-        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(classObject.toJson()),
-    );
+    final httpResponse = await http
+        .put(
+          Uri.parse('$apiBaseUrl/classes/${classObject.class_id}'),
+          headers: <String, String>{
+            HttpHeaders.authorizationHeader: 'token',
+          },
+          body: jsonEncode(
+            classObject.toJson(),
+          ),
+        )
+        .timeout(
+          const Duration(seconds: 10),
+        );
 
     if (httpResponse.statusCode == 200) {
       return Class.fromJson(jsonDecode(httpResponse.body) as Map<String, dynamic>);
     } else {
-      throw Exception('${httpResponse.statusCode} error');
+      throw Exception('${httpResponse.statusCode} error updateClass');
     }
   }
 
   Future<void> deleteClass(int id) async {
-    final http.Response httpResponse = await http.delete(
-      Uri.parse('$apiBaseUrl/classes/$id'),
-      headers: {
-        HttpHeaders.authorizationHeader: 'token',
-        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-      },
-    );
+    final httpResponse = await http
+        .delete(
+          Uri.parse('$apiBaseUrl/classes/$id'),
+          headers: {
+            HttpHeaders.authorizationHeader: 'token',
+          },
+        )
+        .timeout(
+          const Duration(seconds: 10),
+        );
 
     if (httpResponse.statusCode != 204) {
-      throw Exception('${httpResponse.statusCode} error');
+      throw Exception('${httpResponse.statusCode} error deleteClass');
     }
   }
 }

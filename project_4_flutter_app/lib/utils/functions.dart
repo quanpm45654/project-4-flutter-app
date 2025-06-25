@@ -5,6 +5,10 @@ class CustomFormatter {
   static String formatDateTime(DateTime dateTime) {
     return DateFormat.yMMMMd().format(dateTime);
   }
+
+  static String formatDateTime2(DateTime dateTime) {
+    return DateFormat('MMMM dd, yyyy, HH:mm').format(dateTime);
+  }
 }
 
 class CustomParser {

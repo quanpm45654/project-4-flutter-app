@@ -11,19 +11,19 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text(
+          'Home',
+        ),
       ),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(CustomSize.medium),
-          child: const Column(
+      body: const SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(
+            CustomSize.medium,
+          ),
+          child: Column(
             children: [
-              Expanded(
-                child: HomeClassListWidget(),
-              ),
-              Expanded(
-                child: HomeAssignmentListWidget(),
-              ),
+              HomeClassListWidget(),
+              HomeAssignmentListWidget(),
             ],
           ),
         ),

@@ -8,11 +8,11 @@ class CustomTheme {
     onPrimary: Color(0xFFFFFFFF),
     secondary: Color(0xFFFF8000),
     onSecondary: Color(0xFFFFFFFF),
-    error: Color(0xFFFF0000),
+    error: Color(0xFF800000),
     onError: Color(0xFFFFFFFF),
-    surface: Color(0xFFFFFFFF),
+    surface: Color(0xFFF2F2F2),
     onSurface: Color(0xFF000000),
-    surfaceContainer: Color(0xFFFAFAFA),
+    surfaceContainer: Color(0xFFE6E6E6),
   );
 
   static const darkColorScheme = ColorScheme(
@@ -31,8 +31,8 @@ class CustomTheme {
   static final lightTheme = ThemeData(
     colorScheme: lightColorScheme,
     appBarTheme: AppBarTheme(
-      backgroundColor: lightColorScheme.surfaceContainer,
-      foregroundColor: lightColorScheme.onSurface,
+      backgroundColor: lightColorScheme.primary,
+      foregroundColor: lightColorScheme.onPrimary,
       scrolledUnderElevation: 0.0,
     ),
     navigationBarTheme: NavigationBarThemeData(
@@ -42,13 +42,13 @@ class CustomTheme {
         if (states.contains(WidgetState.selected)) {
           return TextStyle(
             color: lightColorScheme.primary,
-            fontSize: CustomFontSize.extraSmall,
+            fontSize: CustomFontSize.small,
             fontWeight: FontWeight.w600,
           );
         }
         return const TextStyle(
           color: Color(0xFF808080),
-          fontSize: CustomFontSize.extraSmall,
+          fontSize: CustomFontSize.small,
           fontWeight: FontWeight.w500,
         );
       }),
@@ -64,7 +64,6 @@ class CustomTheme {
           size: CustomIconSize.medium,
         );
       }),
-      height: 72,
     ),
     cardTheme: CardThemeData(
       elevation: 0,
@@ -73,16 +72,16 @@ class CustomTheme {
       ),
       color: lightColorScheme.surfaceContainer,
     ),
-    dividerTheme: DividerThemeData(
-      color: const Color(0xFF808080),
+    dividerTheme: const DividerThemeData(
+      color: Color(0xFF808080),
     ),
   );
 
   static final darkTheme = ThemeData(
     colorScheme: darkColorScheme,
     appBarTheme: AppBarTheme(
-      backgroundColor: darkColorScheme.surfaceContainer,
-      foregroundColor: darkColorScheme.onSurface,
+      backgroundColor: darkColorScheme.primary,
+      foregroundColor: darkColorScheme.onPrimary,
       scrolledUnderElevation: 0.0,
     ),
     navigationBarTheme: NavigationBarThemeData(
@@ -92,13 +91,13 @@ class CustomTheme {
         if (states.contains(WidgetState.selected)) {
           return TextStyle(
             color: darkColorScheme.primary,
-            fontSize: CustomFontSize.extraSmall,
+            fontSize: CustomFontSize.small,
             fontWeight: FontWeight.w600,
           );
         }
         return const TextStyle(
           color: Color(0xFFBEBEBE),
-          fontSize: CustomFontSize.extraSmall,
+          fontSize: CustomFontSize.small,
           fontWeight: FontWeight.w500,
         );
       }),
@@ -114,7 +113,6 @@ class CustomTheme {
           size: CustomIconSize.medium,
         );
       }),
-      height: 72,
     ),
     cardTheme: CardThemeData(
       elevation: 0,
@@ -123,8 +121,8 @@ class CustomTheme {
       ),
       color: darkColorScheme.surfaceContainer,
     ),
-    dividerTheme: DividerThemeData(
-      color: const Color(0xFFBEBEBE),
+    dividerTheme: const DividerThemeData(
+      color: Color(0xFFBEBEBE),
     ),
   );
 }
