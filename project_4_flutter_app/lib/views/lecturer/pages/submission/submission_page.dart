@@ -9,11 +9,15 @@ class SubmissionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Submission detail'),
+        title: const Text(
+          'Submission detail',
+        ),
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(CustomSize.medium),
+          padding: const EdgeInsets.all(
+            CustomSize.medium,
+          ),
           child: const SubmissionWidget(),
         ),
       ),

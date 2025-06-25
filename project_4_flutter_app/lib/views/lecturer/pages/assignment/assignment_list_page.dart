@@ -9,20 +9,25 @@ class AssignmentListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Assignment'),
+        title: const Text(
+          'Assignment',
+        ),
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.search),
+            icon: const Icon(
+              Icons.search,
+            ),
           ),
         ],
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(CustomSize.medium),
+          padding: const EdgeInsets.all(
+            CustomSize.medium,
+          ),
           child: const AssignmentListWidget(),
         ),
       ),
@@ -32,12 +37,16 @@ class AssignmentListPage extends StatelessWidget {
             context,
             MaterialPageRoute<dynamic>(
               builder: (context) {
-                return const AssignmentCreateEditPage(title: 'Create assignment');
+                return const AssignmentCreateEditPage(
+                  title: 'Create assignment',
+                );
               },
             ),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+        ),
       ),
       bottomNavigationBar: const LecturerNavigationBar(),
     );

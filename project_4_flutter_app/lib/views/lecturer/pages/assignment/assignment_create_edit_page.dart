@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:project_4_flutter_app/models/assignment.dart';
 import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/assignment/assignment_create_edit_widget.dart';
 
 class AssignmentCreateEditPage extends StatelessWidget {
-  const AssignmentCreateEditPage({super.key, required this.title});
+  const AssignmentCreateEditPage({super.key, required this.title, this.assignment});
 
   final String title;
+  final Assignment? assignment;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(title),
+        title: Text(
+          title,
+        ),
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(CustomSize.medium),
-          child: AssignmentCreateEditWidget(title: title),
+          padding: const EdgeInsets.all(
+            CustomSize.medium,
+          ),
+          child: AssignmentCreateEditWidget(
+            title: title,
+            assignment: assignment,
+          ),
         ),
       ),
     );

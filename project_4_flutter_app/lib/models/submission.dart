@@ -44,17 +44,17 @@ class Submission {
 
   factory Submission.fromJson(Map<String, dynamic> json) {
     return Submission(
-      submission_id: int.parse(json['submission_id'] as String),
-      assignment_id: int.parse(json['submission_id'] as String),
-      student_id: int.parse(json['submission_id'] as String),
-      attempt: int.parse(json['submission_id'] as String),
+      submission_id: json['submission_id'] as int,
+      assignment_id: json['submission_id'] as int,
+      student_id: json['submission_id'] as int,
+      attempt: json['submission_id'] as int,
       submitted_at: DateTime.parse(json['submitted_at'] as String),
       note: json['note'] as String,
       file_url: json['file_url'] as String,
-      score: double.parse(json['submission_id'] as String),
+      score: json['submission_id'] as double,
       feedback_text: json['feedback_text'] as String,
       feedback_file_url: json['feedback_file_url'] as String,
-      graded_by: int.parse(json['submission_id'] as String),
+      graded_by: json['submission_id'] as int,
       graded_at: DateTime.parse(json['graded_at'] as String),
     );
   }

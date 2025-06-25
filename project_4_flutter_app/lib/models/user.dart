@@ -5,14 +5,14 @@ class User {
   final int user_id;
   final String full_name;
   final String email;
-  final String password_hash;
+  final String? password_hash;
   final Role role;
 
   User({
     required this.user_id,
     required this.full_name,
     required this.email,
-    required this.password_hash,
+    this.password_hash,
     required this.role,
   });
 
@@ -26,10 +26,10 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      user_id: int.parse(json['user_id'] as String),
+      user_id: json['user_id'] as int,
       full_name: json['full_name'] as String,
       email: json['email'] as String,
-      password_hash: json['password_hash'] as String,
+      password_hash: json['password_hash'] as String?,
       role: CustomParser.parseRole(json['role'] as String),
     );
   }

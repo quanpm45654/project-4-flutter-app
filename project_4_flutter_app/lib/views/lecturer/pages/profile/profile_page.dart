@@ -9,12 +9,18 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text(
+          'Profile',
+        ),
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(CustomSize.medium),
-          child: const Text('Under construction'),
+          padding: const EdgeInsets.all(
+            CustomSize.medium,
+          ),
+          child: const Text(
+            'Under construction',
+          ),
         ),
       ),
       bottomNavigationBar: const LecturerNavigationBar(),

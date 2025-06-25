@@ -1,4 +1,4 @@
-const apiBaseUrl = 'http://localhost:3000/api';
+const apiBaseUrl = 'http://10.0.2.2:3000/api';
 
 class CustomSize {
   static const double extraSmall = 8.0;
@@ -32,11 +32,9 @@ class CustomIconSize {
   static const double extraLarge = 32.0;
 }
 
-class CustomImagePath{
+class CustomImagePath {
   static const errorImage = 'assets/images/Error-rafiki.png';
   static const noClassImage = 'assets/images/Classroom-pana.png';
   static const noAssignmentImage = 'assets/images/Studying-pana.png';
   static const noStudentImage = 'assets/images/Students-rafiki.png';
 }
-
-

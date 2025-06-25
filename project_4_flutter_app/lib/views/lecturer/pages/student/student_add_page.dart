@@ -12,12 +12,18 @@ class StudentAddPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text(title),
+        title: Text(
+          title,
+        ),
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(CustomSize.medium),
-          child: StudentAddWidget(title: title),
+          padding: const EdgeInsets.all(
+            CustomSize.medium,
+          ),
+          child: StudentAddWidget(
+            title: title,
+          ),
         ),
       ),
     );

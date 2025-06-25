@@ -24,94 +24,136 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
   Widget build(BuildContext context) {
     final classObject = widget.classObject;
     if (classObject != null) {
-      _classNameController.text = classObject.name;
-      _classCodeController.text = classObject.code;
+      _classNameController.text = classObject.class_name;
+      _classCodeController.text = classObject.class_code;
       _classDescriptionController.text = classObject.description;
       _classSemesterController.text = classObject.semester;
     }
 
     return Column(
+      spacing: CustomSize.extraLarge,
       children: [
-        Expanded(
+        Flexible(
+          fit: FlexFit.tight,
           child: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: CustomSize.medium),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  spacing: CustomSize.medium,
-                  children: [
-                    TextFormField(
-                      controller: _classNameController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                spacing: CustomSize.medium,
+                children: [
+                  TextFormField(
+                    controller: _classNameController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            CustomSize.medium,
+                          ),
                         ),
-                        label: Text('Class name*'),
                       ),
-                      validator: (value) {
-                        return CustomValidator.combine([
-                          CustomValidator.required(value, 'Class name'),
-                        ]);
-                      },
+                      label: Text(
+                        'Class name*',
+                      ),
                     ),
-                    TextFormField(
-                      controller: _classCodeController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
+                    validator: (value) {
+                      return CustomValidator.combine([
+                        CustomValidator.required(
+                          value,
+                          'Class name',
                         ),
-                        label: Text('Code*'),
-                      ),
-                      validator: (value) {
-                        return CustomValidator.combine([
-                          CustomValidator.required(value, 'Code'),
-                        ]);
-                      },
-                    ),
-                    TextFormField(
-                      controller: _classDescriptionController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
+                      ]);
+                    },
+                  ),
+                  TextFormField(
+                    controller: _classCodeController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            CustomSize.medium,
+                          ),
                         ),
-                        label: Text('Description*'),
                       ),
-                      validator: (value) {
-                        return CustomValidator.combine([
-                          CustomValidator.required(value, 'Description'),
-                        ]);
-                      },
+                      label: Text(
+                        'Class code*',
+                      ),
                     ),
-                    TextFormField(
-                      controller: _classSemesterController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(CustomSize.medium)),
+                    validator: (value) {
+                      return CustomValidator.combine([
+                        CustomValidator.required(
+                          value,
+                          'Class code',
                         ),
-                        label: Text('Semester*'),
+                      ]);
+                    },
+                  ),
+                  TextFormField(
+                    controller: _classDescriptionController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            CustomSize.medium,
+                          ),
+                        ),
                       ),
-                      validator: (value) {
-                        return CustomValidator.combine([
-                          CustomValidator.required(value, 'Semester'),
-                        ]);
-                      },
+                      label: Text(
+                        'Description*',
+                      ),
                     ),
-                  ],
-                ),
+                    validator: (value) {
+                      return CustomValidator.combine([
+                        CustomValidator.required(
+                          value,
+                          'Description',
+                        ),
+                      ]);
+                    },
+                  ),
+                  TextFormField(
+                    controller: _classSemesterController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            CustomSize.medium,
+                          ),
+                        ),
+                      ),
+                      label: Text(
+                        'Semester*',
+                      ),
+                    ),
+                    validator: (value) {
+                      return CustomValidator.combine([
+                        CustomValidator.required(
+                          value,
+                          'Semester',
+                        ),
+                      ]);
+                    },
+                  ),
+                ],
               ),
             ),
           ),
         ),
         Column(
+          spacing: CustomSize.medium,
           children: [
             SizedBox(
               width: double.maxFinite,
+              height: 48,
               child: FilledButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
+                    Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Processing Data')),
+                      const SnackBar(
+                        content: Text(
+                          'Processing Data',
+                        ),
+                      ),
                     );
                   }
                 },
@@ -120,11 +162,14 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
             ),
             SizedBox(
               width: double.maxFinite,
+              height: 48,
               child: TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text('Cancel'),
+                child: const Text(
+                  'Cancel',
+                ),
               ),
             ),
           ],
