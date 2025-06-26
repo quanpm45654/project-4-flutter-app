@@ -20,14 +20,16 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
     return Column(
       spacing: CustomSize.extraLarge,
       children: [
-        Flexible(
-          fit: FlexFit.tight,
+        Expanded(
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
               child: Column(
                 spacing: CustomSize.medium,
                 children: [
+                  const SizedBox(
+                    height: 8,
+                  ),
                   TextFormField(
                     controller: _studentEmailController,
                     decoration: const InputDecoration(
@@ -69,7 +71,7 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(
-                          'Processing Data',
+                          'Adding student...',
                         ),
                       ),
                     );

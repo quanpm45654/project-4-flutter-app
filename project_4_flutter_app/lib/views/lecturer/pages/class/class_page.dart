@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/models/assignment.dart';
+import 'package:project_4_flutter_app/models/class.dart';
 import 'package:project_4_flutter_app/utils/constants.dart';
-import 'package:project_4_flutter_app/views/lecturer/pages/assignment/assignment_create_edit_page.dart';
-import 'package:project_4_flutter_app/views/lecturer/widgets/assignment/assignment_widget.dart';
-import 'package:project_4_flutter_app/views/lecturer/widgets/submission/submission_list_widget.dart';
+import 'package:project_4_flutter_app/views/lecturer/pages/class/class_create_edit_page.dart';
+import 'package:project_4_flutter_app/views/lecturer/widgets/class/class_assignment_list_widget.dart';
+import 'package:project_4_flutter_app/views/lecturer/widgets/class/class_student_list_widget.dart';
+import 'package:project_4_flutter_app/views/lecturer/widgets/lecturer_navigation_bar.dart';
 
-class AssignmentPage extends StatefulWidget {
-  const AssignmentPage({super.key, required this.assignment});
+class ClassPage extends StatefulWidget {
+  const ClassPage({super.key, required this.classObject});
 
-  final Assignment assignment;
+  final Class classObject;
 
   @override
-  State<AssignmentPage> createState() => _AssignmentPageState();
+  State<ClassPage> createState() => _ClassPageState();
 }
 
-class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProviderStateMixin {
+class _ClassPageState extends State<ClassPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -33,19 +34,8 @@ class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Assignment',
-        ),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: [
-            const Tab(
-              child: Text('Instruction'),
-            ),
-            const Tab(
-              child: Text('Submission'),
-            ),
-          ],
+        title: Text(
+          widget.classObject.class_name,
         ),
         actions: [
           MenuAnchor(
@@ -66,9 +56,9 @@ class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProvid
                     context,
                     MaterialPageRoute<dynamic>(
                       builder: (context) {
-                        return AssignmentCreateEditPage(
+                        return ClassCreateEditPage(
                           title: 'Edit assignment',
-                          assignment: widget.assignment,
+                          classObject: widget.classObject,
                         );
                       },
                     ),
@@ -81,6 +71,17 @@ class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProvid
             ],
           ),
         ],
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            const Tab(
+              child: Text('Student'),
+            ),
+            const Tab(
+              child: Text('Assignment'),
+            ),
+          ],
+        ),
       ),
       body: SafeArea(
         child: Container(
@@ -90,16 +91,17 @@ class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProvid
           child: TabBarView(
             controller: _tabController,
             children: [
-              AssignmentWidget(
-                assignment: widget.assignment,
+              ClassStudentListWidget(
+                class_id: widget.classObject.class_id,
               ),
-              SubmissionListWidget(
-                assignment_id: widget.assignment.assignment_id,
+              ClassAssignmentListWidget(
+                class_id: widget.classObject.class_id,
               ),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: const LecturerNavigationBar(),
     );
   }
 }

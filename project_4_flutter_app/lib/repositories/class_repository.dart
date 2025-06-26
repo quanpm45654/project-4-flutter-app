@@ -9,7 +9,7 @@ class ClassRepository {
   Future<List<Class>> fetchClassList({required int lecturer_id}) async {
     final httpResponse = await http
         .get(
-          Uri.parse('$apiBaseUrl/classes?lecturer_id=$lecturer_id'),
+          Uri.parse('$apiBaseUrlAndroid/classes?lecturer_id=$lecturer_id'),
         )
         .timeout(
           const Duration(seconds: 10),
@@ -24,26 +24,10 @@ class ClassRepository {
     }
   }
 
-  Future<Class> fetchClass(int id) async {
-    final httpResponse = await http
-        .get(
-          Uri.parse('$apiBaseUrl/classes/$id'),
-        )
-        .timeout(
-          const Duration(seconds: 10),
-        );
-
-    if (httpResponse.statusCode == 200) {
-      return Class.fromJson(jsonDecode(httpResponse.body) as Map<String, dynamic>);
-    } else {
-      throw Exception('${httpResponse.statusCode} error fetchClass');
-    }
-  }
-
-  Future<Class> createClass(Class classObject) async {
+  Future<Class> createClass({required Class classObject}) async {
     final httpResponse = await http
         .post(
-          Uri.parse('$apiBaseUrl/classes'),
+          Uri.parse('$apiBaseUrlAndroid/classes'),
           headers: <String, String>{
             HttpHeaders.authorizationHeader: 'token',
           },
@@ -62,10 +46,10 @@ class ClassRepository {
     }
   }
 
-  Future<Class> updateClass(Class classObject) async {
+  Future<Class> updateClass({required int class_id, required Class classObject}) async {
     final httpResponse = await http
         .put(
-          Uri.parse('$apiBaseUrl/classes/${classObject.class_id}'),
+          Uri.parse('$apiBaseUrlAndroid/classes/$class_id'),
           headers: <String, String>{
             HttpHeaders.authorizationHeader: 'token',
           },
@@ -81,23 +65,6 @@ class ClassRepository {
       return Class.fromJson(jsonDecode(httpResponse.body) as Map<String, dynamic>);
     } else {
       throw Exception('${httpResponse.statusCode} error updateClass');
-    }
-  }
-
-  Future<void> deleteClass(int id) async {
-    final httpResponse = await http
-        .delete(
-          Uri.parse('$apiBaseUrl/classes/$id'),
-          headers: {
-            HttpHeaders.authorizationHeader: 'token',
-          },
-        )
-        .timeout(
-          const Duration(seconds: 10),
-        );
-
-    if (httpResponse.statusCode != 204) {
-      throw Exception('${httpResponse.statusCode} error deleteClass');
     }
   }
 }

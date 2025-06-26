@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/assignment.dart';
+import 'package:project_4_flutter_app/utils/functions.dart';
 
 class AssignmentWidget extends StatelessWidget {
   const AssignmentWidget({super.key, required this.assignment});
@@ -8,8 +9,31 @@ class AssignmentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      'Under construction',
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          assignment.class_name ?? '',
+        ),
+        Text(
+          assignment.title,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        Text(
+          'Score: ${assignment.max_score}',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        Text(
+          'Due ${CustomFormatter.formatDateTime2(
+            assignment.due_at,
+          )}',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        Text(
+          assignment.description,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+      ],
     );
   }
 }

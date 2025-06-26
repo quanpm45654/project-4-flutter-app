@@ -26,6 +26,11 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _future,
@@ -35,21 +40,10 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
 
           return assignmentList.isEmpty
               ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: CustomSize.medium,
-                    children: [
-                      Image.asset(
-                        CustomImagePath.noAssignmentImage,
-                      ),
-                      const Text(
-                        "Start creating assignments to your class",
-                        style: TextStyle(
-                          fontSize: CustomFontSize.medium,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                  child: Text(
+                    "You haven't created any assignments yet",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
                   ),
                 )
               : ListView.builder(
@@ -80,21 +74,14 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                assignmentList[index].class_name,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
+                                assignmentList[index].class_name ?? '',
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     assignmentList[index].title,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: const TextStyle(
-                                      fontSize: CustomFontSize.medium,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                                    style: Theme.of(context).textTheme.titleMedium,
                                   ),
                                   MenuAnchor(
                                     builder: (context, controller, child) {
@@ -150,20 +137,12 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
         } else if (asyncSnapshot.hasError) {
           developer.log('${DateTime.now()}: ${asyncSnapshot.error}');
           return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  CustomImagePath.errorImage,
-                ),
-                const Text(
-                  'There was an error, please try again later',
-                  style: TextStyle(
-                    fontSize: CustomFontSize.medium,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+            child: Expanded(
+              child: Text(
+                'There was an error, please try again later',
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
             ),
           );
         } else {

@@ -14,14 +14,6 @@ class ClassListPage extends StatelessWidget {
         title: const Text(
           'Class',
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Container(

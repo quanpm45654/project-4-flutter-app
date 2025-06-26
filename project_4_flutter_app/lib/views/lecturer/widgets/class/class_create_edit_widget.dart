@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/class.dart';
+import 'package:project_4_flutter_app/repositories/class_repository.dart';
 import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/utils/validator.dart';
 
@@ -14,6 +15,7 @@ class ClassCreateEditWidget extends StatefulWidget {
 }
 
 class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
+  final _classRepository = ClassRepository();
   final _formKey = GlobalKey<FormState>();
   final _classNameController = TextEditingController();
   final _classCodeController = TextEditingController();
@@ -33,14 +35,16 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
     return Column(
       spacing: CustomSize.extraLarge,
       children: [
-        Flexible(
-          fit: FlexFit.tight,
+        Expanded(
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
               child: Column(
                 spacing: CustomSize.medium,
                 children: [
+                  const SizedBox(
+                    height: 8,
+                  ),
                   TextFormField(
                     controller: _classNameController,
                     decoration: const InputDecoration(
@@ -149,12 +153,28 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
                   if (_formKey.currentState!.validate()) {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
+                      SnackBar(
                         content: Text(
-                          'Processing Data',
+                          '${widget.title}...',
                         ),
                       ),
                     );
+                    final inputClass = Class(
+                      class_id: 0,
+                      class_code: _classCodeController.text,
+                      class_name: _classNameController.text,
+                      description: _classDescriptionController.text,
+                      semester: _classSemesterController.text,
+                      lecturer_id: 2,
+                    );
+                    setState(() {
+                      widget.title.toLowerCase().contains('create') && widget.classObject == null
+                          ? _classRepository.createClass(classObject: inputClass)
+                          : _classRepository.updateClass(
+                              class_id: widget.classObject!.class_id,
+                              classObject: inputClass,
+                            );
+                    });
                   }
                 },
                 child: Text(widget.title),

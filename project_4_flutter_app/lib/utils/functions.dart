@@ -7,23 +7,23 @@ class CustomFormatter {
   }
 
   static String formatDateTime2(DateTime dateTime) {
-    return DateFormat('MMMM dd, yyyy, HH:mm').format(dateTime);
+    return DateFormat('MMMM dd, yyyy, hh:mm a').format(dateTime);
   }
 }
 
 class CustomParser {
-  static AssignmentType parseAssignmentType(String value) {
+  static AssignmentType parseAssignmentType(String string) {
     for (final assignmentType in AssignmentType.values) {
-      if (value == assignmentType.toString()) {
+      if (string == assignmentType.toString()) {
         return assignmentType;
       }
     }
     return AssignmentType.values.elementAt(0);
   }
 
-  static Role parseRole(String value) {
+  static Role parseRole(String string) {
     for (final role in Role.values) {
-      if (value == role.toString()) {
+      if (string == role.toString()) {
         return role;
       }
     }

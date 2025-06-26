@@ -84,6 +84,27 @@ app.get("/api/assignments", (req, res) => {
   });
 });
 
+app.get("/api/submissions", (req, res) => {
+  const query = `SELECT
+                  s.*,
+                  u.full_name
+                FROM
+                  submissions s
+                JOIN
+	                assignments a ON
+    	              s.assignment_id = a.assignment_id
+                JOIN
+	                users u ON
+    	              s.student_id = u.user_id
+                WHERE
+	                s.assignment_id = ?`;
+
+  connection.query(query, [req.query.assignment_id], (err, result) => {
+    if (err) throw err;
+    res.json(result);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });

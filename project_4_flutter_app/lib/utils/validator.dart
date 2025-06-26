@@ -37,4 +37,11 @@ class CustomValidator {
     }
     return null;
   }
+
+  static String? number(String? value) {
+    if (value != null && int.tryParse(value) == null) {
+      return 'Please enter a number';
+    }
+    return null;
+  }
 }

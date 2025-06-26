@@ -6,7 +6,7 @@ import 'package:project_4_flutter_app/repositories/class_repository.dart';
 import 'package:project_4_flutter_app/states/lecturer_navigation_bar_state.dart';
 import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/class/class_list_page.dart';
-import 'package:project_4_flutter_app/views/lecturer/pages/student/student_list_page.dart';
+import 'package:project_4_flutter_app/views/lecturer/pages/class/class_page.dart';
 import 'package:provider/provider.dart';
 
 class HomeClassListWidget extends StatefulWidget {
@@ -27,23 +27,24 @@ class _HomeClassListWidgetState extends State<HomeClassListWidget> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final navigationBarState = Provider.of<LecturerNavigationBarState>(context);
 
     return SizedBox(
-      height: 280,
+      height: 240,
       child: Column(
-        spacing: CustomSize.medium,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Class',
-                style: TextStyle(
-                  fontSize: CustomFontSize.medium,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               TextButton(
                 onPressed: () {
@@ -73,21 +74,18 @@ class _HomeClassListWidgetState extends State<HomeClassListWidget> {
                 final classList = asyncSnapshot.requireData;
 
                 if (classList.isEmpty) {
-                  return const Flexible(
+                  return Flexible(
                     child: Center(
                       child: Text(
-                        'Create a class to get started',
-                        style: TextStyle(
-                          fontSize: CustomFontSize.medium,
-                        ),
-                        textAlign: TextAlign.center,
+                        "You haven't added any classes yet",
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
                   );
                 } else {
                   return Flexible(
                     child: SizedBox(
-                      height: 200,
+                      height: 160,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: classList.length,
@@ -98,9 +96,8 @@ class _HomeClassListWidgetState extends State<HomeClassListWidget> {
                                 context,
                                 MaterialPageRoute<dynamic>(
                                   builder: (context) {
-                                    return StudentListPage(
-                                      class_id: classList[index].class_id,
-                                      class_name: classList[index].class_name,
+                                    return ClassPage(
+                                      classObject: classList[index],
                                     );
                                   },
                                 ),
@@ -111,7 +108,7 @@ class _HomeClassListWidgetState extends State<HomeClassListWidget> {
                                 right: CustomSize.medium,
                               ),
                               child: Container(
-                                width: 200,
+                                width: 160,
                                 padding: const EdgeInsets.all(
                                   CustomSize.medium,
                                 ),
@@ -120,13 +117,13 @@ class _HomeClassListWidgetState extends State<HomeClassListWidget> {
                                   children: [
                                     Text(
                                       classList[index].class_name,
-                                      style: const TextStyle(
-                                        fontSize: CustomFontSize.medium,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                      style: Theme.of(context).textTheme.titleMedium,
                                     ),
                                     Text(
                                       classList[index].class_code,
+                                    ),
+                                    Text(
+                                      classList[index].semester,
                                     ),
                                   ],
                                 ),
@@ -140,19 +137,17 @@ class _HomeClassListWidgetState extends State<HomeClassListWidget> {
                 }
               } else if (asyncSnapshot.hasError) {
                 developer.log('${DateTime.now()}: ${asyncSnapshot.error}');
-                return const Flexible(
+                return Expanded(
                   child: Center(
                     child: Text(
                       'There was an error, please try again later',
-                      style: TextStyle(
-                        fontSize: CustomFontSize.medium,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.center,
                     ),
                   ),
                 );
               } else {
-                return const Flexible(
+                return const Expanded(
                   child: Center(
                     child: CircularProgressIndicator(),
                   ),

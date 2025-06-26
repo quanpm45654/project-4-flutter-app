@@ -8,10 +8,10 @@ class Assignment {
   final DateTime due_at;
   final double max_score;
   final AssignmentType assignment_type;
-  final int time_bound;
-  final int allow_resubmit;
+  final bool time_bound;
+  final bool allow_resubmit;
   final int class_id;
-  final String class_name;
+  final String? class_name;
 
   Assignment({
     required this.assignment_id,
@@ -23,7 +23,7 @@ class Assignment {
     required this.time_bound,
     required this.allow_resubmit,
     required this.class_id,
-    required this.class_name,
+    this.class_name,
   });
 
   Map<String, dynamic> toJson() => {
@@ -33,10 +33,9 @@ class Assignment {
     'due_at': due_at,
     'max_score': max_score,
     'assignment_type': assignment_type,
-    'time_bound': time_bound,
-    'allow_resubmit': allow_resubmit,
+    'time_bound': time_bound ? 1 : 0,
+    'allow_resubmit': allow_resubmit ? 1 : 0,
     'class_id': class_id,
-    'class_name': class_name,
   };
 
   factory Assignment.fromJson(Map<String, dynamic> json) {
@@ -46,9 +45,9 @@ class Assignment {
       description: json['description'] as String,
       due_at: DateTime.parse(json['due_at'] as String),
       max_score: double.parse(json['max_score'] as String),
-      assignment_type: CustomParser.parseAssignmentType(json['max_score'] as String),
-      time_bound: json['time_bound'] as int,
-      allow_resubmit: json['allow_resubmit'] as int,
+      assignment_type: CustomParser.parseAssignmentType(json['assignment_type'] as String),
+      time_bound: json['time_bound'] == 1,
+      allow_resubmit: json['allow_resubmit'] == 1,
       class_id: json['class_id'] as int,
       class_name: json['class_name'] as String,
     );

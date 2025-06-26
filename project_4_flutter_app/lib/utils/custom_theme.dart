@@ -10,9 +10,9 @@ class CustomTheme {
     onSecondary: Color(0xFFFFFFFF),
     error: Color(0xFF800000),
     onError: Color(0xFFFFFFFF),
-    surface: Color(0xFFF2F2F2),
+    surface: Color(0xFFE6E6E6),
     onSurface: Color(0xFF000000),
-    surfaceContainer: Color(0xFFE6E6E6),
+    surfaceContainer: Color(0xFFF2F2F2),
   );
 
   static const darkColorScheme = ColorScheme(
@@ -31,8 +31,8 @@ class CustomTheme {
   static final lightTheme = ThemeData(
     colorScheme: lightColorScheme,
     appBarTheme: AppBarTheme(
-      backgroundColor: lightColorScheme.primary,
-      foregroundColor: lightColorScheme.onPrimary,
+      backgroundColor: lightColorScheme.surfaceContainer,
+      foregroundColor: lightColorScheme.onSurface,
       scrolledUnderElevation: 0.0,
     ),
     navigationBarTheme: NavigationBarThemeData(
@@ -42,26 +42,20 @@ class CustomTheme {
         if (states.contains(WidgetState.selected)) {
           return TextStyle(
             color: lightColorScheme.primary,
-            fontSize: CustomFontSize.small,
-            fontWeight: FontWeight.w600,
           );
         }
         return const TextStyle(
-          color: Color(0xFF808080),
-          fontSize: CustomFontSize.small,
-          fontWeight: FontWeight.w500,
+          color: Color(0xFF404040),
         );
       }),
       iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((states) {
         if (states.contains(WidgetState.selected)) {
           return IconThemeData(
             color: lightColorScheme.primary,
-            size: CustomIconSize.large,
           );
         }
         return const IconThemeData(
-          color: Color(0xFF808080),
-          size: CustomIconSize.medium,
+          color: Color(0xFF404040),
         );
       }),
     ),
@@ -73,15 +67,15 @@ class CustomTheme {
       color: lightColorScheme.surfaceContainer,
     ),
     dividerTheme: const DividerThemeData(
-      color: Color(0xFF808080),
+      color: Color(0xFF404040),
     ),
   );
 
   static final darkTheme = ThemeData(
     colorScheme: darkColorScheme,
     appBarTheme: AppBarTheme(
-      backgroundColor: darkColorScheme.primary,
-      foregroundColor: darkColorScheme.onPrimary,
+      backgroundColor: darkColorScheme.surfaceContainer,
+      foregroundColor: darkColorScheme.onSurface,
       scrolledUnderElevation: 0.0,
     ),
     navigationBarTheme: NavigationBarThemeData(
@@ -91,26 +85,20 @@ class CustomTheme {
         if (states.contains(WidgetState.selected)) {
           return TextStyle(
             color: darkColorScheme.primary,
-            fontSize: CustomFontSize.small,
-            fontWeight: FontWeight.w600,
           );
         }
         return const TextStyle(
           color: Color(0xFFBEBEBE),
-          fontSize: CustomFontSize.small,
-          fontWeight: FontWeight.w500,
         );
       }),
       iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((states) {
         if (states.contains(WidgetState.selected)) {
           return IconThemeData(
             color: darkColorScheme.primary,
-            size: CustomIconSize.large,
           );
         }
         return const IconThemeData(
           color: Color(0xFFBEBEBE),
-          size: CustomIconSize.medium,
         );
       }),
     ),

@@ -12,7 +12,7 @@ class AssignmentRepository {
   }) async {
     final httpResponse = await http
         .get(
-          Uri.parse('$apiBaseUrl/assignments?class_id=$class_id&lecturer_id=$lecturer_id'),
+          Uri.parse('$apiBaseUrlAndroid/assignments?class_id=$class_id&lecturer_id=$lecturer_id'),
         )
         .timeout(
           const Duration(seconds: 10),
@@ -32,7 +32,7 @@ class AssignmentRepository {
   }) async {
     final httpResponse = await http
         .get(
-          Uri.parse('$apiBaseUrl/assignments?lecturer_id=$lecturer_id'),
+          Uri.parse('$apiBaseUrlAndroid/assignments?lecturer_id=$lecturer_id'),
         )
         .timeout(
           const Duration(seconds: 10),
@@ -47,26 +47,10 @@ class AssignmentRepository {
     }
   }
 
-  Future<Assignment> fetchAssignment(int id) async {
-    final httpResponse = await http
-        .get(
-          Uri.parse('$apiBaseUrl/assignments/$id'),
-        )
-        .timeout(
-          const Duration(seconds: 10),
-        );
-
-    if (httpResponse.statusCode == 200) {
-      return Assignment.fromJson(jsonDecode(httpResponse.body) as Map<String, dynamic>);
-    } else {
-      throw Exception('${httpResponse.statusCode} error fetchAssignment');
-    }
-  }
-
-  Future<Assignment> createAssignment(Assignment assignment) async {
+  Future<Assignment> createAssignment({required Assignment assignment}) async {
     final httpResponse = await http
         .post(
-          Uri.parse('$apiBaseUrl/assignments'),
+          Uri.parse('$apiBaseUrlAndroid/assignments'),
           headers: <String, String>{
             HttpHeaders.authorizationHeader: 'token',
           },
@@ -85,10 +69,13 @@ class AssignmentRepository {
     }
   }
 
-  Future<Assignment> updateAssignment(Assignment assignment) async {
+  Future<Assignment> updateAssignment({
+    required int assignment_id,
+    required Assignment assignment,
+  }) async {
     final httpResponse = await http
         .put(
-          Uri.parse('$apiBaseUrl/assignments/${assignment.assignment_id}'),
+          Uri.parse('$apiBaseUrlAndroid/assignments/$assignment_id'),
           headers: <String, String>{
             HttpHeaders.authorizationHeader: 'token',
           },
@@ -104,23 +91,6 @@ class AssignmentRepository {
       return Assignment.fromJson(jsonDecode(httpResponse.body) as Map<String, dynamic>);
     } else {
       throw Exception('${httpResponse.statusCode} error updateAssignment');
-    }
-  }
-
-  Future<void> deleteAssignment(int id) async {
-    final httpResponse = await http
-        .delete(
-          Uri.parse('$apiBaseUrl/assignments/$id'),
-          headers: {
-            HttpHeaders.authorizationHeader: 'token',
-          },
-        )
-        .timeout(
-          const Duration(seconds: 10),
-        );
-
-    if (httpResponse.statusCode != 204) {
-      throw Exception('${httpResponse.statusCode} error deleteAssignment');
     }
   }
 }
