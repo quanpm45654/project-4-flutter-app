@@ -13,9 +13,6 @@ class AssignmentWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          assignment.class_name ?? '',
-        ),
-        Text(
           assignment.title,
           style: Theme.of(context).textTheme.titleLarge,
         ),
