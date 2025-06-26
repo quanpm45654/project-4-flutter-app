@@ -155,7 +155,6 @@ SELECT
    ─ 2 Lớp học, 3 Bài tập, 1 File đính kèm
    ─ 3 Bài nộp + 2 bình luận
 ========================================================*/
-START TRANSACTION;
 
 /*----------- USERS (ADMIN, LECTURER, STUDENTS) ---------*/
 INSERT INTO users 
@@ -208,7 +207,6 @@ VALUES
     (1,          1,             3,       'Cảm ơn thầy!', NOW()),
     (2,          1,             2,       'Thầy đã sửa điểm và thêm phản hồi.', NOW());
 
-COMMIT;
 
 /*----------- RESET AUTO_INCREMENT (tùy chọn) -----------*/
 -- ALTER TABLE users              AUTO_INCREMENT = 100;

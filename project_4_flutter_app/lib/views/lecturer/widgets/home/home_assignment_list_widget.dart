@@ -28,23 +28,24 @@ class _HomeAssignmentListWidgetState extends State<HomeAssignmentListWidget> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final navigationBarState = Provider.of<LecturerNavigationBarState>(context);
 
     return SizedBox(
-      height: 280,
+      height: 240,
       child: Column(
-        spacing: CustomSize.medium,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Assignment',
-                style: TextStyle(
-                  fontSize: CustomFontSize.medium,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               TextButton(
                 onPressed: () {
@@ -74,13 +75,11 @@ class _HomeAssignmentListWidgetState extends State<HomeAssignmentListWidget> {
                 final assignmentList = asyncSnapshot.requireData;
 
                 if (assignmentList.isEmpty) {
-                  return const Flexible(
+                  return Flexible(
                     child: Center(
                       child: Text(
-                        "Start creating assignments to your class",
-                        style: TextStyle(
-                          fontSize: CustomFontSize.medium,
-                        ),
+                        "You haven't created any assignments yet",
+                        style: Theme.of(context).textTheme.bodyLarge,
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -88,7 +87,7 @@ class _HomeAssignmentListWidgetState extends State<HomeAssignmentListWidget> {
                 } else {
                   return Flexible(
                     child: SizedBox(
-                      height: 200,
+                      height: 160,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: assignmentList.length,
@@ -111,7 +110,7 @@ class _HomeAssignmentListWidgetState extends State<HomeAssignmentListWidget> {
                                 right: CustomSize.medium,
                               ),
                               child: Container(
-                                width: 200,
+                                width: 160,
                                 padding: const EdgeInsets.all(
                                   CustomSize.medium,
                                 ),
@@ -119,14 +118,11 @@ class _HomeAssignmentListWidgetState extends State<HomeAssignmentListWidget> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      assignmentList[index].class_name,
+                                      assignmentList[index].class_name ?? '',
                                     ),
                                     Text(
                                       assignmentList[index].title,
-                                      style: const TextStyle(
-                                        fontSize: CustomFontSize.medium,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: Theme.of(context).textTheme.titleMedium,
                                     ),
                                     const Spacer(),
                                     Text(
@@ -149,19 +145,17 @@ class _HomeAssignmentListWidgetState extends State<HomeAssignmentListWidget> {
                 }
               } else if (asyncSnapshot.hasError) {
                 developer.log('${DateTime.now()}: ${asyncSnapshot.error}');
-                return const Flexible(
+                return Expanded(
                   child: Center(
                     child: Text(
                       'There was an error, please try again later',
-                      style: TextStyle(
-                        fontSize: CustomFontSize.medium,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.center,
                     ),
                   ),
                 );
               } else {
-                return const Flexible(
+                return const Expanded(
                   child: Center(
                     child: CircularProgressIndicator(),
                   ),

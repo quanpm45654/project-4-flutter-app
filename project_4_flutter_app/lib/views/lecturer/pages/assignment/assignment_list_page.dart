@@ -14,14 +14,6 @@ class AssignmentListPage extends StatelessWidget {
         title: const Text(
           'Assignment',
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Container(

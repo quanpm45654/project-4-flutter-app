@@ -10,7 +10,7 @@ class SubmissionPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Submission detail',
+          'Submission',
         ),
       ),
       body: SafeArea(
