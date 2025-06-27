@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/class.dart';
-import 'package:project_4_flutter_app/utils/constants.dart';
-import 'package:project_4_flutter_app/views/lecturer/pages/class/class_create_edit_page.dart';
+import 'package:project_4_flutter_app/views/lecturer/pages/class/class_edit_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/class/class_assignment_list_widget.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/class/class_student_list_widget.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/lecturer_navigation_bar.dart';
@@ -56,8 +55,7 @@ class _ClassPageState extends State<ClassPage> with SingleTickerProviderStateMix
                     context,
                     MaterialPageRoute<dynamic>(
                       builder: (context) {
-                        return ClassCreateEditPage(
-                          title: 'Edit assignment',
+                        return ClassEditPage(
                           classObject: widget.classObject,
                         );
                       },
@@ -86,7 +84,7 @@ class _ClassPageState extends State<ClassPage> with SingleTickerProviderStateMix
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(
-            CustomSize.medium,
+            16.0,
           ),
           child: TabBarView(
             controller: _tabController,

@@ -1,20 +1,18 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/class.dart';
 import 'package:project_4_flutter_app/repositories/class_repository.dart';
-import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/utils/validator.dart';
 
-class ClassCreateEditWidget extends StatefulWidget {
-  const ClassCreateEditWidget({super.key, required this.title, this.classObject});
-
-  final String title;
-  final Class? classObject;
+class ClassCreateWidget extends StatefulWidget {
+  const ClassCreateWidget({super.key});
 
   @override
-  State<ClassCreateEditWidget> createState() => _ClassCreateEditWidgetState();
+  State<ClassCreateWidget> createState() => _ClassCreateWidgetState();
 }
 
-class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
+class _ClassCreateWidgetState extends State<ClassCreateWidget> {
   final _classRepository = ClassRepository();
   final _formKey = GlobalKey<FormState>();
   final _classNameController = TextEditingController();
@@ -24,47 +22,28 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final classObject = widget.classObject;
-    if (classObject != null) {
-      _classNameController.text = classObject.class_name;
-      _classCodeController.text = classObject.class_code;
-      _classDescriptionController.text = classObject.description;
-      _classSemesterController.text = classObject.semester;
-    }
-
     return Column(
-      spacing: CustomSize.extraLarge,
+      spacing: 32.0,
       children: [
         Expanded(
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
               child: Column(
-                spacing: CustomSize.medium,
+                spacing: 16.0,
                 children: [
-                  const SizedBox(
-                    height: 8,
-                  ),
+                  const SizedBox(height: 8.0),
                   TextFormField(
                     controller: _classNameController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            CustomSize.medium,
-                          ),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
                       ),
-                      label: Text(
-                        'Class name*',
-                      ),
+                      label: Text('Class name*'),
                     ),
                     validator: (value) {
                       return CustomValidator.combine([
-                        CustomValidator.required(
-                          value,
-                          'Class name',
-                        ),
+                        CustomValidator.required(value, 'Class name'),
                       ]);
                     },
                   ),
@@ -72,22 +51,13 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
                     controller: _classCodeController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            CustomSize.medium,
-                          ),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
                       ),
-                      label: Text(
-                        'Class code*',
-                      ),
+                      label: Text('Class code*'),
                     ),
                     validator: (value) {
                       return CustomValidator.combine([
-                        CustomValidator.required(
-                          value,
-                          'Class code',
-                        ),
+                        CustomValidator.required(value, 'Class code'),
                       ]);
                     },
                   ),
@@ -95,22 +65,13 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
                     controller: _classDescriptionController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            CustomSize.medium,
-                          ),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
                       ),
-                      label: Text(
-                        'Description*',
-                      ),
+                      label: Text('Description*'),
                     ),
                     validator: (value) {
                       return CustomValidator.combine([
-                        CustomValidator.required(
-                          value,
-                          'Description',
-                        ),
+                        CustomValidator.required(value, 'Description'),
                       ]);
                     },
                   ),
@@ -118,22 +79,13 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
                     controller: _classSemesterController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            CustomSize.medium,
-                          ),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
                       ),
-                      label: Text(
-                        'Semester*',
-                      ),
+                      label: Text('Semester*'),
                     ),
                     validator: (value) {
                       return CustomValidator.combine([
-                        CustomValidator.required(
-                          value,
-                          'Semester',
-                        ),
+                        CustomValidator.required(value, 'Semester'),
                       ]);
                     },
                   ),
@@ -143,7 +95,7 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
           ),
         ),
         Column(
-          spacing: CustomSize.medium,
+          spacing: 16.0,
           children: [
             SizedBox(
               width: double.maxFinite,
@@ -153,10 +105,8 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
                   if (_formKey.currentState!.validate()) {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          '${widget.title}...',
-                        ),
+                      const SnackBar(
+                        content: Text('Creating class...'),
                       ),
                     );
                     final inputClass = Class(
@@ -167,17 +117,32 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
                       semester: _classSemesterController.text,
                       lecturer_id: 2,
                     );
-                    setState(() {
-                      widget.title.toLowerCase().contains('create') && widget.classObject == null
-                          ? _classRepository.createClass(classObject: inputClass)
-                          : _classRepository.updateClass(
-                              class_id: widget.classObject!.class_id,
-                              classObject: inputClass,
+                    _classRepository
+                        .createClass(
+                          classObject: inputClass,
+                        )
+                        .then((result) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Class created successfully'),
+                              ),
                             );
-                    });
+                          }
+                        })
+                        .catchError((dynamic error) {
+                          developer.log('${DateTime.now()}: $error');
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('There was an error, please try again later'),
+                              ),
+                            );
+                          }
+                        });
                   }
                 },
-                child: Text(widget.title),
+                child: const Text('Create class'),
               ),
             ),
             SizedBox(
@@ -187,9 +152,7 @@ class _ClassCreateEditWidgetState extends State<ClassCreateEditWidget> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text(
-                  'Cancel',
-                ),
+                child: const Text('Cancel'),
               ),
             ),
           ],

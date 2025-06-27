@@ -31,15 +31,13 @@ class ClassRepository {
           headers: <String, String>{
             HttpHeaders.authorizationHeader: 'token',
           },
-          body: jsonEncode(
-            classObject.toJson(),
-          ),
+          body: jsonEncode(classObject.toJson()),
         )
         .timeout(
           const Duration(seconds: 10),
         );
 
-    if (httpResponse.statusCode == 201) {
+    if (httpResponse.statusCode == 200) {
       return Class.fromJson(jsonDecode(httpResponse.body) as Map<String, dynamic>);
     } else {
       throw Exception('${httpResponse.statusCode} error createClass');
@@ -53,9 +51,7 @@ class ClassRepository {
           headers: <String, String>{
             HttpHeaders.authorizationHeader: 'token',
           },
-          body: jsonEncode(
-            classObject.toJson(),
-          ),
+          body: jsonEncode(classObject.toJson()),
         )
         .timeout(
           const Duration(seconds: 10),

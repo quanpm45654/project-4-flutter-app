@@ -3,8 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/class.dart';
 import 'package:project_4_flutter_app/repositories/class_repository.dart';
-import 'package:project_4_flutter_app/utils/constants.dart';
-import 'package:project_4_flutter_app/views/lecturer/pages/class/class_create_edit_page.dart';
+import 'package:project_4_flutter_app/views/lecturer/pages/class/class_edit_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/class/class_page.dart';
 
 class ClassListWidget extends StatefulWidget {
@@ -62,64 +61,39 @@ class _ClassListWidgetState extends State<ClassListWidget> {
                         );
                       },
                       child: Card(
-                        margin: const EdgeInsets.only(
-                          bottom: CustomSize.medium,
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.all(
-                            CustomSize.medium,
+                        margin: const EdgeInsets.only(bottom: 16.0),
+                        child: ListTile(
+                          title: Text(
+                            classList[index].class_name,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    classList[index].class_name,
-                                    style: Theme.of(context).textTheme.titleMedium,
-                                  ),
-                                  MenuAnchor(
-                                    builder: (context, controller, child) {
-                                      return IconButton(
-                                        onPressed: () {
-                                          controller.isOpen
-                                              ? controller.close()
-                                              : controller.open();
-                                        },
-                                        icon: const Icon(
-                                          Icons.more_vert_rounded,
-                                        ),
-                                      );
-                                    },
-                                    menuChildren: [
-                                      MenuItemButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute<dynamic>(
-                                              builder: (context) {
-                                                return ClassCreateEditPage(
-                                                  title: 'Edit class',
-                                                  classObject: classList[index],
-                                                );
-                                              },
-                                            ),
-                                          );
-                                        },
-                                        child: const Text(
-                                          'Edit',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                classList[index].class_code,
-                              ),
-                              Text(
-                                classList[index].semester,
+                          subtitle: Text(
+                            "${classList[index].class_code} - ${classList[index].semester}",
+                          ),
+                          trailing: MenuAnchor(
+                            builder: (context, controller, child) {
+                              return IconButton(
+                                onPressed: () {
+                                  controller.isOpen ? controller.close() : controller.open();
+                                },
+                                icon: const Icon(Icons.more_vert_rounded),
+                              );
+                            },
+                            menuChildren: [
+                              MenuItemButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute<dynamic>(
+                                      builder: (context) {
+                                        return ClassEditPage(
+                                          classObject: classList[index],
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: const Text('Edit'),
                               ),
                             ],
                           ),

@@ -3,14 +3,13 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/submission.dart';
 import 'package:project_4_flutter_app/repositories/submission_repository.dart';
-import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/utils/functions.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/submission/submission_page.dart';
 
 class SubmissionListWidget extends StatefulWidget {
-  const SubmissionListWidget({super.key, required this.assignment_id});
+  const SubmissionListWidget({super.key, this.assignment_id});
 
-  final int assignment_id;
+  final int? assignment_id;
 
   @override
   State<SubmissionListWidget> createState() => _SubmissionListWidgetState();
@@ -55,9 +54,7 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
                       "${submissionList.length} submitted",
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    const SizedBox(
-                      height: 8,
-                    ),
+                    const SizedBox(height: 8),
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -74,34 +71,17 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
                               ),
                             );
                           },
-                          child: Card(
-                            margin: const EdgeInsets.only(
-                              bottom: CustomSize.medium,
+                          child: ListTile(
+                            title: Text(
+                              submissionList[index].student_name ?? '',
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
-                            child: Container(
-                              padding: const EdgeInsets.all(
-                                CustomSize.medium,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        submissionList[index].student_name ?? '',
-                                        style: Theme.of(context).textTheme.titleMedium,
-                                      ),
-                                      Text(
-                                        submissionList[index].score ?? '',
-                                      ),
-                                    ],
-                                  ),
-                                  Text(
-                                    'Submitted at ${CustomFormatter.formatDateTime2(submissionList[index].submitted_at)}',
-                                  ),
-                                ],
-                              ),
+                            subtitle: Text(
+                              'Submitted at ${CustomFormatter.formatDateTime(submissionList[index].submitted_at)}',
+                            ),
+                            trailing: Text(
+                              '${submissionList[index].score}',
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
                         );

@@ -21,7 +21,7 @@ class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
   void initState() {
     super.initState();
     final studentRepository = StudentRepository();
-    _future = studentRepository.fetchStudentList(
+    _future = studentRepository.fetchClassStudentList(
       class_id: widget.class_id,
     );
   }
@@ -51,21 +51,15 @@ class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
                         context,
                         MaterialPageRoute<dynamic>(
                           builder: (context) {
-                            return const StudentAddPage(
-                              title: 'Add student',
-                            );
+                            return const StudentAddPage();
                           },
                         ),
                       );
                     },
-                    child: const Text(
-                      'Add student',
-                    ),
+                    child: const Text('Add student'),
                   ),
                 ),
-                const SizedBox(
-                  height: 16,
-                ),
+                const SizedBox(height: 16),
                 Row(
                   children: [
                     Text(
@@ -74,14 +68,10 @@ class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
                     ),
                     const Spacer(),
                     Text('${studentList.length}'),
-                    const SizedBox(
-                      width: 16,
-                    ),
+                    const SizedBox(width: 16),
                   ],
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
 
                 studentList.isEmpty
                     ? Center(
@@ -98,32 +88,28 @@ class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
                         itemBuilder: (context, index) {
                           return ListTile(
                             contentPadding: EdgeInsets.zero,
-                            leading: const Icon(
-                              Icons.person_rounded,
+                            leading: CircleAvatar(
+                              backgroundColor: Theme.of(context).colorScheme.secondary,
+                              child: const Icon(Icons.person_rounded),
                             ),
                             title: Text(
                               studentList[index].full_name,
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
-                            subtitle: Text(
-                              studentList[index].email,
-                            ),
+                            subtitle: Text(studentList[index].email),
                             trailing: MenuAnchor(
                               builder: (context, controller, child) {
                                 return IconButton(
                                   onPressed: () {
                                     controller.isOpen ? controller.close() : controller.open();
                                   },
-                                  icon: const Icon(
-                                    Icons.more_vert_rounded,
-                                  ),
+                                  icon: const Icon(Icons.more_vert_rounded),
                                 );
                               },
                               menuChildren: [
                                 MenuItemButton(
                                   onPressed: () {},
-                                  child: const Text(
-                                    'Remove student',
-                                  ),
+                                  child: const Text('Remove student'),
                                 ),
                               ],
                             ),

@@ -5,14 +5,12 @@ class User {
   final int user_id;
   final String full_name;
   final String email;
-  final String? password_hash;
   final Role role;
 
   User({
     required this.user_id,
     required this.full_name,
     required this.email,
-    this.password_hash,
     required this.role,
   });
 
@@ -20,7 +18,6 @@ class User {
     'user_id': user_id,
     'full_name': full_name,
     'email': email,
-    'password_hash': password_hash,
     'role': role,
   };
 
@@ -29,7 +26,6 @@ class User {
       user_id: json['user_id'] as int,
       full_name: json['full_name'] as String,
       email: json['email'] as String,
-      password_hash: json['password_hash'] as String?,
       role: CustomParser.parseRole(json['role'] as String),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/submission/submission_widget.dart';
 
 class SubmissionPage extends StatelessWidget {
@@ -9,15 +8,11 @@ class SubmissionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Submission',
-        ),
+        title: const Text('Submission'),
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(
-            CustomSize.medium,
-          ),
+          padding: const EdgeInsets.all(16.0),
           child: const SubmissionWidget(),
         ),
       ),
