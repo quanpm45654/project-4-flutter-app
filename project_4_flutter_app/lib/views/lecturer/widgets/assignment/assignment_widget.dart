@@ -12,18 +12,25 @@ class AssignmentWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          assignment.title,
-          style: Theme.of(context).textTheme.titleLarge,
+        Row(
+          spacing: 16.0,
+          children: [
+            CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              child: const Icon(Icons.assignment_rounded),
+            ),
+            Text(
+              assignment.title,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+          ],
         ),
         Text(
           'Score: ${assignment.max_score}',
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         Text(
-          'Due ${CustomFormatter.formatDateTime2(
-            assignment.due_at,
-          )}',
+          'Due ${CustomFormatter.formatDateTime(assignment.due_at)}',
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         Text(

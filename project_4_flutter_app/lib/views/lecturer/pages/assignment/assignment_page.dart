@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/assignment.dart';
-import 'package:project_4_flutter_app/utils/constants.dart';
-import 'package:project_4_flutter_app/views/lecturer/pages/assignment/assignment_create_edit_page.dart';
+import 'package:project_4_flutter_app/views/lecturer/pages/assignment/assignment_edit_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/assignment/assignment_widget.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/submission/submission_list_widget.dart';
 
@@ -33,18 +32,12 @@ class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Assignment',
-        ),
+        title: const Text('Assignment'),
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            const Tab(
-              child: Text('Instruction'),
-            ),
-            const Tab(
-              child: Text('Submission'),
-            ),
+            const Tab(child: Text('Instruction')),
+            const Tab(child: Text('Submission')),
           ],
         ),
         actions: [
@@ -54,9 +47,7 @@ class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProvid
                 onPressed: () {
                   controller.isOpen ? controller.close() : controller.open();
                 },
-                icon: const Icon(
-                  Icons.more_vert_rounded,
-                ),
+                icon: const Icon(Icons.more_vert_rounded),
               );
             },
             menuChildren: [
@@ -66,17 +57,14 @@ class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProvid
                     context,
                     MaterialPageRoute<dynamic>(
                       builder: (context) {
-                        return AssignmentCreateEditPage(
-                          title: 'Edit assignment',
+                        return AssignmentEditPage(
                           assignment: widget.assignment,
                         );
                       },
                     ),
                   );
                 },
-                child: const Text(
-                  'Edit',
-                ),
+                child: const Text('Edit'),
               ),
             ],
           ),
@@ -84,18 +72,12 @@ class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProvid
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(
-            CustomSize.medium,
-          ),
+          padding: const EdgeInsets.all(16.0),
           child: TabBarView(
             controller: _tabController,
             children: [
-              AssignmentWidget(
-                assignment: widget.assignment,
-              ),
-              SubmissionListWidget(
-                assignment_id: widget.assignment.assignment_id,
-              ),
+              AssignmentWidget(assignment: widget.assignment),
+              SubmissionListWidget(assignment_id: widget.assignment.assignment_id),
             ],
           ),
         ),

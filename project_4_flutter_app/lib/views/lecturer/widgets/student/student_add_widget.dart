@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/utils/validator.dart';
 
 class StudentAddWidget extends StatefulWidget {
-  const StudentAddWidget({super.key, required this.title});
-
-  final String title;
+  const StudentAddWidget({super.key});
 
   @override
   State<StudentAddWidget> createState() => _StudentAddWidgetState();
@@ -18,38 +15,27 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: CustomSize.extraLarge,
+      spacing: 32.0,
       children: [
         Expanded(
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
               child: Column(
-                spacing: CustomSize.medium,
+                spacing: 16.0,
                 children: [
-                  const SizedBox(
-                    height: 8,
-                  ),
+                  const SizedBox(height: 8.0),
                   TextFormField(
                     controller: _studentEmailController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            CustomSize.medium,
-                          ),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
                       ),
-                      label: Text(
-                        'Student email',
-                      ),
+                      label: Text('Student email'),
                     ),
                     validator: (value) {
                       return CustomValidator.combine([
-                        CustomValidator.required(
-                          value,
-                          'Student email',
-                        ),
+                        CustomValidator.required(value, 'Student email'),
                       ]);
                     },
                   ),
@@ -59,7 +45,7 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
           ),
         ),
         Column(
-          spacing: CustomSize.medium,
+          spacing: 16.0,
           children: [
             SizedBox(
               width: double.maxFinite,
@@ -70,16 +56,12 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text(
-                          'Adding student...',
-                        ),
+                        content: Text('Adding student...'),
                       ),
                     );
                   }
                 },
-                child: Text(
-                  widget.title,
-                ),
+                child: const Text('Add student'),
               ),
             ),
             SizedBox(
@@ -89,9 +71,7 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text(
-                  'Cancel',
-                ),
+                child: const Text('Cancel'),
               ),
             ),
           ],

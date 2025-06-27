@@ -27,26 +27,6 @@ class AssignmentRepository {
     }
   }
 
-  Future<List<Assignment>> fetchAssignmentList({
-    required int lecturer_id,
-  }) async {
-    final httpResponse = await http
-        .get(
-          Uri.parse('$apiBaseUrlAndroid/assignments?lecturer_id=$lecturer_id'),
-        )
-        .timeout(
-          const Duration(seconds: 10),
-        );
-
-    if (httpResponse.statusCode == 200) {
-      return (jsonDecode(httpResponse.body) as List<dynamic>)
-          .map((json) => Assignment.fromJson(json as Map<String, dynamic>))
-          .toList();
-    } else {
-      throw Exception('${httpResponse.statusCode} error fetchAssignmentList');
-    }
-  }
-
   Future<Assignment> createAssignment({required Assignment assignment}) async {
     final httpResponse = await http
         .post(
@@ -54,15 +34,13 @@ class AssignmentRepository {
           headers: <String, String>{
             HttpHeaders.authorizationHeader: 'token',
           },
-          body: jsonEncode(
-            assignment.toJson(),
-          ),
+          body: jsonEncode(assignment.toJson()),
         )
         .timeout(
           const Duration(seconds: 10),
         );
 
-    if (httpResponse.statusCode == 201) {
+    if (httpResponse.statusCode == 200) {
       return Assignment.fromJson(jsonDecode(httpResponse.body) as Map<String, dynamic>);
     } else {
       throw Exception('${httpResponse.statusCode} error createAssignment');
@@ -79,9 +57,7 @@ class AssignmentRepository {
           headers: <String, String>{
             HttpHeaders.authorizationHeader: 'token',
           },
-          body: jsonEncode(
-            assignment.toJson(),
-          ),
+          body: jsonEncode(assignment.toJson()),
         )
         .timeout(
           const Duration(seconds: 10),

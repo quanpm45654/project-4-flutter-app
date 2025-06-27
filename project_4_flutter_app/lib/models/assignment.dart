@@ -11,7 +11,6 @@ class Assignment {
   final bool time_bound;
   final bool allow_resubmit;
   final int class_id;
-  final String? class_name;
 
   Assignment({
     required this.assignment_id,
@@ -23,7 +22,6 @@ class Assignment {
     required this.time_bound,
     required this.allow_resubmit,
     required this.class_id,
-    this.class_name,
   });
 
   Map<String, dynamic> toJson() => {
@@ -49,7 +47,6 @@ class Assignment {
       time_bound: json['time_bound'] == 1,
       allow_resubmit: json['allow_resubmit'] == 1,
       class_id: json['class_id'] as int,
-      class_name: json['class_name'] as String,
     );
   }
 }

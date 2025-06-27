@@ -7,7 +7,7 @@ class Submission {
   final DateTime submitted_at;
   final String? note;
   final String file_url;
-  final String? score;
+  final double? score;
   final String? feedback_text;
   final String? feedback_file_url;
   final int? graded_by;
@@ -54,7 +54,7 @@ class Submission {
       submitted_at: DateTime.parse(json['submitted_at'] as String),
       note: json['note'] as String?,
       file_url: json['file_url'] as String,
-      score: json['score'] as String?,
+      score: json['score'] != null ? double.parse(json['score'] as String) : 0.0,
       feedback_text: json['feedback_text'] as String?,
       feedback_file_url: json['feedback_file_url'] as String?,
       graded_by: json['graded_by'] as int?,

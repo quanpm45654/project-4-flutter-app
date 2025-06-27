@@ -1,22 +1,20 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/assignment.dart';
 import 'package:project_4_flutter_app/repositories/assignment_repository.dart';
-import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/utils/enums.dart';
 import 'package:project_4_flutter_app/utils/functions.dart';
 import 'package:project_4_flutter_app/utils/validator.dart';
 
-class AssignmentCreateEditWidget extends StatefulWidget {
-  const AssignmentCreateEditWidget({super.key, required this.title, this.assignment});
-
-  final String title;
-  final Assignment? assignment;
+class AssignmentCreateWidget extends StatefulWidget {
+  const AssignmentCreateWidget({super.key});
 
   @override
-  State<AssignmentCreateEditWidget> createState() => _AssignmentCreateEditWidgetState();
+  State<AssignmentCreateWidget> createState() => _AssignmentCreateWidgetState();
 }
 
-class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget> {
+class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
   final _assignmentRepository = AssignmentRepository();
   final _formKey = GlobalKey<FormState>();
   final _assignmentTitleController = TextEditingController();
@@ -26,24 +24,11 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
   AssignmentType _assignmentType = AssignmentType.individual;
   bool _assignmentTimeBound = false;
   bool _assignmentAllowResubmit = false;
-  final _assignmentClassController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final assignment = widget.assignment;
-    if (assignment != null) {
-      _assignmentTitleController.text = assignment.title;
-      _assignmentDescriptionController.text = assignment.description;
-      _assignmentDueAtController.text = CustomFormatter.formatDateTime2(assignment.due_at);
-      _assignmentMaxScoreController.text = assignment.max_score.toString();
-      _assignmentType = assignment.assignment_type;
-      _assignmentTimeBound = assignment.time_bound;
-      _assignmentAllowResubmit = assignment.allow_resubmit;
-      _assignmentClassController.text = assignment.class_name ?? '';
-    }
-
     return Column(
-      spacing: CustomSize.extraLarge,
+      spacing: 32.0,
       children: [
         Flexible(
           child: SingleChildScrollView(
@@ -51,7 +36,7 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: CustomSize.medium,
+                spacing: 16.0,
                 children: [
                   const SizedBox(
                     height: 8,
@@ -60,22 +45,13 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                     controller: _assignmentTitleController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            CustomSize.medium,
-                          ),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
                       ),
-                      label: Text(
-                        'Assignment title*',
-                      ),
+                      label: Text('Assignment title*'),
                     ),
                     validator: (value) {
                       return CustomValidator.combine([
-                        CustomValidator.required(
-                          value,
-                          'Assignment title',
-                        ),
+                        CustomValidator.required(value, 'Assignment title'),
                       ]);
                     },
                   ),
@@ -83,22 +59,13 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                     controller: _assignmentDescriptionController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            CustomSize.medium,
-                          ),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
                       ),
-                      label: Text(
-                        'Description*',
-                      ),
+                      label: Text('Description*'),
                     ),
                     validator: (value) {
                       return CustomValidator.combine([
-                        CustomValidator.required(
-                          value,
-                          'Description',
-                        ),
+                        CustomValidator.required(value, 'Description'),
                       ]);
                     },
                   ),
@@ -107,15 +74,9 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                     readOnly: true,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            CustomSize.medium,
-                          ),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
                       ),
-                      label: Text(
-                        'Due at*',
-                      ),
+                      label: Text('Due at*'),
                       suffixIcon: Icon(
                         Icons.calendar_month_rounded,
                       ),
@@ -129,17 +90,14 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                       );
 
                       date != null
-                          ? _assignmentDueAtController.text = CustomFormatter.formatDateTime2(
+                          ? _assignmentDueAtController.text = CustomFormatter.formatDateTime(
                               date,
                             )
                           : _assignmentDueAtController.text = '';
                     },
                     validator: (value) {
                       return CustomValidator.combine([
-                        CustomValidator.required(
-                          value,
-                          'Due at',
-                        ),
+                        CustomValidator.required(value, 'Due at'),
                       ]);
                     },
                   ),
@@ -148,22 +106,14 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                     controller: _assignmentMaxScoreController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            CustomSize.medium,
-                          ),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
                       ),
-                      label: Text(
-                        'Max score*',
-                      ),
+                      label: Text('Max score*'),
                     ),
                     validator: (value) {
                       return CustomValidator.combine([
-                        CustomValidator.required(
-                          value,
-                          'Max score',
-                        ),
+                        CustomValidator.required(value, 'Max score'),
+                        CustomValidator.number(value),
                       ]);
                     },
                   ),
@@ -171,9 +121,7 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                     items: AssignmentType.values.map((value) {
                       return DropdownMenuItem(
                         value: value,
-                        child: Text(
-                          value.name,
-                        ),
+                        child: Text(value.name),
                       );
                     }).toList(),
                     onChanged: (value) {
@@ -181,16 +129,15 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                     },
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            CustomSize.medium,
-                          ),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
                       ),
-                      label: Text(
-                        'Type*',
-                      ),
+                      label: Text('Assignment type*'),
                     ),
+                    validator: (value) {
+                      return CustomValidator.combine([
+                        CustomValidator.required(value.toString(), 'Assignment type'),
+                      ]);
+                    },
                   ),
                   Row(
                     children: [
@@ -224,36 +171,13 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                       ),
                     ],
                   ),
-                  TextFormField(
-                    controller: _assignmentClassController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            CustomSize.medium,
-                          ),
-                        ),
-                      ),
-                      label: Text(
-                        'Class*',
-                      ),
-                    ),
-                    validator: (value) {
-                      return CustomValidator.combine([
-                        CustomValidator.required(
-                          value,
-                          'Class',
-                        ),
-                      ]);
-                    },
-                  ),
                 ],
               ),
             ),
           ),
         ),
         Column(
-          spacing: CustomSize.medium,
+          spacing: 16.0,
           children: [
             SizedBox(
               width: double.maxFinite,
@@ -263,10 +187,8 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                   if (_formKey.currentState!.validate()) {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          '${widget.title}...',
-                        ),
+                      const SnackBar(
+                        content: Text('Creating assignment...'),
                       ),
                     );
                   }
@@ -280,20 +202,30 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                     time_bound: _assignmentTimeBound,
                     allow_resubmit: _assignmentAllowResubmit,
                     class_id: 0,
-                    class_name: '',
                   );
-                  setState(() {
-                    widget.title.toLowerCase().contains('create') && widget.assignment == null
-                        ? _assignmentRepository.createAssignment(assignment: inputAssignment)
-                        : _assignmentRepository.updateAssignment(
-                            assignment_id: widget.assignment!.assignment_id,
-                            assignment: inputAssignment,
+                  _assignmentRepository
+                      .createAssignment(assignment: inputAssignment)
+                      .then((result) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Assignment created successfully'),
+                            ),
                           );
-                  });
+                        }
+                      })
+                      .catchError((dynamic error) {
+                        developer.log('${DateTime.now()}: $error');
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('There was an error, please try again later'),
+                            ),
+                          );
+                        }
+                      });
                 },
-                child: Text(
-                  widget.title,
-                ),
+                child: const Text('Create assignment'),
               ),
             ),
             SizedBox(
@@ -303,9 +235,7 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text(
-                  'Cancel',
-                ),
+                child: const Text('Cancel'),
               ),
             ),
           ],
@@ -313,41 +243,4 @@ class _AssignmentCreateEditWidgetState extends State<AssignmentCreateEditWidget>
       ],
     );
   }
-}
-
-Future<DateTime?> showDateTimePicker({
-  required BuildContext context,
-  DateTime? initialDate,
-  DateTime? firstDate,
-  DateTime? lastDate,
-}) async {
-  initialDate ??= DateTime.now();
-  firstDate ??= initialDate.subtract(const Duration(days: 365 * 100));
-  lastDate ??= firstDate.add(const Duration(days: 365 * 200));
-
-  final DateTime? selectedDate = await showDatePicker(
-    context: context,
-    initialDate: initialDate,
-    firstDate: firstDate,
-    lastDate: lastDate,
-  );
-
-  if (selectedDate == null) return null;
-
-  if (!context.mounted) return selectedDate;
-
-  final TimeOfDay? selectedTime = await showTimePicker(
-    context: context,
-    initialTime: TimeOfDay.fromDateTime(initialDate),
-  );
-
-  return selectedTime == null
-      ? selectedDate
-      : DateTime(
-          selectedDate.year,
-          selectedDate.month,
-          selectedDate.day,
-          selectedTime.hour,
-          selectedTime.minute,
-        );
 }

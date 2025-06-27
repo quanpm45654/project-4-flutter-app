@@ -58,8 +58,7 @@ app.get("/api/assignments", (req, res) => {
   let class_id = req.query.class_id;
   let lecturer_id = req.query.lecturer_id;
   let query = `SELECT
-                    a.*,
-                    c.class_name
+                    a.*
                 FROM
                     assignments a
                 JOIN classes c ON

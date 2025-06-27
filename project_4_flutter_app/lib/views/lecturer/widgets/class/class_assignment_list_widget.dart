@@ -3,9 +3,9 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/assignment.dart';
 import 'package:project_4_flutter_app/repositories/assignment_repository.dart';
-import 'package:project_4_flutter_app/utils/constants.dart';
 import 'package:project_4_flutter_app/utils/functions.dart';
-import 'package:project_4_flutter_app/views/lecturer/pages/assignment/assignment_create_edit_page.dart';
+import 'package:project_4_flutter_app/views/lecturer/pages/assignment/assignment_create_page.dart';
+import 'package:project_4_flutter_app/views/lecturer/pages/assignment/assignment_edit_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/assignment/assignment_page.dart';
 
 class ClassAssignmentListWidget extends StatefulWidget {
@@ -55,21 +55,15 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
                         context,
                         MaterialPageRoute<dynamic>(
                           builder: (context) {
-                            return const AssignmentCreateEditPage(
-                              title: 'Create assignment',
-                            );
+                            return const AssignmentCreatePage();
                           },
                         ),
                       );
                     },
-                    child: const Text(
-                      'Create assignment',
-                    ),
+                    child: const Text('Create assignment'),
                   ),
                 ),
-                const SizedBox(
-                  height: 16,
-                ),
+                const SizedBox(height: 16),
                 Row(
                   children: [
                     Text(
@@ -78,14 +72,10 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
                     ),
                     const Spacer(),
                     Text('${assignmentList.length}'),
-                    const SizedBox(
-                      width: 16,
-                    ),
+                    const SizedBox(width: 16),
                   ],
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 assignmentList.isEmpty
                     ? Center(
                         child: Text(
@@ -113,66 +103,48 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
                               );
                             },
                             child: Card(
-                              margin: const EdgeInsets.only(
-                                bottom: CustomSize.medium,
-                              ),
-                              child: Container(
-                                padding: const EdgeInsets.all(
-                                  CustomSize.medium,
+                              margin: const EdgeInsets.only(bottom: 16.0),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                                  child: const Icon(Icons.assignment_rounded),
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          assignmentList[index].title,
-                                          style: Theme.of(context).textTheme.titleMedium,
-                                        ),
-                                        MenuAnchor(
-                                          builder: (context, controller, child) {
-                                            return IconButton(
-                                              onPressed: () {
-                                                controller.isOpen
-                                                    ? controller.close()
-                                                    : controller.open();
-                                              },
-                                              icon: const Icon(
-                                                Icons.more_vert_rounded,
-                                              ),
-                                            );
-                                          },
-                                          menuChildren: [
-                                            MenuItemButton(
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute<dynamic>(
-                                                    builder: (context) {
-                                                      return AssignmentCreateEditPage(
-                                                        title: 'Edit assignment',
-                                                        assignment: assignmentList[index],
-                                                      );
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                              child: const Text(
-                                                'Edit',
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      'Due ${CustomFormatter.formatDateTime(assignmentList[index].due_at)}',
-                                      style: DateTime.now().isAfter(assignmentList[index].due_at)
-                                          ? TextStyle(
-                                              color: Theme.of(context).colorScheme.error,
-                                            )
-                                          : const TextStyle(),
+                                title: Text(
+                                  assignmentList[index].title,
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                subtitle: Text(
+                                  'Due ${CustomFormatter.formatDateTime(assignmentList[index].due_at)}',
+                                  style: DateTime.now().isAfter(assignmentList[index].due_at)
+                                      ? TextStyle(
+                                          color: Theme.of(context).colorScheme.error,
+                                        )
+                                      : const TextStyle(),
+                                ),
+                                trailing: MenuAnchor(
+                                  builder: (context, controller, child) {
+                                    return IconButton(
+                                      onPressed: () {
+                                        controller.isOpen ? controller.close() : controller.open();
+                                      },
+                                      icon: const Icon(Icons.more_vert_rounded),
+                                    );
+                                  },
+                                  menuChildren: [
+                                    MenuItemButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute<dynamic>(
+                                            builder: (context) {
+                                              return AssignmentEditPage(
+                                                assignment: assignmentList[index],
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                      child: const Text('Edit'),
                                     ),
                                   ],
                                 ),
