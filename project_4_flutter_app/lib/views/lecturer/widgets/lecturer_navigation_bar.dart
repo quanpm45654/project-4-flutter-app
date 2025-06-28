@@ -22,23 +22,19 @@ class LecturerNavigationBar extends StatelessWidget {
         navigationBarState.setIndex(index);
         Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute<dynamic>(
-            builder: (context) {
-              return _pageList[index];
-            },
+          MaterialPageRoute<void>(
+            builder: (context) => _pageList[index],
           ),
-          (Route<dynamic> route) {
-            return false;
-          },
+          (Route<dynamic> route) => false,
         );
       },
       destinations: [
         const NavigationDestination(
-          icon: Icon(Icons.class_rounded),
+          icon: Icon(Icons.class_outlined),
           label: 'Class',
         ),
         const NavigationDestination(
-          icon: Icon(Icons.person_rounded),
+          icon: Icon(Icons.person_outline_rounded),
           label: 'Profile',
         ),
       ],

@@ -1,6 +1,6 @@
 # project_4_flutter_app
 
-A new Flutter project.
+A Flutter project.
 
 ## Getting Started
 
@@ -8,22 +8,10 @@ A new Flutter project.
 
 - Dart SDK version ^3.8.0
 - Flutter SDK version ^3.32.0
-- Android SDK version 35
-- Android NDK version 27.0.12077973
+- Android SDK
+- Android NDK
 
 ### Run Locally
-
-Check development environment:
-
-```bash
-  flutter doctor
-```
-
-Clean project cache:
-
-```bash
-  flutter clean
-```
 
 Install dependencies:
 

@@ -4,7 +4,7 @@ import 'package:project_4_flutter_app/utils/enums.dart';
 
 class CustomFormatter {
   static String formatDateTime(DateTime dateTime) {
-    return DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
+    return DateFormat('yyyy-MM-dd HH:mm').format(dateTime.toLocal());
   }
 }
 
@@ -35,8 +35,8 @@ Future<DateTime?> showDateTimePicker({
   DateTime? lastDate,
 }) async {
   initialDate ??= DateTime.now();
-  firstDate ??= initialDate.subtract(const Duration(days: 365 * 100));
-  lastDate ??= firstDate.add(const Duration(days: 365 * 200));
+  firstDate ??= DateTime.now();
+  lastDate ??= initialDate.add(const Duration(days: 365 * 10));
 
   final DateTime? selectedDate = await showDatePicker(
     context: context,
