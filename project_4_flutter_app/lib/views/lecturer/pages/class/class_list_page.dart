@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/views/lecturer/pages/class/class_create_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/class/class_list_widget.dart';
 import 'package:project_4_flutter_app/views/lecturer/widgets/lecturer_navigation_bar.dart';
 
@@ -17,19 +16,6 @@ class ClassListPage extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: const ClassListWidget(),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute<dynamic>(
-              builder: (context) {
-                return const ClassCreatePage();
-              },
-            ),
-          );
-        },
-        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: const LecturerNavigationBar(),
     );

@@ -21,21 +21,43 @@ class AssignmentWidget extends StatelessWidget {
             ),
             Text(
               assignment.title,
-              style: Theme.of(context).textTheme.titleLarge,
+              style: const TextStyle(fontSize: 24.0),
             ),
           ],
         ),
-        Text(
-          'Score: ${assignment.max_score}',
-          style: Theme.of(context).textTheme.bodyLarge,
+        const Text(
+          'Score',
+          style: TextStyle(fontSize: 20.0),
         ),
         Text(
-          'Due ${CustomFormatter.formatDateTime(assignment.due_at)}',
-          style: Theme.of(context).textTheme.bodyLarge,
+          '${assignment.max_score}',
+          style: const TextStyle(fontSize: 16.0),
+        ),
+        const Text(
+          'Due at',
+          style: TextStyle(fontSize: 20.0),
         ),
         Text(
-          assignment.description,
-          style: Theme.of(context).textTheme.bodyLarge,
+          CustomFormatter.formatDateTime(assignment.due_at),
+          style: DateTime.now().isAfter(assignment.due_at)
+              ? TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 16.0)
+              : const TextStyle(fontSize: 16.0),
+        ),
+        const Text(
+          'Description',
+          style: TextStyle(fontSize: 20.0),
+        ),
+        Text(
+          '${assignment.description}',
+          style: const TextStyle(fontSize: 16.0),
+        ),
+        const Text(
+          'Attachment',
+          style: TextStyle(fontSize: 20.0),
+        ),
+        Text(
+          assignment.file_url ?? '',
+          style: const TextStyle(fontSize: 16.0),
         ),
       ],
     );

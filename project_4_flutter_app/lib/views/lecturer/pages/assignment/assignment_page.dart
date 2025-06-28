@@ -36,8 +36,18 @@ class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProvid
         bottom: TabBar(
           controller: _tabController,
           tabs: [
-            const Tab(child: Text('Instruction')),
-            const Tab(child: Text('Submission')),
+            const Tab(
+              child: Text(
+                'Instruction',
+                style: TextStyle(fontSize: 16.0),
+              ),
+            ),
+            const Tab(
+              child: Text(
+                'Submission',
+                style: TextStyle(fontSize: 16.0),
+              ),
+            ),
           ],
         ),
         actions: [
@@ -52,19 +62,16 @@ class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProvid
             },
             menuChildren: [
               MenuItemButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<dynamic>(
-                      builder: (context) {
-                        return AssignmentEditPage(
-                          assignment: widget.assignment,
-                        );
-                      },
-                    ),
-                  );
-                },
-                child: const Text('Edit'),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => AssignmentEditPage(assignment: widget.assignment),
+                  ),
+                ),
+                child: const Text(
+                  'Edit',
+                  style: TextStyle(fontSize: 16.0),
+                ),
               ),
             ],
           ),

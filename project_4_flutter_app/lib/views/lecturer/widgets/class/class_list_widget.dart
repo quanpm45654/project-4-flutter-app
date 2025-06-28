@@ -1,10 +1,10 @@
-import 'dart:developer' as developer;
-
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/class.dart';
 import 'package:project_4_flutter_app/repositories/class_repository.dart';
+import 'package:project_4_flutter_app/views/lecturer/pages/class/class_create_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/class/class_edit_page.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/class/class_page.dart';
+import 'package:provider/provider.dart';
 
 class ClassListWidget extends StatefulWidget {
   const ClassListWidget({super.key});
@@ -14,109 +14,263 @@ class ClassListWidget extends StatefulWidget {
 }
 
 class _ClassListWidgetState extends State<ClassListWidget> {
-  late final Future<List<Class>> _future;
-
   @override
   void initState() {
     super.initState();
-    final classRepository = ClassRepository();
-    _future = classRepository.fetchClassList(lecturer_id: 2);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => Provider.of<ClassRepository>(context, listen: false).fetchClassList(lecturer_id: 2),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _future,
-      builder: (context, asyncSnapshot) {
-        if (asyncSnapshot.hasData) {
-          final classList = asyncSnapshot.requireData;
+    return Column(
+      children: [
+        buildCreateButton(context),
+        const SizedBox(height: 16),
+        buildConsumer(),
+      ],
+    );
+  }
 
-          return classList.isEmpty
-              ? Center(
-                  child: Text(
-                    "You haven't added any classes yet",
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              : ListView.builder(
-                  itemCount: classList.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<dynamic>(
-                            builder: (context) {
-                              return ClassPage(
-                                classObject: classList[index],
-                              );
-                            },
-                          ),
-                        );
-                      },
-                      child: Card(
-                        margin: const EdgeInsets.only(bottom: 16.0),
-                        child: ListTile(
-                          title: Text(
-                            classList[index].class_name,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          subtitle: Text(
-                            "${classList[index].class_code} - ${classList[index].semester}",
-                          ),
-                          trailing: MenuAnchor(
-                            builder: (context, controller, child) {
-                              return IconButton(
-                                onPressed: () {
-                                  controller.isOpen ? controller.close() : controller.open();
-                                },
-                                icon: const Icon(Icons.more_vert_rounded),
-                              );
-                            },
-                            menuChildren: [
-                              MenuItemButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute<dynamic>(
-                                      builder: (context) {
-                                        return ClassEditPage(
-                                          classObject: classList[index],
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                                child: const Text('Edit'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-        } else if (asyncSnapshot.hasError) {
-          developer.log('${DateTime.now()}: ${asyncSnapshot.error}');
-          return Center(
-            child: Text(
-              'There was an error, please try again later',
-              style: Theme.of(context).textTheme.bodyLarge,
-              textAlign: TextAlign.center,
+  SizedBox buildCreateButton(BuildContext context) {
+    return SizedBox(
+      width: double.maxFinite,
+      height: 48,
+      child: FilledButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (context) => const ClassCreatePage(),
+          ),
+        ),
+        child: const Text(
+          'Create class',
+          style: TextStyle(fontSize: 16.0),
+        ),
+      ),
+    );
+  }
+
+  Consumer<ClassRepository> buildConsumer() {
+    return Consumer<ClassRepository>(
+      builder: (context, classRepository, child) {
+        if (classRepository.isLoading) {
+          return const Flexible(
+            child: Center(
+              child: CircularProgressIndicator(),
             ),
           );
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
+        }
+
+        if (classRepository.errorMessage.isNotEmpty) {
+          return buildErrorMessage(classRepository, context);
+        }
+
+        if (classRepository.classList.isEmpty) {
+          return const Flexible(
+            child: Center(
+              child: Text(
+                "You haven't added any classes yet",
+                style: TextStyle(fontSize: 20.0),
+                textAlign: TextAlign.center,
+              ),
+            ),
           );
         }
+
+        final classList = classRepository.classList;
+        classList.sort((a, b) => b.class_id.compareTo(a.class_id));
+
+        return Flexible(
+          child: buildListView(classRepository, classList),
+        );
       },
+    );
+  }
+
+  ListView buildListView(ClassRepository classRepository, List<Class> classList) {
+    return ListView.builder(
+      itemCount: classRepository.classList.length,
+      itemBuilder: (context, index) {
+        final classObject = classList[index];
+
+        return GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (context) => ClassPage(classObject: classObject),
+            ),
+          ),
+          child: Card(
+            margin: const EdgeInsets.only(bottom: 16.0),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                child: const Icon(Icons.class_outlined),
+              ),
+              title: Text(
+                classObject.class_name,
+                style: const TextStyle(fontSize: 20.0),
+              ),
+              subtitle: Text(
+                "${classObject.class_code} - ${classObject.semester}",
+                style: const TextStyle(fontSize: 16.0),
+              ),
+              trailing: MenuAnchor(
+                builder: (context, controller, child) {
+                  return IconButton(
+                    onPressed: () {
+                      controller.isOpen ? controller.close() : controller.open();
+                    },
+                    icon: const Icon(Icons.more_vert_rounded),
+                  );
+                },
+                menuChildren: [
+                  buildMenuEditButton(context, classObject),
+                  buildMenuDeleteButton(context, classRepository, classObject),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Flexible buildErrorMessage(ClassRepository classRepository, BuildContext context) {
+    return Flexible(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              classRepository.errorMessage,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 20.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            TextButton(
+              onPressed: () => Provider.of<ClassRepository>(
+                context,
+                listen: false,
+              ).fetchClassList(lecturer_id: 2),
+              child: const Text(
+                'Retry',
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  MenuItemButton buildMenuEditButton(BuildContext context, Class classObject) {
+    return MenuItemButton(
+      onPressed: () => Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => ClassEditPage(classObject: classObject),
+        ),
+      ),
+      child: const Text(
+        'Edit',
+        style: TextStyle(fontSize: 16.0),
+      ),
+    );
+  }
+
+  MenuItemButton buildMenuDeleteButton(
+    BuildContext context,
+    ClassRepository classRepository,
+    Class classObject,
+  ) {
+    return MenuItemButton(
+      onPressed: () async => await buildDeleteDialog(context, classRepository, classObject),
+      child: Text(
+        'Delete',
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.error,
+          fontSize: 16.0,
+        ),
+      ),
+    );
+  }
+
+  Future<void> buildDeleteDialog(
+    BuildContext context,
+    ClassRepository classRepository,
+    Class classObject,
+  ) {
+    return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete confirmation'),
+          content: const Text(
+            'This class will be deleted forever',
+            style: TextStyle(fontSize: 16.0),
+          ),
+          actions: [
+            buildCancelButton(context),
+            buildDeleteButton(classRepository, classObject, context),
+          ],
+        );
+      },
+    );
+  }
+
+  TextButton buildCancelButton(BuildContext context) {
+    return TextButton(
+      onPressed: () => Navigator.pop(context),
+      child: const Text(
+        'Cancel',
+        style: TextStyle(fontSize: 16.0),
+      ),
+    );
+  }
+
+  TextButton buildDeleteButton(
+    ClassRepository classRepository,
+    Class classObject,
+    BuildContext context,
+  ) {
+    return TextButton(
+      onPressed: () async {
+        await classRepository.deleteClass(class_id: classObject.class_id);
+        if (context.mounted) {
+          if (classRepository.errorMessageSnackBar.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Class deleted successfully',
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                showCloseIcon: true,
+              ),
+            );
+            Navigator.pop(context);
+          } else if (classRepository.errorMessageSnackBar.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  classRepository.errorMessageSnackBar,
+                  style: const TextStyle(fontSize: 16.0),
+                ),
+                showCloseIcon: true,
+              ),
+            );
+            Navigator.pop(context);
+          }
+        }
+      },
+      child: Text(
+        'Delete',
+        style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 16.0),
+      ),
     );
   }
 }

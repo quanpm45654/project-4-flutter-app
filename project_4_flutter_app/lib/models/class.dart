@@ -1,10 +1,10 @@
 class Class {
-  final int class_id;
+  final num class_id;
   final String class_code;
   final String class_name;
   final String description;
   final String semester;
-  final int lecturer_id;
+  final num lecturer_id;
 
   Class({
     required this.class_id,
@@ -26,12 +26,12 @@ class Class {
 
   factory Class.fromJson(Map<String, dynamic> json) {
     return Class(
-      class_id: json['class_id'] as int,
+      class_id: json['class_id'] as num,
       class_code: json['class_code'] as String,
       class_name: json['class_name'] as String,
       description: json['description'] as String,
       semester: json['semester'] as String,
-      lecturer_id: json['lecturer_id'] as int,
+      lecturer_id: json['lecturer_id'] as num,
     );
   }
 }

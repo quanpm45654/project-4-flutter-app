@@ -12,7 +12,7 @@ class ClassEditPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Create class'),
+        title: const Text('Edit class'),
       ),
       body: SafeArea(
         child: Container(

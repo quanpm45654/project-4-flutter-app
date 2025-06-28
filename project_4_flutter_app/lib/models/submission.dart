@@ -1,3 +1,5 @@
+import 'package:project_4_flutter_app/utils/functions.dart';
+
 class Submission {
   final int submission_id;
   final int assignment_id;
@@ -34,7 +36,7 @@ class Submission {
     'assignment_id': assignment_id,
     'student_id': student_id,
     'attempt': attempt,
-    'submitted_at': submitted_at,
+    'submitted_at': CustomFormatter.formatDateTime(submitted_at),
     'note': note,
     'file_url': file_url,
     'score': score,
@@ -54,7 +56,7 @@ class Submission {
       submitted_at: DateTime.parse(json['submitted_at'] as String),
       note: json['note'] as String?,
       file_url: json['file_url'] as String,
-      score: json['score'] != null ? double.parse(json['score'] as String) : 0.0,
+      score: json['score'] != null ? json['score'] as double : 0.0,
       feedback_text: json['feedback_text'] as String?,
       feedback_file_url: json['feedback_file_url'] as String?,
       graded_by: json['graded_by'] as int?,

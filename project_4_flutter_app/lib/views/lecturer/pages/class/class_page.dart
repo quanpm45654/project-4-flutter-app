@@ -33,37 +33,26 @@ class _ClassPageState extends State<ClassPage> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.classObject.class_name,
-        ),
+        title: Text(widget.classObject.class_name),
         actions: [
           MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
-                onPressed: () {
-                  controller.isOpen ? controller.close() : controller.open();
-                },
-                icon: const Icon(
-                  Icons.more_vert_rounded,
-                ),
+                onPressed: () => controller.isOpen ? controller.close() : controller.open(),
+                icon: const Icon(Icons.more_vert_rounded),
               );
             },
             menuChildren: [
               MenuItemButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<dynamic>(
-                      builder: (context) {
-                        return ClassEditPage(
-                          classObject: widget.classObject,
-                        );
-                      },
-                    ),
-                  );
-                },
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (context) => ClassEditPage(classObject: widget.classObject),
+                  ),
+                ),
                 child: const Text(
                   'Edit',
+                  style: TextStyle(fontSize: 16.0),
                 ),
               ),
             ],
@@ -73,28 +62,28 @@ class _ClassPageState extends State<ClassPage> with SingleTickerProviderStateMix
           controller: _tabController,
           tabs: [
             const Tab(
-              child: Text('Student'),
+              child: Text(
+                'Student',
+                style: TextStyle(fontSize: 16.0),
+              ),
             ),
             const Tab(
-              child: Text('Assignment'),
+              child: Text(
+                'Assignment',
+                style: TextStyle(fontSize: 16.0),
+              ),
             ),
           ],
         ),
       ),
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(
-            16.0,
-          ),
+          padding: const EdgeInsets.all(16.0),
           child: TabBarView(
             controller: _tabController,
             children: [
-              ClassStudentListWidget(
-                class_id: widget.classObject.class_id,
-              ),
-              ClassAssignmentListWidget(
-                class_id: widget.classObject.class_id,
-              ),
+              ClassStudentListWidget(class_id: widget.classObject.class_id),
+              ClassAssignmentListWidget(class_id: widget.classObject.class_id),
             ],
           ),
         ),
