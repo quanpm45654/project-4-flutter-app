@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:project_4_flutter_app/models/student.dart';
 import 'package:project_4_flutter_app/repositories/student_repository.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/student/student_add_page.dart';
 import 'package:provider/provider.dart';
 
-class ClassStudentListWidget extends StatefulWidget {
-  const ClassStudentListWidget({super.key, required this.class_id});
+class StudentListWidget extends StatefulWidget {
+  const StudentListWidget({super.key, required this.class_id});
 
   final num class_id;
 
   @override
-  State<ClassStudentListWidget> createState() => _ClassStudentListWidgetState();
+  State<StudentListWidget> createState() => _StudentListWidgetState();
 }
 
-class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
+class _StudentListWidgetState extends State<StudentListWidget> {
   @override
   void initState() {
     super.initState();
@@ -25,31 +26,36 @@ class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        buildAddButton(context),
-        const SizedBox(height: 16),
-        buildConsumer(),
-      ],
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          buildAddButton(context),
+          const SizedBox(height: 16),
+          buildConsumer(),
+        ],
+      ),
     );
   }
 
   SizedBox buildAddButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48,
+      height: 48.0,
       child: FilledButton(
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute<void>(
-            builder: (context) => const StudentAddPage(),
+            builder: (context) => StudentAddPage(class_id: widget.class_id),
           ),
         ),
-        child: const Text(
-          'Add student',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        child: const Text('Add student'),
       ),
     );
   }
@@ -74,7 +80,6 @@ class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
             child: Center(
               child: Text(
                 "You haven't added any students to this class yet",
-                style: TextStyle(fontSize: 20.0),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -96,10 +101,7 @@ class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
           children: [
             Text(
               studentRepository.errorMessage,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-                fontSize: 20.0,
-              ),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
               textAlign: TextAlign.center,
             ),
             TextButton(
@@ -107,10 +109,7 @@ class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
                 context,
                 listen: false,
               ).fetchClassStudentList(class_id: widget.class_id),
-              child: const Text(
-                'Retry',
-                style: TextStyle(fontSize: 20.0),
-              ),
+              child: const Text('Retry'),
             ),
           ],
         ),
@@ -134,10 +133,7 @@ class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
             student.full_name,
             style: const TextStyle(fontSize: 20.0),
           ),
-          subtitle: Text(
-            student.email,
-            style: const TextStyle(fontSize: 16.0),
-          ),
+          subtitle: Text(student.email),
           trailing: MenuAnchor(
             builder: (context, controller, child) {
               return IconButton(
@@ -148,17 +144,91 @@ class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
               );
             },
             menuChildren: [
-              MenuItemButton(
-                onPressed: () {},
-                child: const Text(
-                  'Remove student from class',
-                  style: TextStyle(fontSize: 16.0),
-                ),
-              ),
+              buildMenuRemoveButton(context, studentRepository, student),
             ],
           ),
         );
       },
+    );
+  }
+
+  MenuItemButton buildMenuRemoveButton(
+    BuildContext context,
+    StudentRepository studentRepository,
+    Student student,
+  ) {
+    return MenuItemButton(
+      onPressed: () async => await buildRemoveDialog(context, studentRepository, student),
+      child: Text(
+        'Remove from class',
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
+      ),
+    );
+  }
+
+  Future<void> buildRemoveDialog(
+    BuildContext context,
+    StudentRepository studentRepository,
+    Student student,
+  ) {
+    return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Remove confirmation'),
+          content: const Text('This student will be removed from class'),
+          actions: [
+            buildCancelButton(context),
+            buildDeleteButton(studentRepository, student, context),
+          ],
+        );
+      },
+    );
+  }
+
+  TextButton buildCancelButton(BuildContext context) {
+    return TextButton(
+      onPressed: () => Navigator.pop(context),
+      child: const Text('Cancel'),
+    );
+  }
+
+  TextButton buildDeleteButton(
+    StudentRepository studentRepository,
+    Student student,
+    BuildContext context,
+  ) {
+    return TextButton(
+      onPressed: () async {
+        await studentRepository.removeStudentFromClass(
+          class_id: widget.class_id,
+          student_id: student.user_id,
+        );
+
+        if (context.mounted) {
+          if (studentRepository.isSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Student removed successfully'),
+                showCloseIcon: true,
+              ),
+            );
+            Navigator.pop(context);
+          } else if (studentRepository.errorMessageSnackBar.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(studentRepository.errorMessageSnackBar),
+                showCloseIcon: true,
+              ),
+            );
+            Navigator.pop(context);
+          }
+        }
+      },
+      child: Text(
+        'Remove',
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
+      ),
     );
   }
 }

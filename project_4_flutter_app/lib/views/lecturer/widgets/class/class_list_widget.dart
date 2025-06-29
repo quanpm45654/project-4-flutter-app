@@ -23,20 +23,28 @@ class _ClassListWidgetState extends State<ClassListWidget> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        buildCreateButton(context),
-        const SizedBox(height: 16),
-        buildConsumer(),
-      ],
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          buildCreateButton(context),
+          const SizedBox(height: 16),
+          buildConsumer(),
+        ],
+      ),
     );
   }
 
   SizedBox buildCreateButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48,
+      height: 48.0,
       child: FilledButton(
         onPressed: () => Navigator.push(
           context,
@@ -44,10 +52,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
             builder: (context) => const ClassCreatePage(),
           ),
         ),
-        child: const Text(
-          'Create class',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        child: const Text('Create class'),
       ),
     );
   }
@@ -144,10 +149,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
                 classObject.class_name,
                 style: const TextStyle(fontSize: 20.0),
               ),
-              subtitle: Text(
-                "${classObject.class_code} - ${classObject.semester}",
-                style: const TextStyle(fontSize: 16.0),
-              ),
+              subtitle: Text("${classObject.class_code} - ${classObject.semester}"),
               trailing: MenuAnchor(
                 builder: (context, controller, child) {
                   return IconButton(
@@ -177,10 +179,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
           builder: (context) => ClassEditPage(classObject: classObject),
         ),
       ),
-      child: const Text(
-        'Edit',
-        style: TextStyle(fontSize: 16.0),
-      ),
+      child: const Text('Edit'),
     );
   }
 
@@ -193,10 +192,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
       onPressed: () async => await buildDeleteDialog(context, classRepository, classObject),
       child: Text(
         'Delete',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.error,
-          fontSize: 16.0,
-        ),
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
     );
   }
@@ -211,10 +207,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Delete confirmation'),
-          content: const Text(
-            'This class will be deleted forever',
-            style: TextStyle(fontSize: 16.0),
-          ),
+          content: const Text('This class will be deleted forever'),
           actions: [
             buildCancelButton(context),
             buildDeleteButton(classRepository, classObject, context),
@@ -227,10 +220,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
   TextButton buildCancelButton(BuildContext context) {
     return TextButton(
       onPressed: () => Navigator.pop(context),
-      child: const Text(
-        'Cancel',
-        style: TextStyle(fontSize: 16.0),
-      ),
+      child: const Text('Cancel'),
     );
   }
 
@@ -242,14 +232,12 @@ class _ClassListWidgetState extends State<ClassListWidget> {
     return TextButton(
       onPressed: () async {
         await classRepository.deleteClass(class_id: classObject.class_id);
+
         if (context.mounted) {
-          if (classRepository.errorMessageSnackBar.isEmpty) {
+          if (classRepository.isSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text(
-                  'Class deleted successfully',
-                  style: TextStyle(fontSize: 16.0),
-                ),
+                content: Text('Class deleted successfully'),
                 showCloseIcon: true,
               ),
             );
@@ -257,10 +245,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
           } else if (classRepository.errorMessageSnackBar.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  classRepository.errorMessageSnackBar,
-                  style: const TextStyle(fontSize: 16.0),
-                ),
+                content: Text(classRepository.errorMessageSnackBar),
                 showCloseIcon: true,
               ),
             );
@@ -270,7 +255,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
       },
       child: Text(
         'Delete',
-        style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 16.0),
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
     );
   }

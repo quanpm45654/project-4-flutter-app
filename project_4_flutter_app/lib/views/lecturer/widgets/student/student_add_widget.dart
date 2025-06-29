@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:project_4_flutter_app/repositories/student_repository.dart';
 import 'package:project_4_flutter_app/utils/validator.dart';
+import 'package:provider/provider.dart';
 
 class StudentAddWidget extends StatefulWidget {
-  const StudentAddWidget({super.key});
+  const StudentAddWidget({super.key, required this.class_id});
+
+  final num class_id;
 
   @override
   State<StudentAddWidget> createState() => _StudentAddWidgetState();
@@ -13,24 +17,42 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
   final _studentEmail = TextEditingController();
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 32.0,
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            child: buildForm(),
-          ),
-        ),
-        Column(
-          spacing: 16.0,
-          children: [
-            buildSubmitButton(),
-            buildCancelButton(context),
-          ],
-        ),
-      ],
-    );
+    var studentRepository = Provider.of<StudentRepository>(context);
+
+    return studentRepository.isLoading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : Column(
+            spacing: 32.0,
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: buildForm(),
+                  ),
+                ),
+              ),
+              Container(
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  spacing: 16.0,
+                  children: [
+                    buildSubmitButton(context, studentRepository),
+                    buildCancelButton(context),
+                  ],
+                ),
+              ),
+            ],
+          );
   }
 
   Form buildForm() {
@@ -39,7 +61,7 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
       child: Column(
         spacing: 16.0,
         children: [
-          const SizedBox(height: 8.0),
+          const SizedBox(),
           buildEmailField(),
         ],
       ),
@@ -50,34 +72,54 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
     return TextFormField(
       controller: _studentEmail,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        suffixIcon: Icon(Icons.mail_outline_rounded),
+        border: OutlineInputBorder(),
         label: Text('Student email'),
       ),
       validator: (value) {
         return CustomValidator.combine([
           CustomValidator.required(value, 'Student email'),
           CustomValidator.email(value),
+          CustomValidator.maxLength(value, 255),
         ]);
       },
     );
   }
 
-  SizedBox buildSubmitButton() {
+  SizedBox buildSubmitButton(BuildContext context, StudentRepository studentRepository) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48,
+      height: 48.0,
       child: FilledButton(
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            // TODO
+            await studentRepository.addStudentToClass(
+              class_id: widget.class_id,
+              email: _studentEmail.text,
+            );
+
+            if (context.mounted) {
+              if (studentRepository.isSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Student added successfully'),
+                    showCloseIcon: true,
+                  ),
+                );
+                Navigator.pop(context);
+              } else if (studentRepository.errorMessageSnackBar.isNotEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(studentRepository.errorMessageSnackBar),
+                    showCloseIcon: true,
+                  ),
+                );
+                Navigator.pop(context);
+              }
+            }
           }
         },
-        child: const Text(
-          'Add student',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        child: const Text('Add student'),
       ),
     );
   }
@@ -85,13 +127,10 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
   SizedBox buildCancelButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48,
+      height: 48.0,
       child: TextButton(
         onPressed: () => Navigator.pop(context),
-        child: const Text(
-          'Cancel',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        child: const Text('Cancel'),
       ),
     );
   }

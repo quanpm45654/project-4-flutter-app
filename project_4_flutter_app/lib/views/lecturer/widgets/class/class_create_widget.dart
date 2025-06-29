@@ -19,27 +19,38 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
   final _classSemester = TextEditingController();
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final classRepository = Provider.of<ClassRepository>(context);
+    var classRepository = Provider.of<ClassRepository>(context);
 
     return classRepository.isLoading
         ? const Center(
             child: CircularProgressIndicator(),
           )
         : Column(
-            spacing: 32.0,
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  child: buildForm(),
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: buildForm(),
+                  ),
                 ),
               ),
-              Column(
-                spacing: 16.0,
-                children: [
-                  buildSubmitButton(classRepository, context),
-                  buildCancelButton(context),
-                ],
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                child: Column(
+                  spacing: 16.0,
+                  children: [
+                    buildSubmitButton(classRepository, context),
+                    buildCancelButton(context),
+                  ],
+                ),
               ),
             ],
           );
@@ -51,7 +62,7 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
       child: Column(
         spacing: 16.0,
         children: [
-          const SizedBox(height: 8.0),
+          const SizedBox(),
           buildNameField(),
           buildCodeField(),
           buildDescriptionField(),
@@ -65,13 +76,12 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
     return TextFormField(
       controller: _className,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('Class name*'),
       ),
       validator: (value) => CustomValidator.combine([
         CustomValidator.required(value, 'Class name'),
+        CustomValidator.maxLength(value, 100),
       ]),
     );
   }
@@ -80,13 +90,12 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
     return TextFormField(
       controller: _classCode,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('Class code*'),
       ),
       validator: (value) => CustomValidator.combine([
         CustomValidator.required(value, 'Class code'),
+        CustomValidator.maxLength(value, 50),
       ]),
     );
   }
@@ -95,9 +104,7 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
     return TextFormField(
       controller: _classDescription,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('Description*'),
       ),
       validator: (value) => CustomValidator.combine([
@@ -110,13 +117,12 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
     return TextFormField(
       controller: _classSemester,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('Semester*'),
       ),
       validator: (value) => CustomValidator.combine([
         CustomValidator.required(value, 'Semester'),
+        CustomValidator.maxLength(value, 20),
       ]),
     );
   }
@@ -124,7 +130,7 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
   SizedBox buildSubmitButton(ClassRepository classRepository, BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48,
+      height: 48.0,
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -140,25 +146,18 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
             await classRepository.createClass(classObject: inputClass);
 
             if (context.mounted) {
-              if (classRepository.errorMessageSnackBar.isEmpty) {
+              if (classRepository.isSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text(
-                      'Class created successfully',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
+                    content: Text('Class created successfully'),
                     showCloseIcon: true,
                   ),
                 );
-                classRepository.fetchClassList(lecturer_id: 2);
                 Navigator.pop(context);
               } else if (classRepository.errorMessageSnackBar.isNotEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(
-                      classRepository.errorMessageSnackBar,
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
+                    content: Text(classRepository.errorMessageSnackBar),
                     showCloseIcon: true,
                   ),
                 );
@@ -167,10 +166,7 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
             }
           }
         },
-        child: const Text(
-          'Create class',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        child: const Text('Create class'),
       ),
     );
   }
@@ -178,13 +174,10 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
   SizedBox buildCancelButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48,
+      height: 48.0,
       child: TextButton(
         onPressed: () => Navigator.pop(context),
-        child: const Text(
-          'Cancel',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        child: const Text('Cancel'),
       ),
     );
   }

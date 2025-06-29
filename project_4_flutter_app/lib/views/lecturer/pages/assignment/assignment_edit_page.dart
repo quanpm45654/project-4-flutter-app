@@ -15,10 +15,7 @@ class AssignmentEditPage extends StatelessWidget {
         title: const Text('Edit assignment'),
       ),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: AssignmentEditWidget(assignment: assignment),
-        ),
+        child: AssignmentEditWidget(assignment: assignment),
       ),
     );
   }

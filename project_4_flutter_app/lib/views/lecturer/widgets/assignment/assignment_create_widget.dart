@@ -21,33 +21,44 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
   final _assignmentDescription = TextEditingController();
   final _assignmentDueAt = TextEditingController();
   final _assignmentMaxScore = TextEditingController();
-  AssignmentType _assignmentType = AssignmentType.individual;
+  AssignmentType? _assignmentType = AssignmentType.individual;
   bool _assignmentTimeBound = false;
   bool _assignmentAllowResubmit = false;
   final _assignmentFileUrl = TextEditingController();
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final assignmentRepository = Provider.of<AssignmentRepository>(context);
+    var assignmentRepository = Provider.of<AssignmentRepository>(context);
 
     return assignmentRepository.isLoading
         ? const Center(
             child: CircularProgressIndicator(),
           )
         : Column(
-            spacing: 32.0,
             children: [
-              Flexible(
-                child: SingleChildScrollView(
-                  child: buildForm(context),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: buildForm(context),
+                  ),
                 ),
               ),
-              Column(
-                spacing: 16.0,
-                children: [
-                  buildSubmitButton(assignmentRepository, context),
-                  buildCancelButton(context),
-                ],
+              Container(
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  spacing: 16.0,
+                  children: [
+                    buildSubmitButton(assignmentRepository, context),
+                    buildCancelButton(context),
+                  ],
+                ),
               ),
             ],
           );
@@ -60,9 +71,7 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16.0,
         children: [
-          const SizedBox(
-            height: 8,
-          ),
+          const SizedBox(),
           buildTitleField(),
           buildDescriptionField(),
           buildDueAtField(context),
@@ -80,13 +89,12 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
     return TextFormField(
       controller: _assignmentTitle,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('Assignment title*'),
       ),
       validator: (value) => CustomValidator.combine([
         CustomValidator.required(value, 'Assignment title'),
+        CustomValidator.maxLength(value, 255),
       ]),
     );
   }
@@ -95,9 +103,7 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
     return TextFormField(
       controller: _assignmentDescription,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('Description*'),
       ),
       validator: (value) => CustomValidator.combine([
@@ -111,9 +117,7 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
       controller: _assignmentDueAt,
       readOnly: true,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('Due at*'),
         suffixIcon: Icon(Icons.calendar_month_rounded),
       ),
@@ -125,9 +129,7 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
           lastDate: DateTime(DateTime.now().year + 10),
         );
 
-        date != null
-            ? _assignmentDueAt.text = CustomFormatter.formatDateTime(date)
-            : _assignmentDueAt.text = '';
+        date != null ? _assignmentDueAt.text = CustomFormatter.formatDateTime(date) : _assignmentDueAt.text = '';
       },
       validator: (value) => CustomValidator.combine([
         CustomValidator.required(value, 'Due at'),
@@ -140,9 +142,7 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
       keyboardType: TextInputType.number,
       controller: _assignmentMaxScore,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('Max score*'),
       ),
       validator: (value) => CustomValidator.combine([
@@ -152,24 +152,39 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
     );
   }
 
-  DropdownButtonFormField<AssignmentType> buildTypeField() {
-    return DropdownButtonFormField(
-      items: AssignmentType.values.map((value) {
-        return DropdownMenuItem(
-          value: value,
-          child: Text(value.name.toUpperCase()),
-        );
-      }).toList(),
-      onChanged: (value) => _assignmentType = value ?? AssignmentType.individual,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+  Column buildTypeField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Assignment type'),
+        const SizedBox(height: 8.0),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: Radio<AssignmentType>(
+            value: AssignmentType.individual,
+            groupValue: _assignmentType,
+            onChanged: (AssignmentType? value) {
+              setState(() {
+                _assignmentType = value;
+              });
+            },
+          ),
+          title: const Text('Individual'),
         ),
-        label: Text('Assignment type*'),
-      ),
-      validator: (value) => CustomValidator.combine([
-        CustomValidator.required(value.toString(), 'Assignment type'),
-      ]),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: Radio<AssignmentType>(
+            value: AssignmentType.group,
+            groupValue: _assignmentType,
+            onChanged: (AssignmentType? value) {
+              setState(() {
+                _assignmentType = value;
+              });
+            },
+          ),
+          title: const Text('Group'),
+        ),
+      ],
     );
   }
 
@@ -177,9 +192,7 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
     return TextFormField(
       controller: _assignmentFileUrl,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('File url*'),
       ),
       validator: (value) => CustomValidator.combine([
@@ -188,40 +201,32 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
     );
   }
 
-  Row buildTimeBoundField() {
-    return Row(
-      children: [
-        Checkbox(
-          value: _assignmentTimeBound,
-          onChanged: (value) => setState(() => _assignmentTimeBound = value ?? false),
-        ),
-        const Text(
-          'Time bound',
-          style: TextStyle(fontSize: 16.0),
-        ),
-      ],
+  ListTile buildTimeBoundField() {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Checkbox(
+        value: _assignmentTimeBound,
+        onChanged: (value) => setState(() => _assignmentTimeBound = value ?? false),
+      ),
+      title: const Text('Time bound'),
     );
   }
 
-  Row buildAllowResubmitField() {
-    return Row(
-      children: [
-        Checkbox(
-          value: _assignmentAllowResubmit,
-          onChanged: (value) => setState(() => _assignmentAllowResubmit = value ?? false),
-        ),
-        const Text(
-          'Allow resubmit',
-          style: TextStyle(fontSize: 16.0),
-        ),
-      ],
+  ListTile buildAllowResubmitField() {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Checkbox(
+        value: _assignmentAllowResubmit,
+        onChanged: (value) => setState(() => _assignmentAllowResubmit = value ?? false),
+      ),
+      title: const Text('Allow resubmit'),
     );
   }
 
   SizedBox buildSubmitButton(AssignmentRepository assignmentRepository, BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48,
+      height: 48.0,
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -231,7 +236,7 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
               description: _assignmentDescription.text,
               due_at: DateTime.parse(_assignmentDueAt.text),
               max_score: double.parse(_assignmentMaxScore.text),
-              assignment_type: _assignmentType,
+              assignment_type: _assignmentType ?? AssignmentType.individual,
               time_bound: _assignmentTimeBound,
               allow_resubmit: _assignmentAllowResubmit,
               class_id: widget.class_id,
@@ -241,28 +246,18 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
             await assignmentRepository.createAssignment(assignment: inputAssignment);
 
             if (context.mounted) {
-              if (assignmentRepository.errorMessageSnackBar.isEmpty) {
+              if (assignmentRepository.isSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text(
-                      'Assignment created successfully',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
+                    content: Text('Assignment created successfully'),
                     showCloseIcon: true,
                   ),
-                );
-                assignmentRepository.fetchClassAssignmentList(
-                  class_id: widget.class_id,
-                  lecturer_id: 2,
                 );
                 Navigator.pop(context);
               } else if (assignmentRepository.errorMessageSnackBar.isNotEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(
-                      assignmentRepository.errorMessageSnackBar,
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
+                    content: Text(assignmentRepository.errorMessageSnackBar),
                     showCloseIcon: true,
                   ),
                 );
@@ -271,10 +266,7 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
             }
           }
         },
-        child: const Text(
-          'Create assignment',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        child: const Text('Create assignment'),
       ),
     );
   }
@@ -282,13 +274,10 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
   SizedBox buildCancelButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48,
+      height: 48.0,
       child: TextButton(
         onPressed: () => Navigator.pop(context),
-        child: const Text(
-          'Cancel',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        child: const Text('Cancel'),
       ),
     );
   }

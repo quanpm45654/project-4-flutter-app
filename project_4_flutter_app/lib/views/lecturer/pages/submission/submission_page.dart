@@ -14,10 +14,7 @@ class SubmissionPage extends StatelessWidget {
         title: const Text('Submission'),
       ),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: SubmissionWidget(submission: submission),
-        ),
+        child: SubmissionWidget(submission: submission),
       ),
     );
   }

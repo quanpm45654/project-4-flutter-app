@@ -10,11 +10,8 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: const Text('Under construction'),
-        ),
+      body: const SafeArea(
+        child: Text('TODO'),
       ),
       bottomNavigationBar: const LecturerNavigationBar(),
     );

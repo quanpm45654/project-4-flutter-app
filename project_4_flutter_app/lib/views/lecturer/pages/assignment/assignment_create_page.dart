@@ -14,10 +14,7 @@ class AssignmentCreatePage extends StatelessWidget {
         title: const Text('Create assignment'),
       ),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: AssignmentCreateWidget(class_id: class_id),
-        ),
+        child: AssignmentCreateWidget(class_id: class_id),
       ),
     );
   }

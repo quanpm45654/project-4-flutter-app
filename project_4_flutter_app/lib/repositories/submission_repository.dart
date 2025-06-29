@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as developer;
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +12,9 @@ class SubmissionRepository extends ChangeNotifier {
   List<Submission> _submissionList = [];
   List<Map<dynamic, dynamic>> _assignedList = [];
   bool _isLoading = false;
+  bool _isSuccess = false;
   String _errorMessage = '';
+  String _errorMessageSnackBar = '';
 
   List<Submission> get submissionList => _submissionList;
 
@@ -19,31 +22,32 @@ class SubmissionRepository extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  bool get isSuccess => _isSuccess;
+
   String get errorMessage => _errorMessage;
+
+  String get errorMessageSnackBar => _errorMessageSnackBar;
 
   Future<void> fetchSubmissionList({required num assignment_id}) async {
     _isLoading = true;
-    _errorMessage = '';
+    _isSuccess = false;
     notifyListeners();
 
     try {
       final httpResponse = await http
           .get(
-            Uri.parse('$apiBaseUrlAndroid/submissions?assignment_id=$assignment_id'),
+            Uri.parse('$apiBaseUrl/submissions?assignment_id=$assignment_id'),
           )
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
         _submissionList = (jsonDecode(httpResponse.body) as List)
             .map((json) => Submission.fromJson(json as Map<String, dynamic>))
             .toList();
+        _isSuccess = true;
       } else {
-        _errorMessage = '${httpResponse.statusCode} error';
-        developer.log('${httpResponse.statusCode} error');
+        throw Exception('${httpResponse.statusCode} error');
       }
-    } on TimeoutException {
-      _errorMessage = 'The connection has timed out, please try again';
-      developer.log('The connection has timed out');
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
       developer.log(error.toString());
@@ -55,15 +59,15 @@ class SubmissionRepository extends ChangeNotifier {
 
   Future<void> fetchAssignedList({required num assignment_id}) async {
     _isLoading = true;
-    _errorMessage = '';
+    _isSuccess = false;
     notifyListeners();
 
     try {
       final httpResponse = await http
           .get(
-            Uri.parse('$apiBaseUrlAndroid/assignments-students?assignment_id=$assignment_id'),
+            Uri.parse('$apiBaseUrl/assignments-students?assignment_id=$assignment_id'),
           )
-          .timeout(const Duration(seconds: 10));
+          .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
         _assignedList = (jsonDecode(httpResponse.body) as List).map((json) {
@@ -73,16 +77,45 @@ class SubmissionRepository extends ChangeNotifier {
             'email': json['email'],
           };
         }).toList();
+        _isSuccess = true;
       } else {
-        _errorMessage = '${httpResponse.statusCode} error';
-        developer.log('${httpResponse.statusCode} error');
+        throw Exception('${httpResponse.statusCode} error');
       }
-    } on TimeoutException {
-      _errorMessage = 'The connection has timed out, please try again';
-      developer.log('The connection has timed out');
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
       developer.log(error.toString());
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> gradeSubmission({required Submission submission}) async {
+    _isLoading = true;
+    _isSuccess = false;
+    notifyListeners();
+
+    try {
+      final httpResponse = await http
+          .patch(
+            Uri.parse('$apiBaseUrl/submissions/${submission.submission_id}'),
+            headers: <String, String>{
+              HttpHeaders.authorizationHeader: 'token',
+              HttpHeaders.contentTypeHeader: 'application/json',
+            },
+            body: jsonEncode(submission.toJson()),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      if (httpResponse.statusCode == 200) {
+        _isSuccess = true;
+        await fetchSubmissionList(assignment_id: submission.assignment_id);
+      } else {
+        throw Exception('${httpResponse.statusCode} error');
+      }
+    } catch (e) {
+      _errorMessageSnackBar = 'An error has occurred, please try again';
+      developer.log(e.toString());
     } finally {
       _isLoading = false;
       notifyListeners();

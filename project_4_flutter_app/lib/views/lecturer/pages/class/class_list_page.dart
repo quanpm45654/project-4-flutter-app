@@ -11,11 +11,8 @@ class ClassListPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Class'),
       ),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: const ClassListWidget(),
-        ),
+      body: const SafeArea(
+        child: ClassListWidget(),
       ),
       bottomNavigationBar: const LecturerNavigationBar(),
     );

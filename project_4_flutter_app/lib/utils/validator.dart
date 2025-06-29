@@ -16,16 +16,16 @@ class CustomValidator {
     return null;
   }
 
-  static String? minLength(String? value, int minLength, String fieldName) {
+  static String? minLength(String? value, int minLength) {
     if (value != null && value.length < minLength) {
-      return 'Please enter ${fieldName.toLowerCase()} with min $minLength characters';
+      return 'Please enter min $minLength characters';
     }
     return null;
   }
 
-  static String? maxLength(String? value, int maxLength, String fieldName) {
-    if (value != null && value.length < maxLength) {
-      return 'Please enter ${fieldName.toLowerCase()} with max $maxLength characters';
+  static String? maxLength(String? value, int maxLength) {
+    if (value != null && value.length > maxLength) {
+      return 'Please enter max $maxLength characters';
     }
     return null;
   }
@@ -39,7 +39,7 @@ class CustomValidator {
   }
 
   static String? number(String? value) {
-    if (value != null && double.tryParse(value) == null) {
+    if (value != null && num.tryParse(value) == null) {
       return 'Please enter a number';
     }
     return null;
