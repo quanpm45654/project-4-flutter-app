@@ -7,16 +7,16 @@ import 'package:project_4_flutter_app/views/lecturer/pages/assignment/assignment
 import 'package:project_4_flutter_app/views/lecturer/pages/assignment/assignment_page.dart';
 import 'package:provider/provider.dart';
 
-class ClassAssignmentListWidget extends StatefulWidget {
-  const ClassAssignmentListWidget({super.key, required this.class_id});
+class AssignmentListWidget extends StatefulWidget {
+  const AssignmentListWidget({super.key, required this.class_id});
 
   final num class_id;
 
   @override
-  State<ClassAssignmentListWidget> createState() => _ClassAssignmentListWidgetState();
+  State<AssignmentListWidget> createState() => _AssignmentListWidgetState();
 }
 
-class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
+class _AssignmentListWidgetState extends State<AssignmentListWidget> {
   @override
   void initState() {
     super.initState();
@@ -24,25 +24,33 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
       (_) => Provider.of<AssignmentRepository>(
         context,
         listen: false,
-      ).fetchClassAssignmentList(class_id: widget.class_id, lecturer_id: 2),
+      ).fetchAssignmentList(class_id: widget.class_id, lecturer_id: 2),
     );
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        buildCreateButton(context),
-        const SizedBox(height: 16),
-        buildConsumer(),
-      ],
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          buildCreateButton(context),
+          const SizedBox(height: 16),
+          buildConsumer(),
+        ],
+      ),
     );
   }
 
   SizedBox buildCreateButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48,
+      height: 48.0,
       child: FilledButton(
         onPressed: () => Navigator.push(
           context,
@@ -50,10 +58,7 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
             builder: (context) => AssignmentCreatePage(class_id: widget.class_id),
           ),
         ),
-        child: const Text(
-          'Create assignment',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        child: const Text('Create assignment'),
       ),
     );
   }
@@ -113,7 +118,7 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
               onPressed: () => Provider.of<AssignmentRepository>(
                 context,
                 listen: false,
-              ).fetchClassAssignmentList(class_id: widget.class_id, lecturer_id: 2),
+              ).fetchAssignmentList(class_id: widget.class_id, lecturer_id: 2),
               child: const Text(
                 'Retry',
                 style: TextStyle(fontSize: 20.0),
@@ -154,8 +159,8 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
             subtitle: Text(
               'Due ${CustomFormatter.formatDateTime(assignment.due_at)}',
               style: DateTime.now().isAfter(assignment.due_at)
-                  ? TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 16.0)
-                  : const TextStyle(fontSize: 16.0),
+                  ? TextStyle(color: Theme.of(context).colorScheme.error)
+                  : const TextStyle(),
             ),
             trailing: MenuAnchor(
               builder: (context, controller, child) {
@@ -185,10 +190,7 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
           builder: (context) => AssignmentEditPage(assignment: assignment),
         ),
       ),
-      child: const Text(
-        'Edit',
-        style: TextStyle(fontSize: 16.0),
-      ),
+      child: const Text('Edit'),
     );
   }
 
@@ -201,10 +203,7 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
       onPressed: () async => await buildDeleteDialog(context, assignmentRepository, assignment),
       child: Text(
         'Delete',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.error,
-          fontSize: 16.0,
-        ),
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
     );
   }
@@ -219,10 +218,7 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Delete confirmation'),
-          content: const Text(
-            'This assignment will be deleted forever',
-            style: TextStyle(fontSize: 16.0),
-          ),
+          content: const Text('This assignment will be deleted forever'),
           actions: [
             buildCancelButton(context),
             buildDeleteButton(assignmentRepository, assignment, context),
@@ -235,10 +231,7 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
   TextButton buildCancelButton(BuildContext context) {
     return TextButton(
       onPressed: () => Navigator.pop(context),
-      child: const Text(
-        'Cancel',
-        style: TextStyle(fontSize: 16.0),
-      ),
+      child: const Text('Cancel'),
     );
   }
 
@@ -252,13 +245,10 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
         await assignmentRepository.deleteAssignment(assignment_id: assignment.assignment_id);
 
         if (context.mounted) {
-          if (assignmentRepository.errorMessageSnackBar.isEmpty) {
+          if (assignmentRepository.isSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text(
-                  'Assignment deleted successfully',
-                  style: TextStyle(fontSize: 16.0),
-                ),
+                content: Text('Assignment deleted successfully'),
                 showCloseIcon: true,
               ),
             );
@@ -266,10 +256,7 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
           } else if (assignmentRepository.errorMessageSnackBar.isNotEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  assignmentRepository.errorMessageSnackBar,
-                  style: const TextStyle(fontSize: 16.0),
-                ),
+                content: Text(assignmentRepository.errorMessageSnackBar),
                 showCloseIcon: true,
               ),
             );
@@ -279,10 +266,7 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
       },
       child: Text(
         'Delete',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.error,
-          fontSize: 16.0,
-        ),
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
       ),
     );
   }

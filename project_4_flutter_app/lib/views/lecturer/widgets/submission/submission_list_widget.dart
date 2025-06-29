@@ -30,8 +30,16 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return buildConsumer();
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: buildConsumer(),
+    );
   }
 
   Consumer<SubmissionRepository> buildConsumer() {
@@ -47,12 +55,10 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
           return buildErrorMessage(submissionRepository, context);
         }
 
-        if (submissionRepository.submissionList.isEmpty &&
-            submissionRepository.assignedList.isEmpty) {
+        if (submissionRepository.submissionList.isEmpty && submissionRepository.assignedList.isEmpty) {
           return const Center(
             child: Text(
               "You haven't assign this to any students yet",
-              style: TextStyle(fontSize: 16.0),
               textAlign: TextAlign.center,
             ),
           );
@@ -62,9 +68,13 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             submissionRepository.submissionList.isNotEmpty
-                ? const Text(
+                ? Text(
                     "Submitted",
-                    style: TextStyle(fontSize: 20.0),
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   )
                 : const SizedBox(),
             submissionRepository.submissionList.isNotEmpty
@@ -73,12 +83,14 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
                   )
                 : const SizedBox(),
             buildSubmittedListView(submissionRepository),
-            submissionRepository.submissionList.isNotEmpty
-                ? const SizedBox(height: 16)
-                : const SizedBox(),
-            const Text(
+            submissionRepository.submissionList.isNotEmpty ? const SizedBox(height: 16) : const SizedBox(),
+            Text(
               "Assigned",
-              style: TextStyle(fontSize: 20.0),
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
             const Divider(
               height: 10,
@@ -140,7 +152,6 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
             ),
             subtitle: Text(
               'Submitted at ${CustomFormatter.formatDateTime(submission.submitted_at)}',
-              style: const TextStyle(fontSize: 16.0),
             ),
             trailing: Text(
               '${submission.score}',
@@ -165,10 +176,7 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
             '${assigned['full_name']}',
             style: const TextStyle(fontSize: 20.0),
           ),
-          subtitle: const Text(
-            'Not turned in',
-            style: TextStyle(fontSize: 16.0),
-          ),
+          subtitle: const Text('Not turned in'),
         );
       },
     );

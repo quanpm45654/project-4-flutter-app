@@ -11,11 +11,8 @@ class ClassCreatePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Create class'),
       ),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: const ClassCreateWidget(),
-        ),
+      body: const SafeArea(
+        child: ClassCreateWidget(),
       ),
     );
   }

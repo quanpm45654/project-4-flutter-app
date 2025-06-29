@@ -30,27 +30,38 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final classRepository = Provider.of<ClassRepository>(context);
+    var classRepository = Provider.of<ClassRepository>(context);
 
     return classRepository.isLoading
         ? const Center(
             child: CircularProgressIndicator(),
           )
         : Column(
-            spacing: 32.0,
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  child: buildForm(),
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: buildForm(),
+                  ),
                 ),
               ),
-              Column(
-                spacing: 16.0,
-                children: [
-                  buildSubmitButton(classRepository, context),
-                  buildCancelButton(context),
-                ],
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                color: Theme.of(context).colorScheme.surfaceContainer,
+                child: Column(
+                  spacing: 16.0,
+                  children: [
+                    buildSubmitButton(classRepository, context),
+                    buildCancelButton(context),
+                  ],
+                ),
               ),
             ],
           );
@@ -62,7 +73,7 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
       child: Column(
         spacing: 16.0,
         children: [
-          const SizedBox(height: 8.0),
+          const SizedBox(),
           buildNameField(),
           buildCodeField(),
           buildDescriptionField(),
@@ -76,13 +87,12 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
     return TextFormField(
       controller: _className,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('Class name*'),
       ),
       validator: (value) => CustomValidator.combine([
         CustomValidator.required(value, 'Class name'),
+        CustomValidator.maxLength(value, 100),
       ]),
     );
   }
@@ -91,13 +101,12 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
     return TextFormField(
       controller: _classCode,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('Class code*'),
       ),
       validator: (value) => CustomValidator.combine([
         CustomValidator.required(value, 'Class code'),
+        CustomValidator.maxLength(value, 50),
       ]),
     );
   }
@@ -106,9 +115,7 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
     return TextFormField(
       controller: _classDescription,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('Description*'),
       ),
       validator: (value) => CustomValidator.combine([
@@ -121,13 +128,12 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
     return TextFormField(
       controller: _classSemester,
       decoration: const InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0)),
-        ),
+        border: OutlineInputBorder(),
         label: Text('Semester*'),
       ),
       validator: (value) => CustomValidator.combine([
         CustomValidator.required(value, 'Semester'),
+        CustomValidator.maxLength(value, 20),
       ]),
     );
   }
@@ -135,7 +141,7 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
   SizedBox buildSubmitButton(ClassRepository classRepository, BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48,
+      height: 48.0,
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -151,13 +157,10 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
             await classRepository.updateClass(classObject: inputClass);
 
             if (context.mounted) {
-              if (classRepository.errorMessageSnackBar.isEmpty) {
+              if (classRepository.isSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text(
-                      'Class edited successfully',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
+                    content: Text('Class edited successfully'),
                     showCloseIcon: true,
                   ),
                 );
@@ -165,10 +168,7 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
               } else if (classRepository.errorMessageSnackBar.isNotEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(
-                      classRepository.errorMessageSnackBar,
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
+                    content: Text(classRepository.errorMessageSnackBar),
                     showCloseIcon: true,
                   ),
                 );
@@ -177,10 +177,7 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
             }
           }
         },
-        child: const Text(
-          'Edit class',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        child: const Text('Edit class'),
       ),
     );
   }
@@ -188,13 +185,10 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
   SizedBox buildCancelButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48,
+      height: 48.0,
       child: TextButton(
         onPressed: () => Navigator.pop(context),
-        child: const Text(
-          'Cancel',
-          style: TextStyle(fontSize: 16.0),
-        ),
+        child: const Text('Cancel'),
       ),
     );
   }

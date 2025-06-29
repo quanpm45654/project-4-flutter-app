@@ -15,10 +15,7 @@ class ClassEditPage extends StatelessWidget {
         title: const Text('Edit class'),
       ),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: ClassEditWidget(classObject: classObject),
-        ),
+        child: ClassEditWidget(classObject: classObject),
       ),
     );
   }
