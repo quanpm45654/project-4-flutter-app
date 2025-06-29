@@ -82,17 +82,47 @@ class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
         }
 
         return Flexible(
-          child: buildListView(studentRepository),
+          child: buildStudentListView(studentRepository),
         );
       },
     );
   }
 
-  ListView buildListView(StudentRepository studentRepository) {
+  Flexible buildErrorMessage(StudentRepository studentRepository, BuildContext context) {
+    return Flexible(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              studentRepository.errorMessage,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 20.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            TextButton(
+              onPressed: () => Provider.of<StudentRepository>(
+                context,
+                listen: false,
+              ).fetchClassStudentList(class_id: widget.class_id),
+              child: const Text(
+                'Retry',
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ListView buildStudentListView(StudentRepository studentRepository) {
     return ListView.builder(
       itemCount: studentRepository.studentList.length,
       itemBuilder: (context, index) {
-        final student = studentRepository.studentList[index];
+        var student = studentRepository.studentList[index];
 
         return ListTile(
           contentPadding: EdgeInsets.zero,
@@ -129,36 +159,6 @@ class _ClassStudentListWidgetState extends State<ClassStudentListWidget> {
           ),
         );
       },
-    );
-  }
-
-  Flexible buildErrorMessage(StudentRepository studentRepository, BuildContext context) {
-    return Flexible(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              studentRepository.errorMessage,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-                fontSize: 20.0,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            TextButton(
-              onPressed: () => Provider.of<StudentRepository>(
-                context,
-                listen: false,
-              ).fetchClassStudentList(class_id: widget.class_id),
-              child: const Text(
-                'Retry',
-                style: TextStyle(fontSize: 20.0),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

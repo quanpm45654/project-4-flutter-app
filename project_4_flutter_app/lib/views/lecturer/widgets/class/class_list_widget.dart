@@ -79,60 +79,11 @@ class _ClassListWidgetState extends State<ClassListWidget> {
           );
         }
 
-        final classList = classRepository.classList;
+        var classList = classRepository.classList;
         classList.sort((a, b) => b.class_id.compareTo(a.class_id));
 
         return Flexible(
-          child: buildListView(classRepository, classList),
-        );
-      },
-    );
-  }
-
-  ListView buildListView(ClassRepository classRepository, List<Class> classList) {
-    return ListView.builder(
-      itemCount: classRepository.classList.length,
-      itemBuilder: (context, index) {
-        final classObject = classList[index];
-
-        return GestureDetector(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => ClassPage(classObject: classObject),
-            ),
-          ),
-          child: Card(
-            margin: const EdgeInsets.only(bottom: 16.0),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.secondary,
-                child: const Icon(Icons.class_outlined),
-              ),
-              title: Text(
-                classObject.class_name,
-                style: const TextStyle(fontSize: 20.0),
-              ),
-              subtitle: Text(
-                "${classObject.class_code} - ${classObject.semester}",
-                style: const TextStyle(fontSize: 16.0),
-              ),
-              trailing: MenuAnchor(
-                builder: (context, controller, child) {
-                  return IconButton(
-                    onPressed: () {
-                      controller.isOpen ? controller.close() : controller.open();
-                    },
-                    icon: const Icon(Icons.more_vert_rounded),
-                  );
-                },
-                menuChildren: [
-                  buildMenuEditButton(context, classObject),
-                  buildMenuDeleteButton(context, classRepository, classObject),
-                ],
-              ),
-            ),
-          ),
+          child: buildClassListView(classRepository, classList),
         );
       },
     );
@@ -165,6 +116,56 @@ class _ClassListWidgetState extends State<ClassListWidget> {
           ],
         ),
       ),
+    );
+  }
+
+  ListView buildClassListView(ClassRepository classRepository, List<Class> classList) {
+    return ListView.builder(
+      itemCount: classRepository.classList.length,
+      itemBuilder: (context, index) {
+        var classObject = classList[index];
+
+        return GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (context) => ClassPage(classObject: classObject),
+            ),
+          ),
+          child: Card(
+            margin: const EdgeInsets.only(bottom: 16.0),
+            child: ListTile(
+              contentPadding: const EdgeInsets.all(16.0),
+              leading: CircleAvatar(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                child: const Icon(Icons.class_outlined),
+              ),
+              title: Text(
+                classObject.class_name,
+                style: const TextStyle(fontSize: 20.0),
+              ),
+              subtitle: Text(
+                "${classObject.class_code} - ${classObject.semester}",
+                style: const TextStyle(fontSize: 16.0),
+              ),
+              trailing: MenuAnchor(
+                builder: (context, controller, child) {
+                  return IconButton(
+                    onPressed: () {
+                      controller.isOpen ? controller.close() : controller.open();
+                    },
+                    icon: const Icon(Icons.more_vert_rounded),
+                  );
+                },
+                menuChildren: [
+                  buildMenuEditButton(context, classObject),
+                  buildMenuDeleteButton(context, classRepository, classObject),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

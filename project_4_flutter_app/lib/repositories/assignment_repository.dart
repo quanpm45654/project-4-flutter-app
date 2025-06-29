@@ -121,7 +121,7 @@ class AssignmentRepository extends ChangeNotifier {
       }
     } on TimeoutException {
       _errorMessageSnackBar = 'The connection has timed out, please try again';
-      developer.log('The connection has timed out, please try again');
+      developer.log('The connection has timed out');
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
       developer.log(error.toString());
@@ -133,7 +133,7 @@ class AssignmentRepository extends ChangeNotifier {
 
   Future<void> deleteAssignment({required num assignment_id}) async {
     _isLoading = true;
-    _errorMessage = '';
+    _errorMessageSnackBar = '';
     notifyListeners();
 
     try {
@@ -154,7 +154,7 @@ class AssignmentRepository extends ChangeNotifier {
       }
     } on TimeoutException {
       _errorMessageSnackBar = 'The connection has timed out, please try again';
-      developer.log('The connection has timed out, please try again');
+      developer.log('The connection has timed out');
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
       developer.log(error.toString());

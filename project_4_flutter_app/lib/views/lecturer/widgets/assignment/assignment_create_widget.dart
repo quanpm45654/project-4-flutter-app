@@ -27,13 +27,8 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
   final _assignmentFileUrl = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final assignmentRepository = Provider.of<AssignmentRepository>(context);
+    final assignmentRepository = Provider.of<AssignmentRepository>(context, listen: false);
 
     return assignmentRepository.isLoading
         ? const Center(

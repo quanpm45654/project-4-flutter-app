@@ -44,7 +44,7 @@ class ClassRepository extends ChangeNotifier {
       }
     } on TimeoutException {
       _errorMessage = 'The connection has timed out, please try again';
-      developer.log('The connection has timed out, please try again');
+      developer.log('The connection has timed out');
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
       developer.log(error.toString());
@@ -117,7 +117,7 @@ class ClassRepository extends ChangeNotifier {
       }
     } on TimeoutException {
       _errorMessageSnackBar = 'The connection has timed out, please try again';
-      developer.log('The connection has timed out, please try again');
+      developer.log('The connection has timed out');
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
       developer.log(error.toString());
@@ -129,7 +129,7 @@ class ClassRepository extends ChangeNotifier {
 
   Future<void> deleteClass({required num class_id}) async {
     _isLoading = true;
-    _errorMessage = '';
+    _errorMessageSnackBar = '';
     notifyListeners();
 
     try {

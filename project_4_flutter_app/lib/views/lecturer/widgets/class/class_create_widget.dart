@@ -19,13 +19,8 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
   final _classSemester = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final classRepository = Provider.of<ClassRepository>(context);
+    final classRepository = Provider.of<ClassRepository>(context, listen: false);
 
     return classRepository.isLoading
         ? const Center(
@@ -155,6 +150,7 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
                     showCloseIcon: true,
                   ),
                 );
+                classRepository.fetchClassList(lecturer_id: 2);
                 Navigator.pop(context);
               } else if (classRepository.errorMessageSnackBar.isNotEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
