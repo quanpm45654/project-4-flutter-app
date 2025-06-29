@@ -28,7 +28,7 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final assignmentRepository = Provider.of<AssignmentRepository>(context, listen: false);
+    final assignmentRepository = Provider.of<AssignmentRepository>(context);
 
     return assignmentRepository.isLoading
         ? const Center(
