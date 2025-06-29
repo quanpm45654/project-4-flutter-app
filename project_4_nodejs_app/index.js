@@ -253,7 +253,25 @@ app.get("/api/submissions", (req, res) => {
                 FROM submissions s
                 JOIN assignments a ON s.assignment_id = a.assignment_id
                 JOIN users u ON s.student_id = u.user_id
-                WHERE s.assignment_id = ?`;
+                WHERE s.assignment_id = ?;`;
+
+  connection.query(query, [req.query.assignment_id], (err, result) => {
+    if (err) {
+      console.error(err);
+      res.status(500);
+    } else {
+      res.status(200).json(result);
+    }
+  });
+});
+
+app.get("/api/assignments-students", (req, res) => {
+  const query = `SELECT u.user_id, u.full_name, u.email
+                FROM assignments a
+                JOIN class_students cs ON a.class_id = cs.class_id
+                JOIN users u ON cs.student_id = u.user_id
+                LEFT JOIN submissions s ON s.assignment_id = a.assignment_id AND s.student_id = u.user_id
+                WHERE a.assignment_id = ? AND s.submission_id IS NULL;`;
 
   connection.query(query, [req.query.assignment_id], (err, result) => {
     if (err) {

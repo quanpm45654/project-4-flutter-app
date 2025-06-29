@@ -24,12 +24,6 @@ class _ClassPageState extends State<ClassPage> with SingleTickerProviderStateMix
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    _tabController.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

@@ -23,12 +23,6 @@ class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProvid
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    _tabController.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

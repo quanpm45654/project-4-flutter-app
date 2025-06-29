@@ -39,6 +39,25 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
     );
   }
 
+  SizedBox buildCreateButton(BuildContext context) {
+    return SizedBox(
+      width: double.maxFinite,
+      height: 48,
+      child: FilledButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (context) => AssignmentCreatePage(class_id: widget.class_id),
+          ),
+        ),
+        child: const Text(
+          'Create assignment',
+          style: TextStyle(fontSize: 16.0),
+        ),
+      ),
+    );
+  }
+
   Consumer<AssignmentRepository> buildConsumer() {
     return Consumer<AssignmentRepository>(
       builder: (context, assignmentRepository, child) {
@@ -66,24 +85,54 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
           );
         }
 
-        final assignmentList = assignmentRepository.assignmentList;
+        var assignmentList = assignmentRepository.assignmentList;
         assignmentList.sort((a, b) => b.assignment_id.compareTo(a.assignment_id));
 
         return Flexible(
-          child: buildListView(assignmentRepository, assignmentList),
+          child: buildAssignmentListView(assignmentRepository, assignmentList),
         );
       },
     );
   }
 
-  ListView buildListView(
+  Flexible buildErrorMessage(AssignmentRepository assignmentRepository, BuildContext context) {
+    return Flexible(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              assignmentRepository.errorMessage,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 20.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            TextButton(
+              onPressed: () => Provider.of<AssignmentRepository>(
+                context,
+                listen: false,
+              ).fetchClassAssignmentList(class_id: widget.class_id, lecturer_id: 2),
+              child: const Text(
+                'Retry',
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ListView buildAssignmentListView(
     AssignmentRepository assignmentRepository,
     List<Assignment> assignmentList,
   ) {
     return ListView.builder(
       itemCount: assignmentRepository.assignmentList.length,
       itemBuilder: (context, index) {
-        final assignment = assignmentList[index];
+        var assignment = assignmentList[index];
 
         return GestureDetector(
           onTap: () => Navigator.push(
@@ -93,6 +142,7 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
             ),
           ),
           child: ListTile(
+            contentPadding: EdgeInsets.zero,
             leading: CircleAvatar(
               backgroundColor: Theme.of(context).colorScheme.secondary,
               child: const Icon(Icons.assignment_outlined),
@@ -124,55 +174,6 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
           ),
         );
       },
-    );
-  }
-
-  SizedBox buildCreateButton(BuildContext context) {
-    return SizedBox(
-      width: double.maxFinite,
-      height: 48,
-      child: FilledButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute<void>(
-            builder: (context) => AssignmentCreatePage(class_id: widget.class_id),
-          ),
-        ),
-        child: const Text(
-          'Create assignment',
-          style: TextStyle(fontSize: 16.0),
-        ),
-      ),
-    );
-  }
-
-  Flexible buildErrorMessage(AssignmentRepository assignmentRepository, BuildContext context) {
-    return Flexible(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              assignmentRepository.errorMessage,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-                fontSize: 20.0,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            TextButton(
-              onPressed: () => Provider.of<AssignmentRepository>(
-                context,
-                listen: false,
-              ).fetchClassAssignmentList(class_id: widget.class_id, lecturer_id: 2),
-              child: const Text(
-                'Retry',
-                style: TextStyle(fontSize: 20.0),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -248,9 +249,8 @@ class _ClassAssignmentListWidgetState extends State<ClassAssignmentListWidget> {
   ) {
     return TextButton(
       onPressed: () async {
-        await assignmentRepository.deleteAssignment(
-          assignment_id: assignment.assignment_id,
-        );
+        await assignmentRepository.deleteAssignment(assignment_id: assignment.assignment_id);
+
         if (context.mounted) {
           if (assignmentRepository.errorMessageSnackBar.isEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(

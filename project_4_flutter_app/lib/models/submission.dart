@@ -1,18 +1,18 @@
 import 'package:project_4_flutter_app/utils/functions.dart';
 
 class Submission {
-  final int submission_id;
-  final int assignment_id;
-  final int student_id;
+  final num submission_id;
+  final num assignment_id;
+  final num student_id;
   final String? student_name;
-  final int attempt;
+  final num attempt;
   final DateTime submitted_at;
   final String? note;
   final String file_url;
-  final double? score;
+  final num? score;
   final String? feedback_text;
   final String? feedback_file_url;
-  final int? graded_by;
+  final num? graded_by;
   final String? graded_at;
 
   Submission({
@@ -48,18 +48,18 @@ class Submission {
 
   factory Submission.fromJson(Map<String, dynamic> json) {
     return Submission(
-      submission_id: json['submission_id'] as int,
-      assignment_id: json['assignment_id'] as int,
-      student_id: json['student_id'] as int,
+      submission_id: json['submission_id'] as num,
+      assignment_id: json['assignment_id'] as num,
+      student_id: json['student_id'] as num,
       student_name: json['full_name'] as String?,
-      attempt: json['attempt'] as int,
+      attempt: json['attempt'] as num,
       submitted_at: DateTime.parse(json['submitted_at'] as String),
       note: json['note'] as String?,
       file_url: json['file_url'] as String,
-      score: json['score'] != null ? json['score'] as double : 0.0,
+      score: json['score'] is String ? num.parse(json['score'] as String) : json['score'] as num,
       feedback_text: json['feedback_text'] as String?,
       feedback_file_url: json['feedback_file_url'] as String?,
-      graded_by: json['graded_by'] as int?,
+      graded_by: json['graded_by'] as num?,
       graded_at: json['graded_at'] as String?,
     );
   }

@@ -22,6 +22,10 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
         context,
         listen: false,
       ).fetchSubmissionList(assignment_id: widget.assignment_id);
+      Provider.of<SubmissionRepository>(
+        context,
+        listen: false,
+      ).fetchAssignedList(assignment_id: widget.assignment_id);
     });
   }
 
@@ -43,7 +47,8 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
           return buildErrorMessage(submissionRepository, context);
         }
 
-        if (submissionRepository.submissionList.isEmpty) {
+        if (submissionRepository.submissionList.isEmpty &&
+            submissionRepository.assignedList.isEmpty) {
           return const Center(
             child: Text(
               "You haven't assign this to any students yet",
@@ -54,13 +59,31 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
         }
 
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "${submissionRepository.submissionList.length} submitted",
-              style: const TextStyle(fontSize: 20.0),
+            submissionRepository.submissionList.isNotEmpty
+                ? const Text(
+                    "Submitted",
+                    style: TextStyle(fontSize: 20.0),
+                  )
+                : const SizedBox(),
+            submissionRepository.submissionList.isNotEmpty
+                ? const Divider(
+                    height: 10,
+                  )
+                : const SizedBox(),
+            buildSubmittedListView(submissionRepository),
+            submissionRepository.submissionList.isNotEmpty
+                ? const SizedBox(height: 16)
+                : const SizedBox(),
+            const Text(
+              "Assigned",
+              style: TextStyle(fontSize: 20.0),
             ),
-            const SizedBox(height: 8),
-            buildListView(submissionRepository),
+            const Divider(
+              height: 10,
+            ),
+            buildAssignedListView(submissionRepository),
           ],
         );
       },
@@ -95,12 +118,12 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
     );
   }
 
-  ListView buildListView(SubmissionRepository submissionRepository) {
+  ListView buildSubmittedListView(SubmissionRepository submissionRepository) {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: submissionRepository.submissionList.length,
       itemBuilder: (context, index) {
-        final submission = submissionRepository.submissionList[index];
+        var submission = submissionRepository.submissionList[index];
 
         return GestureDetector(
           onTap: () => Navigator.push(
@@ -110,6 +133,7 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
             ),
           ),
           child: ListTile(
+            contentPadding: EdgeInsets.zero,
             title: Text(
               submission.student_name ?? '',
               style: const TextStyle(fontSize: 20.0),
@@ -122,6 +146,28 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
               '${submission.score}',
               style: const TextStyle(fontSize: 20.0),
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  ListView buildAssignedListView(SubmissionRepository submissionRepository) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: submissionRepository.assignedList.length,
+      itemBuilder: (context, index) {
+        var assigned = submissionRepository.assignedList[index];
+
+        return ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Text(
+            '${assigned['full_name']}',
+            style: const TextStyle(fontSize: 20.0),
+          ),
+          subtitle: const Text(
+            'Not turned in',
+            style: TextStyle(fontSize: 16.0),
           ),
         );
       },
