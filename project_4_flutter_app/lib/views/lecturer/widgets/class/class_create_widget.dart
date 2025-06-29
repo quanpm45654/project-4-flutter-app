@@ -20,7 +20,7 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final classRepository = Provider.of<ClassRepository>(context, listen: false);
+    final classRepository = Provider.of<ClassRepository>(context);
 
     return classRepository.isLoading
         ? const Center(
