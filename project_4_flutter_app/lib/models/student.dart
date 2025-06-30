@@ -6,12 +6,14 @@ class Student {
   String full_name;
   String email;
   Role role;
+  DateTime joined_at;
 
   Student(
     this.user_id,
     this.full_name,
     this.email,
     this.role,
+    this.joined_at,
   );
 
   Map<String, dynamic> toJson() => {
@@ -26,12 +28,8 @@ class Student {
     var full_name = json['full_name'] as String;
     var email = json['email'] as String;
     var role = CustomParser.parseRole(json['role'] as String);
+    var joined_at = DateTime.parse(json['joined_at'] as String);
 
-    return Student(
-      user_id,
-      full_name,
-      email,
-      role,
-    );
+    return Student(user_id, full_name, email, role, joined_at);
   }
 }

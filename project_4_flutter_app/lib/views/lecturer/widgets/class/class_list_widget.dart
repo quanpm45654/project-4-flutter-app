@@ -63,6 +63,8 @@ class _ClassListWidgetState extends State<ClassListWidget> {
   Consumer<ClassRepository> buildConsumer() {
     return Consumer<ClassRepository>(
       builder: (context, classRepository, child) {
+        var classList = classRepository.classList;
+
         if (classRepository.isLoading) {
           return const Flexible(
             child: Center(
@@ -75,7 +77,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
           return buildErrorMessage(classRepository, context);
         }
 
-        if (classRepository.classList.isEmpty) {
+        if (classList.isEmpty) {
           return const Flexible(
             child: Center(
               child: Text(
@@ -86,9 +88,6 @@ class _ClassListWidgetState extends State<ClassListWidget> {
             ),
           );
         }
-
-        var classList = classRepository.classList;
-        classList.sort((a, b) => b.class_id.compareTo(a.class_id));
 
         return Flexible(
           child: RefreshIndicator(
@@ -129,7 +128,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
     List<Class> classList,
   ) {
     return ListView.builder(
-      itemCount: classRepository.classList.length,
+      itemCount: classList.length,
       itemBuilder: (context, index) {
         var classObject = classList[index];
 

@@ -38,7 +38,12 @@ class AssignmentRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _assignmentList = (jsonDecode(httpResponse.body) as List<dynamic>).map((json) => Assignment.fromJson(json as Map<String, dynamic>)).toList();
+        _assignmentList = (jsonDecode(httpResponse.body) as List<dynamic>)
+            .map((json) => Assignment.fromJson(json as Map<String, dynamic>))
+            .toList();
+        _assignmentList.sort(
+          (a, b) => b.assignment_id.compareTo(a.assignment_id),
+        );
         _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
@@ -70,8 +75,12 @@ class AssignmentRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
+        assignment.assignment_id = jsonDecode(httpResponse.body) as int;
+        _assignmentList.add(assignment);
+        _assignmentList.sort(
+          (a, b) => b.assignment_id.compareTo(a.assignment_id),
+        );
         _isSuccess = true;
-        await fetchAssignmentList(assignment.class_id);
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }
@@ -102,11 +111,13 @@ class AssignmentRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _isSuccess = true;
-        int index = _assignmentList.indexWhere((a) => a.assignment_id == assignment.assignment_id);
+        int index = _assignmentList.indexWhere(
+          (a) => a.assignment_id == assignment.assignment_id,
+        );
         if (index != -1) {
           _assignmentList[index] = assignment;
         }
+        _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }
@@ -135,8 +146,8 @@ class AssignmentRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _isSuccess = true;
         _assignmentList.removeWhere((a) => a.assignment_id == assignment_id);
+        _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }

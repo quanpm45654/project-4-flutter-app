@@ -67,6 +67,8 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
   Consumer<AssignmentRepository> buildConsumer() {
     return Consumer<AssignmentRepository>(
       builder: (context, assignmentRepository, child) {
+        var assignmentList = assignmentRepository.assignmentList;
+
         if (assignmentRepository.isLoading) {
           return const Flexible(
             child: Center(
@@ -79,7 +81,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
           return buildErrorMessage(assignmentRepository, context);
         }
 
-        if (assignmentRepository.assignmentList.isEmpty) {
+        if (assignmentList.isEmpty) {
           return const Flexible(
             child: Center(
               child: Text(
@@ -90,11 +92,6 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
             ),
           );
         }
-
-        var assignmentList = assignmentRepository.assignmentList;
-        assignmentList.sort(
-          (a, b) => b.assignment_id.compareTo(a.assignment_id),
-        );
 
         return Flexible(
           child: RefreshIndicator(
@@ -140,7 +137,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
     List<Assignment> assignmentList,
   ) {
     return ListView.builder(
-      itemCount: assignmentRepository.assignmentList.length,
+      itemCount: assignmentList.length,
       itemBuilder: (context, index) {
         var assignment = assignmentList[index];
 

@@ -41,7 +41,9 @@ class SubmissionRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _submissionList = (jsonDecode(httpResponse.body) as List).map((json) => Submission.fromJson(json as Map<String, dynamic>)).toList();
+        _submissionList = (jsonDecode(httpResponse.body) as List)
+            .map((json) => Submission.fromJson(json as Map<String, dynamic>))
+            .toList();
         _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
@@ -63,7 +65,9 @@ class SubmissionRepository extends ChangeNotifier {
     try {
       final httpResponse = await http
           .get(
-            Uri.parse('$apiBaseUrl/assignments-students?assignment_id=$assignment_id'),
+            Uri.parse(
+              '$apiBaseUrl/assignments-students?assignment_id=$assignment_id',
+            ),
           )
           .timeout(const Duration(seconds: 30));
 
@@ -106,11 +110,13 @@ class SubmissionRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _isSuccess = true;
-        int index = _submissionList.indexWhere((a) => a.submission_id == submission.submission_id);
+        int index = _submissionList.indexWhere(
+          (a) => a.submission_id == submission.submission_id,
+        );
         if (index != -1) {
           _submissionList[index].score = submission.score;
         }
+        _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }

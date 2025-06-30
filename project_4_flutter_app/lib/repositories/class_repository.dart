@@ -38,7 +38,10 @@ class ClassRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _classList = (jsonDecode(httpResponse.body) as List).map((json) => Class.fromJson(json as Map<String, dynamic>)).toList();
+        _classList = (jsonDecode(httpResponse.body) as List)
+            .map((json) => Class.fromJson(json as Map<String, dynamic>))
+            .toList();
+        _classList.sort((a, b) => b.class_id.compareTo(a.class_id));
         _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
@@ -70,8 +73,10 @@ class ClassRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
+        classObject.class_id = jsonDecode(httpResponse.body) as int;
+        _classList.add(classObject);
+        _classList.sort((a, b) => b.class_id.compareTo(a.class_id));
         _isSuccess = true;
-        await fetchClassList(2);
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }
@@ -102,11 +107,13 @@ class ClassRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _isSuccess = true;
-        int index = _classList.indexWhere((a) => a.class_id == classObject.class_id);
+        int index = _classList.indexWhere(
+          (a) => a.class_id == classObject.class_id,
+        );
         if (index != -1) {
           _classList[index] = classObject;
         }
+        _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }
@@ -135,8 +142,8 @@ class ClassRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _isSuccess = true;
         _classList.removeWhere((a) => a.class_id == class_id);
+        _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }

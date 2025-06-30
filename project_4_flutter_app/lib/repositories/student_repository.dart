@@ -38,7 +38,10 @@ class StudentRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _studentList = (jsonDecode(httpResponse.body) as List).map((json) => Student.fromJson(json as Map<String, dynamic>)).toList();
+        _studentList = (jsonDecode(httpResponse.body) as List)
+            .map((json) => Student.fromJson(json as Map<String, dynamic>))
+            .toList();
+        _studentList.sort((a, b) => b.joined_at.compareTo(a.joined_at));
         _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
@@ -70,8 +73,9 @@ class StudentRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
+        fetchClassStudentList(class_id);
+        _studentList.sort((a, b) => b.joined_at.compareTo(a.joined_at));
         _isSuccess = true;
-        await fetchClassStudentList(class_id);
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }
@@ -102,8 +106,8 @@ class StudentRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _isSuccess = true;
         _studentList.removeWhere((a) => a.user_id == student_id);
+        _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }

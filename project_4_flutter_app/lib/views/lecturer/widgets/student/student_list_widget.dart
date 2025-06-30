@@ -63,6 +63,8 @@ class _StudentListWidgetState extends State<StudentListWidget> {
   Consumer<StudentRepository> buildConsumer() {
     return Consumer<StudentRepository>(
       builder: (context, studentRepository, child) {
+        var studentList = studentRepository.studentList;
+
         if (studentRepository.isLoading) {
           return const Flexible(
             child: Center(
@@ -75,7 +77,7 @@ class _StudentListWidgetState extends State<StudentListWidget> {
           return buildErrorMessage(studentRepository, context);
         }
 
-        if (studentRepository.studentList.isEmpty) {
+        if (studentList.isEmpty) {
           return const Flexible(
             child: Center(
               child: Text(
@@ -90,7 +92,7 @@ class _StudentListWidgetState extends State<StudentListWidget> {
           child: RefreshIndicator(
             onRefresh: () async =>
                 await studentRepository.fetchClassStudentList(widget.class_id),
-            child: buildStudentListView(studentRepository),
+            child: buildStudentListView(studentList, studentRepository),
           ),
         );
       },
@@ -122,11 +124,14 @@ class _StudentListWidgetState extends State<StudentListWidget> {
     );
   }
 
-  ListView buildStudentListView(StudentRepository studentRepository) {
+  ListView buildStudentListView(
+    List<Student> studentList,
+    StudentRepository studentRepository,
+  ) {
     return ListView.builder(
-      itemCount: studentRepository.studentList.length,
+      itemCount: studentList.length,
       itemBuilder: (context, index) {
-        var student = studentRepository.studentList[index];
+        var student = studentList[index];
 
         return ListTile(
           contentPadding: EdgeInsets.zero,
