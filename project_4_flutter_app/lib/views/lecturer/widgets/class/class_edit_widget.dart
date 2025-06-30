@@ -145,16 +145,23 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            final inputClass = Class(
-              class_id: widget.classObject.class_id,
-              class_code: _classCode.text,
-              class_name: _className.text,
-              description: _classDescription.text,
-              semester: _classSemester.text,
-              lecturer_id: 2,
+            var class_id = widget.classObject.class_id;
+            var class_code = _classCode.text;
+            var class_name = _className.text;
+            var description = _classDescription.text;
+            var semester = _classSemester.text;
+            var lecturer_id = 2;
+
+            var inputClass = Class(
+              class_id,
+              class_code,
+              class_name,
+              description,
+              semester,
+              lecturer_id,
             );
 
-            await classRepository.updateClass(classObject: inputClass);
+            await classRepository.updateClass(inputClass);
 
             if (context.mounted) {
               if (classRepository.isSuccess) {

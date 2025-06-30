@@ -18,7 +18,10 @@ class _ClassListWidgetState extends State<ClassListWidget> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) => Provider.of<ClassRepository>(context, listen: false).fetchClassList(lecturer_id: 2),
+      (_) => Provider.of<ClassRepository>(
+        context,
+        listen: false,
+      ).fetchClassList(2),
     );
   }
 
@@ -34,7 +37,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
       child: Column(
         children: [
           buildCreateButton(context),
-          const SizedBox(height: 16),
+          const SizedBox(height: 16.0),
           buildConsumer(),
         ],
       ),
@@ -60,6 +63,8 @@ class _ClassListWidgetState extends State<ClassListWidget> {
   Consumer<ClassRepository> buildConsumer() {
     return Consumer<ClassRepository>(
       builder: (context, classRepository, child) {
+        var classList = classRepository.classList;
+
         if (classRepository.isLoading) {
           return const Flexible(
             child: Center(
@@ -72,7 +77,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
           return buildErrorMessage(classRepository, context);
         }
 
-        if (classRepository.classList.isEmpty) {
+        if (classList.isEmpty) {
           return const Flexible(
             child: Center(
               child: Text(
@@ -84,17 +89,20 @@ class _ClassListWidgetState extends State<ClassListWidget> {
           );
         }
 
-        var classList = classRepository.classList;
-        classList.sort((a, b) => b.class_id.compareTo(a.class_id));
-
         return Flexible(
-          child: buildClassListView(classRepository, classList),
+          child: RefreshIndicator(
+            onRefresh: () async => await classRepository.fetchClassList(2),
+            child: buildClassListView(classRepository, classList),
+          ),
         );
       },
     );
   }
 
-  Flexible buildErrorMessage(ClassRepository classRepository, BuildContext context) {
+  Flexible buildErrorMessage(
+    ClassRepository classRepository,
+    BuildContext context,
+  ) {
     return Flexible(
       child: Center(
         child: Column(
@@ -102,21 +110,12 @@ class _ClassListWidgetState extends State<ClassListWidget> {
           children: [
             Text(
               classRepository.errorMessage,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-                fontSize: 20.0,
-              ),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
               textAlign: TextAlign.center,
             ),
             TextButton(
-              onPressed: () => Provider.of<ClassRepository>(
-                context,
-                listen: false,
-              ).fetchClassList(lecturer_id: 2),
-              child: const Text(
-                'Retry',
-                style: TextStyle(fontSize: 20.0),
-              ),
+              onPressed: () async => await classRepository.fetchClassList(2),
+              child: const Text('Retry'),
             ),
           ],
         ),
@@ -124,9 +123,12 @@ class _ClassListWidgetState extends State<ClassListWidget> {
     );
   }
 
-  ListView buildClassListView(ClassRepository classRepository, List<Class> classList) {
+  ListView buildClassListView(
+    ClassRepository classRepository,
+    List<Class> classList,
+  ) {
     return ListView.builder(
-      itemCount: classRepository.classList.length,
+      itemCount: classList.length,
       itemBuilder: (context, index) {
         var classObject = classList[index];
 
@@ -149,12 +151,16 @@ class _ClassListWidgetState extends State<ClassListWidget> {
                 classObject.class_name,
                 style: const TextStyle(fontSize: 20.0),
               ),
-              subtitle: Text("${classObject.class_code} - ${classObject.semester}"),
+              subtitle: Text(
+                "${classObject.class_code} - ${classObject.semester}",
+              ),
               trailing: MenuAnchor(
                 builder: (context, controller, child) {
                   return IconButton(
                     onPressed: () {
-                      controller.isOpen ? controller.close() : controller.open();
+                      controller.isOpen
+                          ? controller.close()
+                          : controller.open();
                     },
                     icon: const Icon(Icons.more_vert_rounded),
                   );
@@ -189,7 +195,8 @@ class _ClassListWidgetState extends State<ClassListWidget> {
     Class classObject,
   ) {
     return MenuItemButton(
-      onPressed: () async => await buildDeleteDialog(context, classRepository, classObject),
+      onPressed: () async =>
+          await buildDeleteDialog(context, classRepository, classObject),
       child: Text(
         'Delete',
         style: TextStyle(color: Theme.of(context).colorScheme.error),
@@ -231,7 +238,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
   ) {
     return TextButton(
       onPressed: () async {
-        await classRepository.deleteClass(class_id: classObject.class_id);
+        await classRepository.deleteClass(classObject.class_id);
 
         if (context.mounted) {
           if (classRepository.isSuccess) {

@@ -4,7 +4,7 @@ import 'package:project_4_flutter_app/views/lecturer/widgets/assignment/assignme
 class AssignmentCreatePage extends StatelessWidget {
   const AssignmentCreatePage({super.key, required this.class_id});
 
-  final num class_id;
+  final int class_id;
 
   @override
   Widget build(BuildContext context) {

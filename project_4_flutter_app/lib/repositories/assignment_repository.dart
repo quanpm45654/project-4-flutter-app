@@ -25,7 +25,7 @@ class AssignmentRepository extends ChangeNotifier {
 
   String get errorMessageSnackBar => _errorMessageSnackBar;
 
-  Future<void> fetchAssignmentList({required num class_id, required num lecturer_id}) async {
+  Future<void> fetchAssignmentList(int class_id) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -33,12 +33,17 @@ class AssignmentRepository extends ChangeNotifier {
     try {
       final httpResponse = await http
           .get(
-            Uri.parse('$apiBaseUrl/assignments?class_id=$class_id&lecturer_id=$lecturer_id'),
+            Uri.parse('$apiBaseUrl/assignments?class_id=$class_id'),
           )
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _assignmentList = (jsonDecode(httpResponse.body) as List<dynamic>).map((json) => Assignment.fromJson(json as Map<String, dynamic>)).toList();
+        _assignmentList = (jsonDecode(httpResponse.body) as List<dynamic>)
+            .map((json) => Assignment.fromJson(json as Map<String, dynamic>))
+            .toList();
+        _assignmentList.sort(
+          (a, b) => b.assignment_id.compareTo(a.assignment_id),
+        );
         _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
@@ -52,7 +57,7 @@ class AssignmentRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> createAssignment({required Assignment assignment}) async {
+  Future<void> createAssignment(Assignment assignment) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -70,8 +75,12 @@ class AssignmentRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
+        assignment.assignment_id = jsonDecode(httpResponse.body) as int;
+        _assignmentList.add(assignment);
+        _assignmentList.sort(
+          (a, b) => b.assignment_id.compareTo(a.assignment_id),
+        );
         _isSuccess = true;
-        await fetchAssignmentList(class_id: assignment.class_id, lecturer_id: 2);
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }
@@ -84,7 +93,7 @@ class AssignmentRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> updateAssignment({required Assignment assignment}) async {
+  Future<void> updateAssignment(Assignment assignment) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -102,11 +111,13 @@ class AssignmentRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _isSuccess = true;
-        int index = _assignmentList.indexWhere((a) => a.assignment_id == assignment.assignment_id);
+        int index = _assignmentList.indexWhere(
+          (a) => a.assignment_id == assignment.assignment_id,
+        );
         if (index != -1) {
           _assignmentList[index] = assignment;
         }
+        _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }
@@ -119,7 +130,7 @@ class AssignmentRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteAssignment({required num assignment_id}) async {
+  Future<void> deleteAssignment(int assignment_id) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -135,8 +146,8 @@ class AssignmentRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _isSuccess = true;
         _assignmentList.removeWhere((a) => a.assignment_id == assignment_id);
+        _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }

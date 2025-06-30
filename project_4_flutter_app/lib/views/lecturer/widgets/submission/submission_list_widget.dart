@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:project_4_flutter_app/models/submission.dart';
+import 'package:project_4_flutter_app/repositories/assignment_repository.dart';
 import 'package:project_4_flutter_app/repositories/submission_repository.dart';
-import 'package:project_4_flutter_app/utils/functions.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/submission/submission_page.dart';
 import 'package:provider/provider.dart';
 
 class SubmissionListWidget extends StatefulWidget {
   const SubmissionListWidget({super.key, required this.assignment_id});
 
-  final num assignment_id;
+  final int assignment_id;
 
   @override
   State<SubmissionListWidget> createState() => _SubmissionListWidgetState();
@@ -21,11 +22,11 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
       Provider.of<SubmissionRepository>(
         context,
         listen: false,
-      ).fetchSubmissionList(assignment_id: widget.assignment_id);
+      ).fetchSubmissionList(widget.assignment_id);
       Provider.of<SubmissionRepository>(
         context,
         listen: false,
-      ).fetchAssignedList(assignment_id: widget.assignment_id);
+      ).fetchAssignedList(widget.assignment_id);
     });
   }
 
@@ -36,13 +37,17 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var assignmentRepository = Provider.of<AssignmentRepository>(context);
+
     return Container(
       padding: const EdgeInsets.all(16.0),
-      child: buildConsumer(),
+      child: buildConsumer(assignmentRepository),
     );
   }
 
-  Consumer<SubmissionRepository> buildConsumer() {
+  Consumer<SubmissionRepository> buildConsumer(
+    AssignmentRepository assignmentRepository,
+  ) {
     return Consumer<SubmissionRepository>(
       builder: (context, submissionRepository, child) {
         if (submissionRepository.isLoading) {
@@ -55,7 +60,8 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
           return buildErrorMessage(submissionRepository, context);
         }
 
-        if (submissionRepository.submissionList.isEmpty && submissionRepository.assignedList.isEmpty) {
+        if (submissionRepository.submissionList.isEmpty &&
+            submissionRepository.assignedList.isEmpty) {
           return const Center(
             child: Text(
               "You haven't assign this to any students yet",
@@ -64,45 +70,113 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
           );
         }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            submissionRepository.submissionList.isNotEmpty
-                ? Text(
-                    "Submitted",
+        var submittedSubmissionList = submissionRepository.submissionList
+            .where((a) => a.score == null)
+            .toList();
+        var gradedSubmissionList = submissionRepository.submissionList
+            .where((a) => a.score != null)
+            .toList();
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            await submissionRepository.fetchSubmissionList(
+              widget.assignment_id,
+            );
+            await submissionRepository.fetchAssignedList(widget.assignment_id);
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              gradedSubmissionList.isNotEmpty
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Graded",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        Text(
+                          '${gradedSubmissionList.length}',
+                          style: const TextStyle(fontSize: 16.0),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(),
+              gradedSubmissionList.isNotEmpty
+                  ? const Divider(height: 10)
+                  : const SizedBox(),
+              buildGradedListView(
+                gradedSubmissionList,
+                assignmentRepository,
+              ),
+              gradedSubmissionList.isNotEmpty
+                  ? const SizedBox(height: 16.0)
+                  : const SizedBox(),
+              submittedSubmissionList.isNotEmpty
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Graded",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                        Text(
+                          '${submittedSubmissionList.where(
+                            (a) => a.score != null,
+                          ).length}',
+                          style: const TextStyle(fontSize: 16.0),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(),
+              submittedSubmissionList.isNotEmpty
+                  ? const Divider(height: 10)
+                  : const SizedBox(),
+              buildSubmittedListView(
+                submittedSubmissionList,
+                assignmentRepository,
+              ),
+              submittedSubmissionList.isNotEmpty
+                  ? const SizedBox(height: 16.0)
+                  : const SizedBox(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Assigned",
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.w500,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                  )
-                : const SizedBox(),
-            submissionRepository.submissionList.isNotEmpty
-                ? const Divider(
-                    height: 10,
-                  )
-                : const SizedBox(),
-            buildSubmittedListView(submissionRepository),
-            submissionRepository.submissionList.isNotEmpty ? const SizedBox(height: 16) : const SizedBox(),
-            Text(
-              "Assigned",
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).colorScheme.primary,
+                  ),
+                  Text(
+                    '${submissionRepository.assignedList.length}',
+                    style: const TextStyle(fontSize: 16.0),
+                  ),
+                ],
               ),
-            ),
-            const Divider(
-              height: 10,
-            ),
-            buildAssignedListView(submissionRepository),
-          ],
+              const Divider(height: 10),
+              buildAssignedListView(submissionRepository),
+            ],
+          ),
         );
       },
     );
   }
 
-  Center buildErrorMessage(SubmissionRepository submissionRepository, BuildContext context) {
+  Center buildErrorMessage(
+    SubmissionRepository submissionRepository,
+    BuildContext context,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -116,26 +190,30 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
             textAlign: TextAlign.center,
           ),
           TextButton(
-            onPressed: () => Provider.of<SubmissionRepository>(
-              context,
-              listen: false,
-            ).fetchSubmissionList(assignment_id: widget.assignment_id),
-            child: const Text(
-              'Retry',
-              style: TextStyle(fontSize: 20.0),
-            ),
+            onPressed: () async {
+              await submissionRepository.fetchSubmissionList(
+                widget.assignment_id,
+              );
+              await submissionRepository.fetchAssignedList(
+                widget.assignment_id,
+              );
+            },
+            child: const Text('Retry'),
           ),
         ],
       ),
     );
   }
 
-  ListView buildSubmittedListView(SubmissionRepository submissionRepository) {
+  ListView buildGradedListView(
+    List<Submission> gradedSubmissionList,
+    AssignmentRepository assignmentRepository,
+  ) {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: submissionRepository.submissionList.length,
+      itemCount: gradedSubmissionList.length,
       itemBuilder: (context, index) {
-        var submission = submissionRepository.submissionList[index];
+        var submission = gradedSubmissionList.toList()[index];
 
         return GestureDetector(
           onTap: () => Navigator.push(
@@ -150,12 +228,88 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
               submission.student_name ?? '',
               style: const TextStyle(fontSize: 20.0),
             ),
-            subtitle: Text(
-              'Submitted at ${CustomFormatter.formatDateTime(submission.submitted_at)}',
-            ),
+            subtitle:
+                submission.submitted_at.isAfter(
+                  assignmentRepository.assignmentList
+                      .firstWhere(
+                        (a) => a.assignment_id == submission.assignment_id,
+                      )
+                      .due_at,
+                )
+                ? Text(
+                    'Done late',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  )
+                : const Text(
+                    'Turned in',
+                    style: TextStyle(color: Colors.green),
+                  ),
             trailing: Text(
-              '${submission.score}',
+              '${submission.score ?? '...'}/${assignmentRepository.assignmentList.firstWhere(
+                (a) => a.assignment_id == submission.assignment_id,
+              ).max_score}',
+              style: const TextStyle(
+                fontSize: 20.0,
+                color: Colors.green,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  ListView buildSubmittedListView(
+    List<Submission> submittedSubmissionList,
+    AssignmentRepository assignmentRepository,
+  ) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: submittedSubmissionList.length,
+      itemBuilder: (context, index) {
+        var submission = submittedSubmissionList[index];
+
+        return GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (context) => SubmissionPage(submission: submission),
+            ),
+          ),
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              submission.student_name ?? '',
               style: const TextStyle(fontSize: 20.0),
+            ),
+            subtitle:
+                submission.submitted_at.isAfter(
+                  assignmentRepository.assignmentList
+                      .firstWhere(
+                        (a) => a.assignment_id == submission.assignment_id,
+                      )
+                      .due_at,
+                )
+                ? Text(
+                    'Done late',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  )
+                : const Text(
+                    'Turned in',
+                    style: TextStyle(color: Colors.green),
+                  ),
+            trailing: Text(
+              '${submission.score ?? '...'}/${assignmentRepository.assignmentList.firstWhere(
+                (a) => a.assignment_id == submission.assignment_id,
+              ).max_score}',
+              style: const TextStyle(
+                fontSize: 20.0,
+                color: Colors.green,
+              ),
             ),
           ),
         );

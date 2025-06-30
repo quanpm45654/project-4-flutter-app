@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 class AssignmentListWidget extends StatefulWidget {
   const AssignmentListWidget({super.key, required this.class_id});
 
-  final num class_id;
+  final int class_id;
 
   @override
   State<AssignmentListWidget> createState() => _AssignmentListWidgetState();
@@ -24,7 +24,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
       (_) => Provider.of<AssignmentRepository>(
         context,
         listen: false,
-      ).fetchAssignmentList(class_id: widget.class_id, lecturer_id: 2),
+      ).fetchAssignmentList(widget.class_id),
     );
   }
 
@@ -40,7 +40,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
       child: Column(
         children: [
           buildCreateButton(context),
-          const SizedBox(height: 16),
+          const SizedBox(height: 16.0),
           buildConsumer(),
         ],
       ),
@@ -55,7 +55,8 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute<void>(
-            builder: (context) => AssignmentCreatePage(class_id: widget.class_id),
+            builder: (context) =>
+                AssignmentCreatePage(class_id: widget.class_id),
           ),
         ),
         child: const Text('Create assignment'),
@@ -66,6 +67,8 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
   Consumer<AssignmentRepository> buildConsumer() {
     return Consumer<AssignmentRepository>(
       builder: (context, assignmentRepository, child) {
+        var assignmentList = assignmentRepository.assignmentList;
+
         if (assignmentRepository.isLoading) {
           return const Flexible(
             child: Center(
@@ -78,7 +81,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
           return buildErrorMessage(assignmentRepository, context);
         }
 
-        if (assignmentRepository.assignmentList.isEmpty) {
+        if (assignmentList.isEmpty) {
           return const Flexible(
             child: Center(
               child: Text(
@@ -90,17 +93,24 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
           );
         }
 
-        var assignmentList = assignmentRepository.assignmentList;
-        assignmentList.sort((a, b) => b.assignment_id.compareTo(a.assignment_id));
-
         return Flexible(
-          child: buildAssignmentListView(assignmentRepository, assignmentList),
+          child: RefreshIndicator(
+            onRefresh: () async =>
+                await assignmentRepository.fetchAssignmentList(widget.class_id),
+            child: buildAssignmentListView(
+              assignmentRepository,
+              assignmentList,
+            ),
+          ),
         );
       },
     );
   }
 
-  Flexible buildErrorMessage(AssignmentRepository assignmentRepository, BuildContext context) {
+  Flexible buildErrorMessage(
+    AssignmentRepository assignmentRepository,
+    BuildContext context,
+  ) {
     return Flexible(
       child: Center(
         child: Column(
@@ -108,21 +118,13 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
           children: [
             Text(
               assignmentRepository.errorMessage,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.error,
-                fontSize: 20.0,
-              ),
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
               textAlign: TextAlign.center,
             ),
             TextButton(
-              onPressed: () => Provider.of<AssignmentRepository>(
-                context,
-                listen: false,
-              ).fetchAssignmentList(class_id: widget.class_id, lecturer_id: 2),
-              child: const Text(
-                'Retry',
-                style: TextStyle(fontSize: 20.0),
-              ),
+              onPressed: () async => await assignmentRepository
+                  .fetchAssignmentList(widget.class_id),
+              child: const Text('Retry'),
             ),
           ],
         ),
@@ -135,7 +137,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
     List<Assignment> assignmentList,
   ) {
     return ListView.builder(
-      itemCount: assignmentRepository.assignmentList.length,
+      itemCount: assignmentList.length,
       itemBuilder: (context, index) {
         var assignment = assignmentList[index];
 
@@ -173,7 +175,11 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
               },
               menuChildren: [
                 buildMenuEditButton(context, assignment),
-                buildMenuDeleteButton(context, assignmentRepository, assignment),
+                buildMenuDeleteButton(
+                  context,
+                  assignmentRepository,
+                  assignment,
+                ),
               ],
             ),
           ),
@@ -182,7 +188,10 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
     );
   }
 
-  MenuItemButton buildMenuEditButton(BuildContext context, Assignment assignment) {
+  MenuItemButton buildMenuEditButton(
+    BuildContext context,
+    Assignment assignment,
+  ) {
     return MenuItemButton(
       onPressed: () => Navigator.push(
         context,
@@ -200,7 +209,8 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
     Assignment assignment,
   ) {
     return MenuItemButton(
-      onPressed: () async => await buildDeleteDialog(context, assignmentRepository, assignment),
+      onPressed: () async =>
+          await buildDeleteDialog(context, assignmentRepository, assignment),
       child: Text(
         'Delete',
         style: TextStyle(color: Theme.of(context).colorScheme.error),
@@ -242,7 +252,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
   ) {
     return TextButton(
       onPressed: () async {
-        await assignmentRepository.deleteAssignment(assignment_id: assignment.assignment_id);
+        await assignmentRepository.deleteAssignment(assignment.assignment_id);
 
         if (context.mounted) {
           if (assignmentRepository.isSuccess) {

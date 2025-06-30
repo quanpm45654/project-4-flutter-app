@@ -27,7 +27,7 @@ connection.getConnection((err) => {
 
 // GET ALL STUDENTS FROM CLASS
 app.get("/api/students", (req, res) => {
-  const query = `SELECT u.user_id, u.full_name, u.email, u.role
+  const query = `SELECT u.user_id, u.full_name, u.email, u.role, cs.joined_at
                 FROM users u
                 JOIN class_students cs ON u.user_id = cs.student_id
                 WHERE cs.class_id = ?;`;
@@ -46,7 +46,7 @@ app.get("/api/students", (req, res) => {
 // ADD STUDENT TO CLASS
 app.post("/api/students", (req, res) => {
   const { email, class_id } = req.body;
-  const queryStudent = "SELECT user_id, full_name, email, role FROM users WHERE email = ?";
+  const queryStudent = "SELECT user_id FROM users WHERE email = ?";
 
   connection.query(queryStudent, [email], (err, result) => {
     if (err) {
@@ -113,7 +113,7 @@ app.post("/api/classes", (req, res) => {
       return;
     }
 
-    res.status(200).json(result);
+    res.status(200).json(result.insertId);
   });
 });
 
@@ -191,24 +191,30 @@ app.get("/api/assignments", (req, res) => {
 // CREATE NEW ASSIGNMENT
 app.post("/api/assignments", (req, res) => {
   const { class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit, file_url } = req.body;
-  const query = `START TRANSACTION;
+  const query = `INSERT INTO assignments(class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?);`;
 
-                INSERT INTO assignments(class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit)
-                VALUES(?, ?, ?, ?, ?, ?, ?, ?);
-
-                INSERT INTO assignment_attachments(assignment_id, file_url)
-                VALUES(LAST_INSERT_ID(), ?);
-
-                COMMIT;`;
-
-  connection.query(query, [class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit, file_url], (err, result) => {
+  connection.query(query, [class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit], (err, result) => {
     if (err) {
       console.error(err);
       res.status(500);
       return;
     }
 
-    res.status(200).json(result);
+    var assignment_id = result.insertId;
+
+    const query2 = `INSERT INTO assignment_attachments(assignment_id, file_url)
+                    VALUES(LAST_INSERT_ID(), ?);`;
+
+    connection.query(query2, [file_url], (err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500);
+        return;
+      }
+
+      res.status(200).json(assignment_id);
+    });
   });
 });
 

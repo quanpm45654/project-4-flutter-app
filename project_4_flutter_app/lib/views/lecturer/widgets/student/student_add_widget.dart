@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class StudentAddWidget extends StatefulWidget {
   const StudentAddWidget({super.key, required this.class_id});
 
-  final num class_id;
+  final int class_id;
 
   @override
   State<StudentAddWidget> createState() => _StudentAddWidgetState();
@@ -93,9 +93,12 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
+            var class_id = widget.class_id;
+            var email = _studentEmail.text;
+
             await studentRepository.addStudentToClass(
-              class_id: widget.class_id,
-              email: _studentEmail.text,
+              class_id,
+              email,
             );
 
             if (context.mounted) {

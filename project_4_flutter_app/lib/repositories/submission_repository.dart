@@ -28,7 +28,7 @@ class SubmissionRepository extends ChangeNotifier {
 
   String get errorMessageSnackBar => _errorMessageSnackBar;
 
-  Future<void> fetchSubmissionList({required num assignment_id}) async {
+  Future<void> fetchSubmissionList(num assignment_id) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -57,7 +57,7 @@ class SubmissionRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchAssignedList({required num assignment_id}) async {
+  Future<void> fetchAssignedList(num assignment_id) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -65,7 +65,9 @@ class SubmissionRepository extends ChangeNotifier {
     try {
       final httpResponse = await http
           .get(
-            Uri.parse('$apiBaseUrl/assignments-students?assignment_id=$assignment_id'),
+            Uri.parse(
+              '$apiBaseUrl/assignments-students?assignment_id=$assignment_id',
+            ),
           )
           .timeout(const Duration(seconds: 30));
 
@@ -90,7 +92,7 @@ class SubmissionRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> gradeSubmission({required Submission submission}) async {
+  Future<void> gradeSubmission(Submission submission) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -108,8 +110,13 @@ class SubmissionRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
+        int index = _submissionList.indexWhere(
+          (a) => a.submission_id == submission.submission_id,
+        );
+        if (index != -1) {
+          _submissionList[index].score = submission.score;
+        }
         _isSuccess = true;
-        await fetchSubmissionList(assignment_id: submission.assignment_id);
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }

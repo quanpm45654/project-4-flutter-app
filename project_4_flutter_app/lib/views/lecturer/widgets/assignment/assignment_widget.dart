@@ -9,7 +9,7 @@ class AssignmentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -22,19 +22,19 @@ class AssignmentWidget extends StatelessWidget {
             ),
             title: Text(
               assignment.title,
-              style: const TextStyle(fontSize: 24.0),
+              style: const TextStyle(fontSize: 20.0),
             ),
           ),
-          const SizedBox(),
+          const SizedBox(height: 8.0),
           Text(
             'Due ${CustomFormatter.formatDateTime(assignment.due_at)}',
             style: DateTime.now().isAfter(assignment.due_at)
                 ? TextStyle(color: Theme.of(context).colorScheme.error)
                 : const TextStyle(),
           ),
-          const SizedBox(),
+          const SizedBox(height: 8.0),
           Text('${assignment.max_score} point'),
-          const SizedBox(),
+          const SizedBox(height: 8.0),
           Text(
             'Description',
             style: TextStyle(
@@ -43,8 +43,9 @@ class AssignmentWidget extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
-          Text('${assignment.description}'),
-          const SizedBox(),
+          Text(assignment.description),
+          const SizedBox(height: 8.0),
+
           Text(
             'Attachment',
             style: TextStyle(
@@ -53,8 +54,9 @@ class AssignmentWidget extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
-          Text(assignment.file_url ?? ''),
-          const SizedBox(),
+          SelectableText(assignment.file_url ?? ''),
+          const SizedBox(height: 8.0),
+
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: assignment.assignment_type.name == 'individual'
