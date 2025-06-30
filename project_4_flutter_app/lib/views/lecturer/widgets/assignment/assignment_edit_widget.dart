@@ -22,16 +22,18 @@ class _AssignmentEditWidgetState extends State<AssignmentEditWidget> {
   final _assignmentDueAt = TextEditingController();
   final _assignmentMaxScore = TextEditingController();
   AssignmentType? _assignmentType = AssignmentType.individual;
-  bool _assignmentTimeBound = false;
-  bool _assignmentAllowResubmit = false;
+  var _assignmentTimeBound = false;
+  var _assignmentAllowResubmit = false;
   final _assignmentFileUrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _assignmentTitle.text = widget.assignment.title;
-    _assignmentDescription.text = widget.assignment.description ?? '';
-    _assignmentDueAt.text = CustomFormatter.formatDateTime(widget.assignment.due_at);
+    _assignmentDescription.text = widget.assignment.description;
+    _assignmentDueAt.text = CustomFormatter.formatDateTime(
+      widget.assignment.due_at,
+    );
     _assignmentMaxScore.text = widget.assignment.max_score.toString();
     _assignmentType = widget.assignment.assignment_type;
     _assignmentTimeBound = widget.assignment.time_bound;
@@ -163,6 +165,7 @@ class _AssignmentEditWidgetState extends State<AssignmentEditWidget> {
       validator: (value) => CustomValidator.combine([
         CustomValidator.required(value, 'Max score'),
         CustomValidator.number(value),
+        CustomValidator.minValue(value, 0),
       ]),
     );
   }
@@ -221,7 +224,8 @@ class _AssignmentEditWidgetState extends State<AssignmentEditWidget> {
       contentPadding: EdgeInsets.zero,
       leading: Checkbox(
         value: _assignmentTimeBound,
-        onChanged: (value) => setState(() => _assignmentTimeBound = value ?? false),
+        onChanged: (value) =>
+            setState(() => _assignmentTimeBound = value ?? false),
       ),
       title: const Text('Time bound'),
     );
@@ -232,33 +236,48 @@ class _AssignmentEditWidgetState extends State<AssignmentEditWidget> {
       contentPadding: EdgeInsets.zero,
       leading: Checkbox(
         value: _assignmentAllowResubmit,
-        onChanged: (value) => setState(() => _assignmentAllowResubmit = value ?? false),
+        onChanged: (value) =>
+            setState(() => _assignmentAllowResubmit = value ?? false),
       ),
       title: const Text('Allow resubmit'),
     );
   }
 
-  SizedBox buildSubmitButton(AssignmentRepository assignmentRepository, BuildContext context) {
+  SizedBox buildSubmitButton(
+    AssignmentRepository assignmentRepository,
+    BuildContext context,
+  ) {
     return SizedBox(
       width: double.maxFinite,
       height: 48.0,
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
+            var assignment_id = widget.assignment.assignment_id;
+            var title = _assignmentTitle.text;
+            var description = _assignmentDescription.text;
+            var due_at = DateTime.parse(_assignmentDueAt.text);
+            var max_score = double.parse(_assignmentMaxScore.text);
+            var assignment_type = _assignmentType ?? AssignmentType.individual;
+            var time_bound = _assignmentTimeBound;
+            var allow_resubmit = _assignmentAllowResubmit;
+            var class_id = widget.assignment.class_id;
+            var file_url = _assignmentFileUrl.text;
+
             final inputAssignment = Assignment(
-              assignment_id: widget.assignment.assignment_id,
-              title: _assignmentTitle.text,
-              description: _assignmentDescription.text,
-              due_at: DateTime.parse(_assignmentDueAt.text),
-              max_score: double.parse(_assignmentMaxScore.text),
-              assignment_type: _assignmentType ?? AssignmentType.individual,
-              time_bound: _assignmentTimeBound,
-              allow_resubmit: _assignmentAllowResubmit,
-              class_id: widget.assignment.class_id,
-              file_url: _assignmentFileUrl.text,
+              assignment_id,
+              title,
+              description,
+              due_at,
+              max_score,
+              assignment_type,
+              time_bound,
+              allow_resubmit,
+              class_id,
+              file_url,
             );
 
-            await assignmentRepository.updateAssignment(assignment: inputAssignment);
+            await assignmentRepository.updateAssignment(inputAssignment);
 
             if (context.mounted) {
               if (assignmentRepository.isSuccess) {

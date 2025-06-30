@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class StudentListWidget extends StatefulWidget {
   const StudentListWidget({super.key, required this.class_id});
 
-  final num class_id;
+  final int class_id;
 
   @override
   State<StudentListWidget> createState() => _StudentListWidgetState();
@@ -21,7 +21,7 @@ class _StudentListWidgetState extends State<StudentListWidget> {
       (_) => Provider.of<StudentRepository>(
         context,
         listen: false,
-      ).fetchClassStudentList(class_id: widget.class_id),
+      ).fetchClassStudentList(widget.class_id),
     );
   }
 
@@ -37,7 +37,7 @@ class _StudentListWidgetState extends State<StudentListWidget> {
       child: Column(
         children: [
           buildAddButton(context),
-          const SizedBox(height: 16),
+          const SizedBox(height: 16.0),
           buildConsumer(),
         ],
       ),
@@ -87,13 +87,20 @@ class _StudentListWidgetState extends State<StudentListWidget> {
         }
 
         return Flexible(
-          child: buildStudentListView(studentRepository),
+          child: RefreshIndicator(
+            onRefresh: () async =>
+                await studentRepository.fetchClassStudentList(widget.class_id),
+            child: buildStudentListView(studentRepository),
+          ),
         );
       },
     );
   }
 
-  Flexible buildErrorMessage(StudentRepository studentRepository, BuildContext context) {
+  Flexible buildErrorMessage(
+    StudentRepository studentRepository,
+    BuildContext context,
+  ) {
     return Flexible(
       child: Center(
         child: Column(
@@ -105,10 +112,8 @@ class _StudentListWidgetState extends State<StudentListWidget> {
               textAlign: TextAlign.center,
             ),
             TextButton(
-              onPressed: () => Provider.of<StudentRepository>(
-                context,
-                listen: false,
-              ).fetchClassStudentList(class_id: widget.class_id),
+              onPressed: () async => await studentRepository
+                  .fetchClassStudentList(widget.class_id),
               child: const Text('Retry'),
             ),
           ],
@@ -158,7 +163,8 @@ class _StudentListWidgetState extends State<StudentListWidget> {
     Student student,
   ) {
     return MenuItemButton(
-      onPressed: () async => await buildRemoveDialog(context, studentRepository, student),
+      onPressed: () async =>
+          await buildRemoveDialog(context, studentRepository, student),
       child: Text(
         'Remove from class',
         style: TextStyle(color: Theme.of(context).colorScheme.error),
@@ -200,9 +206,12 @@ class _StudentListWidgetState extends State<StudentListWidget> {
   ) {
     return TextButton(
       onPressed: () async {
+        var class_id = widget.class_id;
+        var student_id = student.user_id;
+
         await studentRepository.removeStudentFromClass(
-          class_id: widget.class_id,
-          student_id: student.user_id,
+          class_id,
+          student_id,
         );
 
         if (context.mounted) {

@@ -28,7 +28,7 @@ class SubmissionRepository extends ChangeNotifier {
 
   String get errorMessageSnackBar => _errorMessageSnackBar;
 
-  Future<void> fetchSubmissionList({required num assignment_id}) async {
+  Future<void> fetchSubmissionList(num assignment_id) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -41,9 +41,7 @@ class SubmissionRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _submissionList = (jsonDecode(httpResponse.body) as List)
-            .map((json) => Submission.fromJson(json as Map<String, dynamic>))
-            .toList();
+        _submissionList = (jsonDecode(httpResponse.body) as List).map((json) => Submission.fromJson(json as Map<String, dynamic>)).toList();
         _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
@@ -57,7 +55,7 @@ class SubmissionRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchAssignedList({required num assignment_id}) async {
+  Future<void> fetchAssignedList(num assignment_id) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -90,7 +88,7 @@ class SubmissionRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> gradeSubmission({required Submission submission}) async {
+  Future<void> gradeSubmission(Submission submission) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -109,7 +107,10 @@ class SubmissionRepository extends ChangeNotifier {
 
       if (httpResponse.statusCode == 200) {
         _isSuccess = true;
-        await fetchSubmissionList(assignment_id: submission.assignment_id);
+        int index = _submissionList.indexWhere((a) => a.submission_id == submission.submission_id);
+        if (index != -1) {
+          _submissionList[index].score = submission.score;
+        }
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }

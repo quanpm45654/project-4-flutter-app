@@ -46,7 +46,7 @@ app.get("/api/students", (req, res) => {
 // ADD STUDENT TO CLASS
 app.post("/api/students", (req, res) => {
   const { email, class_id } = req.body;
-  const queryStudent = "SELECT user_id, full_name, email, role FROM users WHERE email = ?";
+  const queryStudent = "SELECT user_id FROM users WHERE email = ?";
 
   connection.query(queryStudent, [email], (err, result) => {
     if (err) {
@@ -54,7 +54,7 @@ app.post("/api/students", (req, res) => {
       return;
     }
 
-    const user_id = result[0].user_id;
+    const user_id = result.user_id;
     const queryAddStudent = "INSERT INTO class_students (class_id, student_id) VALUES (?, ?)";
 
     connection.query(queryAddStudent, [class_id, user_id], (err, result) => {
@@ -113,7 +113,7 @@ app.post("/api/classes", (req, res) => {
       return;
     }
 
-    res.status(200).json(result);
+    res.status(200).json(result.insertId);
   });
 });
 
@@ -208,7 +208,7 @@ app.post("/api/assignments", (req, res) => {
       return;
     }
 
-    res.status(200).json(result);
+    res.status(200).json(result[0].insertId);
   });
 });
 

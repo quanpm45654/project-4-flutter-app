@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 
 class CustomTheme {
+  static const _blue = Color(0xFF306ED0);
+  static const _gold = Color(0xFFD09230);
+  static const _darkerRed = Color(0xFF800000);
+  static const _white = Color(0xFFE6E6E6);
+  static const _darkerWhite = Color(0xFFDADADA);
+  static const _black = Color(0xFF1A1A1A);
+  static const _gray = Color(0xFF808080);
+  static const _darkerGray = Color(0xFF404040);
+
   static const _lightColorScheme = ColorScheme(
     brightness: Brightness.light,
-    primary: Color(0xFF306ED0),
-    onPrimary: Color(0xFFFFFFFF),
-    secondary: Color(0xFFD09230),
-    onSecondary: Color(0xFFFFFFFF),
-    error: Color(0xFF800000),
-    onError: Color(0xFFFFFFFF),
-    surface: Color(0xFFDADADA),
-    onSurface: Color(0xFF000000),
-    surfaceContainer: Color(0xFFE6E6E6),
+    primary: _blue,
+    onPrimary: _white,
+    secondary: _gold,
+    onSecondary: _white,
+    error: _darkerRed,
+    onError: _white,
+    surface: _darkerWhite,
+    onSurface: _black,
+    surfaceContainer: _white,
+    outline: _darkerGray,
+    outlineVariant: _gray,
   );
 
   static final lightTheme = ThemeData(
@@ -20,6 +31,9 @@ class CustomTheme {
       backgroundColor: _lightColorScheme.surfaceContainer,
       foregroundColor: _lightColorScheme.onSurface,
       scrolledUnderElevation: 0.0,
+    ),
+    tabBarTheme: TabBarThemeData(
+      dividerColor: _lightColorScheme.outlineVariant,
     ),
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: _lightColorScheme.surfaceContainer,
@@ -31,8 +45,8 @@ class CustomTheme {
             fontSize: 16.0,
           );
         }
-        return const TextStyle(
-          color: Color(0xFF404040),
+        return TextStyle(
+          color: _lightColorScheme.outline,
           fontSize: 16.0,
         );
       }),
@@ -42,8 +56,8 @@ class CustomTheme {
             color: _lightColorScheme.primary,
           );
         }
-        return const IconThemeData(
-          color: Color(0xFF404040),
+        return IconThemeData(
+          color: _lightColorScheme.outline,
         );
       }),
     ),
@@ -53,8 +67,8 @@ class CustomTheme {
       ),
       color: _lightColorScheme.surfaceContainer,
     ),
-    dividerTheme: const DividerThemeData(
-      color: Color(0xFF404040),
+    dividerTheme: DividerThemeData(
+      color: _lightColorScheme.outlineVariant,
     ),
   );
 }

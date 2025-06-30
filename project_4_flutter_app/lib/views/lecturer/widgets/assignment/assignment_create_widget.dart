@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 class AssignmentCreateWidget extends StatefulWidget {
   const AssignmentCreateWidget({super.key, required this.class_id});
 
-  final num class_id;
+  final int class_id;
 
   @override
   State<AssignmentCreateWidget> createState() => _AssignmentCreateWidgetState();
@@ -22,8 +22,8 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
   final _assignmentDueAt = TextEditingController();
   final _assignmentMaxScore = TextEditingController();
   AssignmentType? _assignmentType = AssignmentType.individual;
-  bool _assignmentTimeBound = false;
-  bool _assignmentAllowResubmit = false;
+  var _assignmentTimeBound = false;
+  var _assignmentAllowResubmit = false;
   final _assignmentFileUrl = TextEditingController();
 
   @override
@@ -148,6 +148,7 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
       validator: (value) => CustomValidator.combine([
         CustomValidator.required(value, 'Max score'),
         CustomValidator.number(value),
+        CustomValidator.minValue(value, 0),
       ]),
     );
   }
@@ -230,20 +231,31 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            final inputAssignment = Assignment(
-              assignment_id: 0,
-              title: _assignmentTitle.text,
-              description: _assignmentDescription.text,
-              due_at: DateTime.parse(_assignmentDueAt.text),
-              max_score: double.parse(_assignmentMaxScore.text),
-              assignment_type: _assignmentType ?? AssignmentType.individual,
-              time_bound: _assignmentTimeBound,
-              allow_resubmit: _assignmentAllowResubmit,
-              class_id: widget.class_id,
-              file_url: _assignmentFileUrl.text,
+            var assignment_id = 0;
+            var title = _assignmentTitle.text;
+            var description = _assignmentDescription.text;
+            var due_at = DateTime.parse(_assignmentDueAt.text);
+            var max_score = double.parse(_assignmentMaxScore.text);
+            var assignment_type = _assignmentType ?? AssignmentType.individual;
+            var time_bound = _assignmentTimeBound;
+            var allow_resubmit = _assignmentAllowResubmit;
+            var class_id = widget.class_id;
+            var file_url = _assignmentFileUrl.text;
+
+            var inputAssignment = Assignment(
+              assignment_id,
+              title,
+              description,
+              due_at,
+              max_score,
+              assignment_type,
+              time_bound,
+              allow_resubmit,
+              class_id,
+              file_url,
             );
 
-            await assignmentRepository.createAssignment(assignment: inputAssignment);
+            await assignmentRepository.createAssignment(inputAssignment);
 
             if (context.mounted) {
               if (assignmentRepository.isSuccess) {

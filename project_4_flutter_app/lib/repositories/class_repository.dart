@@ -25,7 +25,7 @@ class ClassRepository extends ChangeNotifier {
 
   String get errorMessageSnackBar => _errorMessageSnackBar;
 
-  Future<void> fetchClassList({required num lecturer_id}) async {
+  Future<void> fetchClassList(int lecturer_id) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -52,7 +52,7 @@ class ClassRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> createClass({required Class classObject}) async {
+  Future<void> createClass(Class classObject) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -71,7 +71,7 @@ class ClassRepository extends ChangeNotifier {
 
       if (httpResponse.statusCode == 200) {
         _isSuccess = true;
-        await fetchClassList(lecturer_id: 2);
+        await fetchClassList(2);
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }
@@ -84,7 +84,7 @@ class ClassRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> updateClass({required Class classObject}) async {
+  Future<void> updateClass(Class classObject) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -119,7 +119,7 @@ class ClassRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteClass({required num class_id}) async {
+  Future<void> deleteClass(int class_id) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();

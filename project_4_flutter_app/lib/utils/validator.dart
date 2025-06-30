@@ -44,4 +44,18 @@ class CustomValidator {
     }
     return null;
   }
+
+  static String? minValue(String? value, num minValue) {
+    if (value != null && num.parse(value) < minValue) {
+      return 'Please enter a number greater than $minValue';
+    }
+    return null;
+  }
+
+  static String? maxValue(String? value, num maxValue) {
+    if (value != null && num.parse(value) > maxValue) {
+      return 'Please enter a number less than $maxValue';
+    }
+    return null;
+  }
 }

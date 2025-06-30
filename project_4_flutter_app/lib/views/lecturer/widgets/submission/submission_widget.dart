@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/models/submission.dart';
+import 'package:project_4_flutter_app/repositories/assignment_repository.dart';
 import 'package:project_4_flutter_app/repositories/submission_repository.dart';
-import 'package:project_4_flutter_app/utils/functions.dart';
 import 'package:project_4_flutter_app/utils/validator.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +26,7 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
   @override
   Widget build(BuildContext context) {
     var submissionRepository = Provider.of<SubmissionRepository>(context);
+    var assignmentRepository = Provider.of<AssignmentRepository>(context);
 
     return submissionRepository.isLoading
         ? const Center(
@@ -35,11 +36,9 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Container(
+                child: SingleChildScrollView(
                   padding: const EdgeInsets.all(16.0),
-                  child: SingleChildScrollView(
-                    child: buildColumn(),
-                  ),
+                  child: buildColumn(assignmentRepository),
                 ),
               ),
               Container(
@@ -47,17 +46,14 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
                 color: Theme.of(context).colorScheme.surfaceContainer,
                 child: Column(
                   children: [
-                    buildForm(),
+                    buildForm(assignmentRepository),
                     const SizedBox(height: 16.0),
                     buildSubmitButton(submissionRepository, context),
                     const SizedBox(height: 16.0),
                     SizedBox(
                       width: double.maxFinite,
                       height: 48.0,
-                      child: TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel'),
-                      ),
+                      child: buildCancelButton(context),
                     ),
                   ],
                 ),
@@ -66,17 +62,51 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
           );
   }
 
-  Column buildColumn() {
+  Column buildColumn(AssignmentRepository assignmentRepository) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '${widget.submission.student_name}',
-          style: const TextStyle(fontSize: 24.0),
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: Text(
+            '${widget.submission.student_name}',
+            style: const TextStyle(fontSize: 20.0),
+          ),
+          subtitle:
+              widget.submission.submitted_at.isAfter(
+                assignmentRepository.assignmentList
+                    .firstWhere(
+                      (a) => a.assignment_id == widget.submission.assignment_id,
+                    )
+                    .due_at,
+              )
+              ? Text(
+                  'Done late',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                )
+              : const Text(
+                  'Turned in',
+                  style: TextStyle(color: Colors.green),
+                ),
+          trailing: Text(
+            '${widget.submission.score}/${assignmentRepository.assignmentList.firstWhere(
+              (a) => a.assignment_id == widget.submission.assignment_id,
+            ).max_score}',
+            style: const TextStyle(color: Colors.green, fontSize: 20.0),
+          ),
         ),
-        Text('Submitted at ${CustomFormatter.formatDateTime(widget.submission.submitted_at)}'),
-        Text('${widget.submission.score} point'),
+        Text(
+          'Note',
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.w500,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
         Text('${widget.submission.note}'),
+        const SizedBox(height: 8.0),
         Text(
           'Attachment',
           style: TextStyle(
@@ -85,7 +115,8 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        Text(widget.submission.file_url),
+        SelectableText(widget.submission.file_url),
+        const SizedBox(height: 8.0),
         Text(
           'Feedback',
           style: TextStyle(
@@ -96,6 +127,7 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
         ),
         Text(widget.submission.feedback_text ?? ''),
         Text(widget.submission.feedback_file_url ?? ''),
+        const SizedBox(height: 8.0),
         Text(
           'Comment',
           style: TextStyle(
@@ -108,42 +140,45 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
     );
   }
 
-  Form buildForm() {
+  Form buildForm(AssignmentRepository assignmentRepository) {
+    num maxScore = assignmentRepository.assignmentList
+        .firstWhere((a) => a.assignment_id == widget.submission.assignment_id)
+        .max_score;
     return Form(
       key: _formKey,
       child: TextFormField(
         controller: _submissionGrade,
         keyboardType: TextInputType.number,
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          label: Text('Grade*'),
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          label: const Text('Grade*'),
+          suffixText: '/$maxScore',
         ),
         validator: (value) => CustomValidator.combine([
           CustomValidator.number(value),
+          CustomValidator.minValue(value, 0),
+          CustomValidator.maxValue(value, maxScore),
         ]),
       ),
     );
   }
 
-  SizedBox buildSubmitButton(SubmissionRepository submissionRepository, BuildContext context) {
+  SizedBox buildSubmitButton(
+    SubmissionRepository submissionRepository,
+    BuildContext context,
+  ) {
     return SizedBox(
       width: double.maxFinite,
       height: 48.0,
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
-            final submission = Submission(
-              submission_id: 0,
-              assignment_id: 0,
-              student_id: 0,
-              attempt: 0,
-              submitted_at: DateTime.now(),
-              file_url: '',
-              score: num.parse(_submissionGrade.text),
-              graded_by: 2,
-            );
+            var submission = Submission.empty();
+            submission.submission_id = widget.submission.submission_id;
+            submission.score = double.parse(_submissionGrade.text);
+            submission.graded_by = 2;
 
-            await submissionRepository.gradeSubmission(submission: submission);
+            await submissionRepository.gradeSubmission(submission);
 
             if (context.mounted) {
               if (submissionRepository.isSuccess) {
@@ -168,6 +203,13 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
         },
         child: const Text('Return grade'),
       ),
+    );
+  }
+
+  TextButton buildCancelButton(BuildContext context) {
+    return TextButton(
+      onPressed: () => Navigator.pop(context),
+      child: const Text('Cancel'),
     );
   }
 }

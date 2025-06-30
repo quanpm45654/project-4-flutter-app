@@ -25,7 +25,7 @@ class StudentRepository extends ChangeNotifier {
 
   String get errorMessageSnackBar => _errorMessageSnackBar;
 
-  Future<void> fetchClassStudentList({required num class_id}) async {
+  Future<void> fetchClassStudentList(int class_id) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -38,9 +38,7 @@ class StudentRepository extends ChangeNotifier {
           .timeout(const Duration(seconds: 30));
 
       if (httpResponse.statusCode == 200) {
-        _studentList = (jsonDecode(httpResponse.body) as List)
-            .map((json) => Student.fromJson(json as Map<String, dynamic>))
-            .toList();
+        _studentList = (jsonDecode(httpResponse.body) as List).map((json) => Student.fromJson(json as Map<String, dynamic>)).toList();
         _isSuccess = true;
       } else {
         throw Exception('${httpResponse.statusCode} error');
@@ -54,7 +52,7 @@ class StudentRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> addStudentToClass({required num class_id, required String email}) async {
+  Future<void> addStudentToClass(int class_id, String email) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
@@ -73,7 +71,7 @@ class StudentRepository extends ChangeNotifier {
 
       if (httpResponse.statusCode == 200) {
         _isSuccess = true;
-        await fetchClassStudentList(class_id: class_id);
+        await fetchClassStudentList(class_id);
       } else {
         throw Exception('${httpResponse.statusCode} error');
       }
@@ -86,7 +84,7 @@ class StudentRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> removeStudentFromClass({required num class_id, required num student_id}) async {
+  Future<void> removeStudentFromClass(int class_id, int student_id) async {
     _isLoading = true;
     _isSuccess = false;
     notifyListeners();
