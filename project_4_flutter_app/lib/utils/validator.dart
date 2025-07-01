@@ -31,7 +31,9 @@ class CustomValidator {
   }
 
   static String? email(String? value) {
-    final emailRegExp = RegExp(r"^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$");
+    final emailRegExp = RegExp(
+      r"^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$",
+    );
     if (value != null && !emailRegExp.hasMatch(value)) {
       return 'Please enter a valid email';
     }

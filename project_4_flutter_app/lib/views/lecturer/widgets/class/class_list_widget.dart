@@ -199,7 +199,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
           await buildDeleteDialog(context, classRepository, classObject),
       child: Text(
         'Delete',
-        style: TextStyle(color: Theme.of(context).colorScheme.error),
+        style: TextStyle(color: Colors.red.shade900),
       ),
     );
   }
@@ -262,7 +262,7 @@ class _ClassListWidgetState extends State<ClassListWidget> {
       },
       child: Text(
         'Delete',
-        style: TextStyle(color: Theme.of(context).colorScheme.error),
+        style: TextStyle(color: Colors.red.shade900),
       ),
     );
   }

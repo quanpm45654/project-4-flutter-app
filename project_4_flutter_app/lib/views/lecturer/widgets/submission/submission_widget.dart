@@ -17,6 +17,7 @@ class SubmissionWidget extends StatefulWidget {
 class _SubmissionWidgetState extends State<SubmissionWidget> {
   final _formKey = GlobalKey<FormState>();
   final _submissionGrade = TextEditingController();
+  final _submissionFeedback = TextEditingController();
 
   @override
   void dispose() {
@@ -83,18 +84,18 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
               ? Text(
                   'Done late',
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
+                    color: Colors.red.shade900,
                   ),
                 )
-              : const Text(
+              : Text(
                   'Turned in',
-                  style: TextStyle(color: Colors.green),
+                  style: TextStyle(color: Colors.green.shade900),
                 ),
           trailing: Text(
             '${widget.submission.score}/${assignmentRepository.assignmentList.firstWhere(
               (a) => a.assignment_id == widget.submission.assignment_id,
             ).max_score}',
-            style: const TextStyle(color: Colors.green, fontSize: 20.0),
+            style: TextStyle(color: Colors.green.shade900, fontSize: 20.0),
           ),
         ),
         Text(
@@ -141,25 +142,49 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
   }
 
   Form buildForm(AssignmentRepository assignmentRepository) {
-    num maxScore = assignmentRepository.assignmentList
+    var maxScore = assignmentRepository.assignmentList
         .firstWhere((a) => a.assignment_id == widget.submission.assignment_id)
         .max_score;
     return Form(
       key: _formKey,
-      child: TextFormField(
-        controller: _submissionGrade,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          border: const OutlineInputBorder(),
-          label: const Text('Grade*'),
-          suffixText: '/$maxScore',
-        ),
-        validator: (value) => CustomValidator.combine([
-          CustomValidator.number(value),
-          CustomValidator.minValue(value, 0),
-          CustomValidator.maxValue(value, maxScore),
-        ]),
+      child: Column(
+        children: [
+          buildGradeField(maxScore),
+          const SizedBox(height: 16),
+          buildFeedbackField(),
+        ],
       ),
+    );
+  }
+
+  TextFormField buildGradeField(double maxScore) {
+    return TextFormField(
+      controller: _submissionGrade,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        border: const OutlineInputBorder(),
+        label: const Text('Grade*'),
+        suffixText: '/$maxScore',
+      ),
+      validator: (value) => CustomValidator.combine([
+        CustomValidator.required(value, 'Grade'),
+        CustomValidator.number(value),
+        CustomValidator.minValue(value, 0),
+        CustomValidator.maxValue(value, maxScore),
+      ]),
+    );
+  }
+
+  TextFormField buildFeedbackField() {
+    return TextFormField(
+      controller: _submissionFeedback,
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        label: Text('Feedback'),
+      ),
+      validator: (value) => CustomValidator.combine([
+        CustomValidator.maxLength(value, 255),
+      ]),
     );
   }
 
@@ -176,6 +201,7 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
             var submission = Submission.empty();
             submission.submission_id = widget.submission.submission_id;
             submission.score = double.parse(_submissionGrade.text);
+            submission.feedback_text = _submissionFeedback.text;
             submission.graded_by = 2;
 
             await submissionRepository.gradeSubmission(submission);

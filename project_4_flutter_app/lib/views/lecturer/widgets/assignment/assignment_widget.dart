@@ -29,7 +29,7 @@ class AssignmentWidget extends StatelessWidget {
           Text(
             'Due ${CustomFormatter.formatDateTime(assignment.due_at)}',
             style: DateTime.now().isAfter(assignment.due_at)
-                ? TextStyle(color: Theme.of(context).colorScheme.error)
+                ? TextStyle(color: Colors.red.shade900)
                 : const TextStyle(),
           ),
           const SizedBox(height: 8.0),
@@ -74,14 +74,14 @@ class AssignmentWidget extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: assignment.time_bound
-                ? const Icon(
-                    Icons.check_box,
-                    color: Colors.green,
+                ? Icon(
+                    Icons.check_rounded,
+                    color: Colors.green.shade900,
                     size: 32,
                   )
-                : const Icon(
-                    Icons.cancel_rounded,
-                    color: Colors.red,
+                : Icon(
+                    Icons.close_rounded,
+                    color: Colors.red.shade900,
                     size: 32,
                   ),
             title: const Text('Time bound'),
@@ -90,14 +90,14 @@ class AssignmentWidget extends StatelessWidget {
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: assignment.allow_resubmit
-                ? const Icon(
-                    Icons.check_box,
-                    color: Colors.green,
+                ? Icon(
+                    Icons.check_rounded,
+                    color: Colors.green.shade900,
                     size: 32,
                   )
-                : const Icon(
-                    Icons.cancel_rounded,
-                    color: Colors.red,
+                : Icon(
+                    Icons.close_rounded,
+                    color: Colors.red.shade900,
                     size: 32,
                   ),
             title: const Text('Allow resubmit'),

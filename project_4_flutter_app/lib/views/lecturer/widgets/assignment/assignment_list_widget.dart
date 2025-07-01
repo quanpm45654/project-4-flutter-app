@@ -161,7 +161,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
             subtitle: Text(
               'Due ${CustomFormatter.formatDateTime(assignment.due_at)}',
               style: DateTime.now().isAfter(assignment.due_at)
-                  ? TextStyle(color: Theme.of(context).colorScheme.error)
+                  ? TextStyle(color: Colors.red.shade900)
                   : const TextStyle(),
             ),
             trailing: MenuAnchor(
@@ -213,7 +213,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
           await buildDeleteDialog(context, assignmentRepository, assignment),
       child: Text(
         'Delete',
-        style: TextStyle(color: Theme.of(context).colorScheme.error),
+        style: TextStyle(color: Colors.red.shade900),
       ),
     );
   }
@@ -276,7 +276,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
       },
       child: Text(
         'Delete',
-        style: TextStyle(color: Theme.of(context).colorScheme.error),
+        style: TextStyle(color: Colors.red.shade900),
       ),
     );
   }

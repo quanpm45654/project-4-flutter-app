@@ -28,6 +28,7 @@ class AssignmentRepository extends ChangeNotifier {
   Future<void> fetchAssignmentList(int class_id) async {
     _isLoading = true;
     _isSuccess = false;
+    _errorMessage = '';
     notifyListeners();
 
     try {
@@ -46,7 +47,9 @@ class AssignmentRepository extends ChangeNotifier {
         );
         _isSuccess = true;
       } else {
-        throw Exception('${httpResponse.statusCode} error');
+        throw Exception(
+          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
+        );
       }
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
@@ -60,6 +63,7 @@ class AssignmentRepository extends ChangeNotifier {
   Future<void> createAssignment(Assignment assignment) async {
     _isLoading = true;
     _isSuccess = false;
+    _errorMessageSnackBar = '';
     notifyListeners();
 
     try {
@@ -82,7 +86,9 @@ class AssignmentRepository extends ChangeNotifier {
         );
         _isSuccess = true;
       } else {
-        throw Exception('${httpResponse.statusCode} error');
+        throw Exception(
+          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
+        );
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -96,6 +102,7 @@ class AssignmentRepository extends ChangeNotifier {
   Future<void> updateAssignment(Assignment assignment) async {
     _isLoading = true;
     _isSuccess = false;
+    _errorMessageSnackBar = '';
     notifyListeners();
 
     try {
@@ -119,7 +126,9 @@ class AssignmentRepository extends ChangeNotifier {
         }
         _isSuccess = true;
       } else {
-        throw Exception('${httpResponse.statusCode} error');
+        throw Exception(
+          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
+        );
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -133,6 +142,7 @@ class AssignmentRepository extends ChangeNotifier {
   Future<void> deleteAssignment(int assignment_id) async {
     _isLoading = true;
     _isSuccess = false;
+    _errorMessageSnackBar = '';
     notifyListeners();
 
     try {
@@ -149,7 +159,9 @@ class AssignmentRepository extends ChangeNotifier {
         _assignmentList.removeWhere((a) => a.assignment_id == assignment_id);
         _isSuccess = true;
       } else {
-        throw Exception('${httpResponse.statusCode} error');
+        throw Exception(
+          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
+        );
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
