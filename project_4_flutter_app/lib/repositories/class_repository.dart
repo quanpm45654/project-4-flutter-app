@@ -28,6 +28,7 @@ class ClassRepository extends ChangeNotifier {
   Future<void> fetchClassList(int lecturer_id) async {
     _isLoading = true;
     _isSuccess = false;
+    _errorMessage = '';
     notifyListeners();
 
     try {
@@ -44,7 +45,9 @@ class ClassRepository extends ChangeNotifier {
         _classList.sort((a, b) => b.class_id.compareTo(a.class_id));
         _isSuccess = true;
       } else {
-        throw Exception('${httpResponse.statusCode} error');
+        throw Exception(
+          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
+        );
       }
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
@@ -58,6 +61,7 @@ class ClassRepository extends ChangeNotifier {
   Future<void> createClass(Class classObject) async {
     _isLoading = true;
     _isSuccess = false;
+    _errorMessageSnackBar = '';
     notifyListeners();
 
     try {
@@ -78,7 +82,9 @@ class ClassRepository extends ChangeNotifier {
         _classList.sort((a, b) => b.class_id.compareTo(a.class_id));
         _isSuccess = true;
       } else {
-        throw Exception('${httpResponse.statusCode} error');
+        throw Exception(
+          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
+        );
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -92,6 +98,7 @@ class ClassRepository extends ChangeNotifier {
   Future<void> updateClass(Class classObject) async {
     _isLoading = true;
     _isSuccess = false;
+    _errorMessageSnackBar = '';
     notifyListeners();
 
     try {
@@ -115,7 +122,9 @@ class ClassRepository extends ChangeNotifier {
         }
         _isSuccess = true;
       } else {
-        throw Exception('${httpResponse.statusCode} error');
+        throw Exception(
+          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
+        );
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -129,6 +138,7 @@ class ClassRepository extends ChangeNotifier {
   Future<void> deleteClass(int class_id) async {
     _isLoading = true;
     _isSuccess = false;
+    _errorMessageSnackBar = '';
     notifyListeners();
 
     try {
@@ -145,7 +155,9 @@ class ClassRepository extends ChangeNotifier {
         _classList.removeWhere((a) => a.class_id == class_id);
         _isSuccess = true;
       } else {
-        throw Exception('${httpResponse.statusCode} error');
+        throw Exception(
+          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
+        );
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';

@@ -239,20 +239,20 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
                 ? Text(
                     'Done late',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
+                      color: Colors.red.shade900,
                     ),
                   )
-                : const Text(
+                : Text(
                     'Turned in',
-                    style: TextStyle(color: Colors.green),
+                    style: TextStyle(color: Colors.green.shade900),
                   ),
             trailing: Text(
               '${submission.score ?? '...'}/${assignmentRepository.assignmentList.firstWhere(
                 (a) => a.assignment_id == submission.assignment_id,
               ).max_score}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20.0,
-                color: Colors.green,
+                color: Colors.green.shade900,
               ),
             ),
           ),
@@ -295,7 +295,7 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
                 ? Text(
                     'Done late',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.error,
+                      color: Colors.red.shade900,
                     ),
                   )
                 : const Text(

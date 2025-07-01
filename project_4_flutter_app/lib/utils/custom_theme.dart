@@ -23,6 +23,7 @@ class CustomTheme {
     surfaceContainer: _white,
     outline: _darkerGray,
     outlineVariant: _gray,
+    shadow: _black,
   );
 
   static final lightTheme = ThemeData(
@@ -30,34 +31,37 @@ class CustomTheme {
     appBarTheme: AppBarTheme(
       backgroundColor: _lightColorScheme.surfaceContainer,
       foregroundColor: _lightColorScheme.onSurface,
-      scrolledUnderElevation: 0.0,
+      scrolledUnderElevation: 2.0,
+      elevation: 2.0,
+      shadowColor: _lightColorScheme.shadow,
+      surfaceTintColor: Colors.transparent,
     ),
     tabBarTheme: TabBarThemeData(
       dividerColor: _lightColorScheme.outlineVariant,
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: _lightColorScheme.surfaceContainer,
+      backgroundColor: _lightColorScheme.primary,
       indicatorColor: Colors.transparent,
       labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
         if (states.contains(WidgetState.selected)) {
           return TextStyle(
-            color: _lightColorScheme.primary,
+            color: _lightColorScheme.surfaceContainer,
             fontSize: 16.0,
           );
         }
         return TextStyle(
-          color: _lightColorScheme.outline,
+          color: _lightColorScheme.outlineVariant,
           fontSize: 16.0,
         );
       }),
       iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((states) {
         if (states.contains(WidgetState.selected)) {
           return IconThemeData(
-            color: _lightColorScheme.primary,
+            color: _lightColorScheme.surfaceContainer,
           );
         }
         return IconThemeData(
-          color: _lightColorScheme.outline,
+          color: _lightColorScheme.outlineVariant,
         );
       }),
     ),

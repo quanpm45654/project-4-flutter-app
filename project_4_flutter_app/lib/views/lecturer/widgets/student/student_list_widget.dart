@@ -83,6 +83,7 @@ class _StudentListWidgetState extends State<StudentListWidget> {
               child: Text(
                 "You haven't added any students to this class yet",
                 textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20.0),
               ),
             ),
           );
@@ -172,7 +173,7 @@ class _StudentListWidgetState extends State<StudentListWidget> {
           await buildRemoveDialog(context, studentRepository, student),
       child: Text(
         'Remove from class',
-        style: TextStyle(color: Theme.of(context).colorScheme.error),
+        style: TextStyle(color: Colors.red.shade900),
       ),
     );
   }
@@ -241,7 +242,7 @@ class _StudentListWidgetState extends State<StudentListWidget> {
       },
       child: Text(
         'Remove',
-        style: TextStyle(color: Theme.of(context).colorScheme.error),
+        style: TextStyle(color: Colors.red.shade900),
       ),
     );
   }

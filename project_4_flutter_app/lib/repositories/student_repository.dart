@@ -28,6 +28,7 @@ class StudentRepository extends ChangeNotifier {
   Future<void> fetchClassStudentList(int class_id) async {
     _isLoading = true;
     _isSuccess = false;
+    _errorMessage = '';
     notifyListeners();
 
     try {
@@ -44,7 +45,9 @@ class StudentRepository extends ChangeNotifier {
         _studentList.sort((a, b) => b.joined_at.compareTo(a.joined_at));
         _isSuccess = true;
       } else {
-        throw Exception('${httpResponse.statusCode} error');
+        throw Exception(
+          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
+        );
       }
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
@@ -58,6 +61,7 @@ class StudentRepository extends ChangeNotifier {
   Future<void> addStudentToClass(int class_id, String email) async {
     _isLoading = true;
     _isSuccess = false;
+    _errorMessageSnackBar = '';
     notifyListeners();
 
     try {
@@ -77,7 +81,9 @@ class StudentRepository extends ChangeNotifier {
         _studentList.sort((a, b) => b.joined_at.compareTo(a.joined_at));
         _isSuccess = true;
       } else {
-        throw Exception('${httpResponse.statusCode} error');
+        throw Exception(
+          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
+        );
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -91,6 +97,7 @@ class StudentRepository extends ChangeNotifier {
   Future<void> removeStudentFromClass(int class_id, int student_id) async {
     _isLoading = true;
     _isSuccess = false;
+    _errorMessageSnackBar = '';
     notifyListeners();
 
     try {
@@ -109,7 +116,9 @@ class StudentRepository extends ChangeNotifier {
         _studentList.removeWhere((a) => a.user_id == student_id);
         _isSuccess = true;
       } else {
-        throw Exception('${httpResponse.statusCode} error');
+        throw Exception(
+          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
+        );
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
