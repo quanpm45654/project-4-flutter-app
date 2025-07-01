@@ -45,9 +45,8 @@ class ClassRepository extends ChangeNotifier {
         _classList.sort((a, b) => b.class_id.compareTo(a.class_id));
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessage =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
@@ -82,9 +81,8 @@ class ClassRepository extends ChangeNotifier {
         _classList.sort((a, b) => b.class_id.compareTo(a.class_id));
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessageSnackBar =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -122,9 +120,8 @@ class ClassRepository extends ChangeNotifier {
         }
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessageSnackBar =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -155,9 +152,8 @@ class ClassRepository extends ChangeNotifier {
         _classList.removeWhere((a) => a.class_id == class_id);
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessageSnackBar =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';

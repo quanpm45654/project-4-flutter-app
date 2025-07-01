@@ -47,9 +47,8 @@ class AssignmentRepository extends ChangeNotifier {
         );
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessage =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
@@ -86,9 +85,8 @@ class AssignmentRepository extends ChangeNotifier {
         );
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessageSnackBar =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -126,9 +124,8 @@ class AssignmentRepository extends ChangeNotifier {
         }
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessageSnackBar =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -159,9 +156,8 @@ class AssignmentRepository extends ChangeNotifier {
         _assignmentList.removeWhere((a) => a.assignment_id == assignment_id);
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessageSnackBar =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
