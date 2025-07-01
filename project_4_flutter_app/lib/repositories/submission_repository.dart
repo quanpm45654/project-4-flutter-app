@@ -47,9 +47,8 @@ class SubmissionRepository extends ChangeNotifier {
             .toList();
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessage =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
@@ -85,9 +84,8 @@ class SubmissionRepository extends ChangeNotifier {
         }).toList();
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessage =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
@@ -126,9 +124,8 @@ class SubmissionRepository extends ChangeNotifier {
         }
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessageSnackBar =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (e) {
       _errorMessageSnackBar = 'An error has occurred, please try again';

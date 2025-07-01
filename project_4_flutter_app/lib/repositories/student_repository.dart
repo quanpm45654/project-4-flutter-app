@@ -45,9 +45,8 @@ class StudentRepository extends ChangeNotifier {
         _studentList.sort((a, b) => b.joined_at.compareTo(a.joined_at));
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessage =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
@@ -81,9 +80,8 @@ class StudentRepository extends ChangeNotifier {
         _studentList.sort((a, b) => b.joined_at.compareTo(a.joined_at));
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessageSnackBar =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -116,9 +114,8 @@ class StudentRepository extends ChangeNotifier {
         _studentList.removeWhere((a) => a.user_id == student_id);
         _isSuccess = true;
       } else {
-        throw Exception(
-          '${httpResponse.statusCode} error ${jsonDecode(httpResponse.body)}',
-        );
+        _errorMessageSnackBar =
+            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
