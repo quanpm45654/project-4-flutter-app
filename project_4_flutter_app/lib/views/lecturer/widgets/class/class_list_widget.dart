@@ -110,12 +110,18 @@ class _ClassListWidgetState extends State<ClassListWidget> {
           children: [
             Text(
               classRepository.errorMessage,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 20.0,
+              ),
               textAlign: TextAlign.center,
             ),
             TextButton(
               onPressed: () async => await classRepository.fetchClassList(2),
-              child: const Text('Retry'),
+              child: const Text(
+                'Retry',
+                style: TextStyle(fontSize: 20.0),
+              ),
             ),
           ],
         ),

@@ -198,7 +198,10 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
                 widget.assignment_id,
               );
             },
-            child: const Text('Retry'),
+            child: const Text(
+              'Retry',
+              style: TextStyle(fontSize: 20.0),
+            ),
           ),
         ],
       ),
