@@ -30,11 +30,13 @@ class LecturerNavigationBar extends StatelessWidget {
       },
       destinations: [
         const NavigationDestination(
-          icon: Icon(Icons.class_rounded),
+          icon: Icon(Icons.class_outlined),
+          selectedIcon: Icon(Icons.class_rounded),
           label: 'Class',
         ),
         const NavigationDestination(
-          icon: Icon(Icons.person_rounded),
+          icon: Icon(Icons.person_outline_rounded),
+          selectedIcon: Icon(Icons.person_rounded),
           label: 'Profile',
         ),
       ],

@@ -118,13 +118,19 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
           children: [
             Text(
               assignmentRepository.errorMessage,
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.error,
+                fontSize: 20.0,
+              ),
               textAlign: TextAlign.center,
             ),
             TextButton(
               onPressed: () async => await assignmentRepository
                   .fetchAssignmentList(widget.class_id),
-              child: const Text('Retry'),
+              child: const Text(
+                'Retry',
+                style: TextStyle(fontSize: 20.0),
+              ),
             ),
           ],
         ),

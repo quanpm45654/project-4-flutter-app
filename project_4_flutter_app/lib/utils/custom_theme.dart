@@ -31,37 +31,32 @@ class CustomTheme {
     appBarTheme: AppBarTheme(
       backgroundColor: _lightColorScheme.surfaceContainer,
       foregroundColor: _lightColorScheme.onSurface,
-      scrolledUnderElevation: 2.0,
-      elevation: 2.0,
-      shadowColor: _lightColorScheme.shadow,
-      surfaceTintColor: Colors.transparent,
+      scrolledUnderElevation: 0.0,
     ),
     tabBarTheme: TabBarThemeData(
       dividerColor: _lightColorScheme.outlineVariant,
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: _lightColorScheme.primary,
+      backgroundColor: _lightColorScheme.surfaceContainer,
       indicatorColor: Colors.transparent,
       labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
         if (states.contains(WidgetState.selected)) {
           return TextStyle(
-            color: _lightColorScheme.surfaceContainer,
-            fontSize: 16.0,
+            color: _lightColorScheme.primary,
           );
         }
         return TextStyle(
-          color: _lightColorScheme.outlineVariant,
-          fontSize: 16.0,
+          color: _lightColorScheme.outline,
         );
       }),
       iconTheme: WidgetStateProperty.resolveWith<IconThemeData>((states) {
         if (states.contains(WidgetState.selected)) {
           return IconThemeData(
-            color: _lightColorScheme.surfaceContainer,
+            color: _lightColorScheme.primary,
           );
         }
         return IconThemeData(
-          color: _lightColorScheme.outlineVariant,
+          color: _lightColorScheme.outline,
         );
       }),
     ),
