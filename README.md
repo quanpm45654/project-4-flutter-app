@@ -1,5 +1,7 @@
+## App function
+
+### GET ALL STUDENTS IN A CLASS
 ```
-// GET ALL STUDENTS IN A CLASS
 app.get("/api/classes/:class_id/students", (req, res) => {
   const class_id = req.params.class_id;
   const query = `SELECT u.user_id, u.full_name, u.email, u.role, cs.joined_at
@@ -17,8 +19,9 @@ app.get("/api/classes/:class_id/students", (req, res) => {
     res.status(200).json(result);
   });
 });
-
-// ADD A STUDENT TO A CLASS
+```
+### ADD A STUDENT TO A CLASS
+```
 app.post("/api/classes/:class_id/students", (req, res) => {
   const class_id = req.params.class_id;
   const email = req.body;
@@ -45,8 +48,9 @@ app.post("/api/classes/:class_id/students", (req, res) => {
     });
   });
 });
-
-// REMOVE A STUDENT FROM A CLASS
+```
+### REMOVE A STUDENT FROM A CLASS
+```
 app.delete("/api/classes/:class_id/students/:student_id", (req, res) => {
   const class_id = req.params.class_id;
   const student_id = req.params.student_id;
@@ -62,8 +66,9 @@ app.delete("/api/classes/:class_id/students/:student_id", (req, res) => {
     res.status(200).json(result);
   });
 });
-
-// GET ALL CLASSES FOR A LECTURER
+```
+### GET ALL CLASSES FOR A LECTURER
+```
 app.get("/api/classes", (req, res) => {
   const query = "SELECT * FROM classes WHERE lecturer_id = ?;";
 
@@ -77,8 +82,9 @@ app.get("/api/classes", (req, res) => {
     res.status(200).json(result);
   });
 });
-
-// CREATE A NEW CLASS
+```
+### CREATE A NEW CLASS
+```
 app.post("/api/classes", (req, res) => {
   const { class_code, class_name, description, semester, lecturer_id } = req.body;
   const query = `INSERT INTO classes(class_code, class_name, description, semester, lecturer_id)
@@ -94,8 +100,9 @@ app.post("/api/classes", (req, res) => {
     res.status(200).json(result.insertId);
   });
 });
-
-// EDIT A CLASS
+```
+### EDIT A CLASS
+```
 app.patch("/api/classes/:class_id", (req, res) => {
   const class_id = req.params.class_id;
   const { class_code, class_name, description, semester, lecturer_id } = req.body;
@@ -118,8 +125,9 @@ app.patch("/api/classes/:class_id", (req, res) => {
     res.status(200).json(result);
   });
 });
-
-// DELETE A CLASS
+```
+### DELETE A CLASS
+```
 app.delete("/api/classes/:class_id", (req, res) => {
   const class_id = req.params.class_id;
   const query = `DELETE FROM classes WHERE class_id = ?;`;
@@ -134,8 +142,9 @@ app.delete("/api/classes/:class_id", (req, res) => {
     res.status(200).json(result);
   });
 });
-
-// GET ALL ASSIGNMENTS IN A CLASS
+```
+### GET ALL ASSIGNMENTS IN A CLASS
+```
 app.get("/api/classes/:class_id/assignments", (req, res) => {
   const class_id = req.params.class_id;
   let query = `SELECT a.*, aa.file_url
@@ -154,8 +163,9 @@ app.get("/api/classes/:class_id/assignments", (req, res) => {
     res.status(200).json(result);
   });
 });
-
-// CREATE A NEW ASSIGNMENT
+```
+### CREATE A NEW ASSIGNMENT
+```
 app.post("/api/assignments", (req, res) => {
   const { class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit, file_url } = req.body;
   const queryAssignment = `INSERT INTO assignments(class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit)
@@ -183,8 +193,9 @@ app.post("/api/assignments", (req, res) => {
     });
   });
 });
-
-// EDIT AN ASSIGNMENT
+```
+### EDIT AN ASSIGNMENT
+```
 app.patch("/api/assignments/:assignment_id", (req, res) => {
   const assignment_id = req.params.assignment_id;
   const { class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit, file_url } = req.body;
@@ -220,8 +231,9 @@ app.patch("/api/assignments/:assignment_id", (req, res) => {
     res.status(200).json(result);
   });
 });
-
-// DELETE AN ASSIGNMENT
+```
+### DELETE AN ASSIGNMENT
+```
 app.delete("/api/assignments/:assignment_id", (req, res) => {
   const assignment_id = parseInt(req.params.assignment_id);
   const query = `DELETE FROM assignments WHERE assignment_id = ?;`;
@@ -236,8 +248,9 @@ app.delete("/api/assignments/:assignment_id", (req, res) => {
     res.status(200).json(result);
   });
 });
-
-// GET ALL SUBMISSIONS FOR AN ASSIGNMENT
+```
+### GET ALL SUBMISSIONS FOR AN ASSIGNMENT
+```
 app.get("/api/assignments/:assignment_id/submissions", (req, res) => {
   const assignment_id = req.params.assignment_id;
   const query = `SELECT s.*, u.full_name
@@ -256,8 +269,9 @@ app.get("/api/assignments/:assignment_id/submissions", (req, res) => {
     res.status(200).json(result);
   });
 });
-
-// GRADE AND FEEDBACK STUDENT SUBMISSION
+```
+### GRADE AND FEEDBACK STUDENT SUBMISSION
+```
 app.patch("/api/submissions/:submission_id", (req, res) => {
   const submission_id = req.params.submission_id;
   const { score, feedback_text, graded_by } = req.body;
@@ -279,8 +293,9 @@ app.patch("/api/submissions/:submission_id", (req, res) => {
     res.status(200).json(result);
   });
 });
-
-// GET ALL STUDENT WITH ASSIGNMENT NOT SUBMITTED
+```
+### GET ALL STUDENT WITH ASSIGNMENT NOT SUBMITTED
+```
 app.get("/api/assignment-students", (req, res) => {
   const query = `SELECT u.user_id, u.full_name, u.email
                 FROM assignments a
