@@ -34,7 +34,7 @@ class AssignmentRepository extends ChangeNotifier {
     try {
       final httpResponse = await http
           .get(
-            Uri.parse('$apiBaseUrl/assignments?class_id=$class_id'),
+            Uri.parse('$apiBaseUrl/classes/$class_id/assignments'),
           )
           .timeout(const Duration(seconds: 30));
 

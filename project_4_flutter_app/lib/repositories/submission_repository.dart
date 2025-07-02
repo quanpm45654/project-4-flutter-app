@@ -28,7 +28,7 @@ class SubmissionRepository extends ChangeNotifier {
 
   String get errorMessageSnackBar => _errorMessageSnackBar;
 
-  Future<void> fetchSubmissionList(num assignment_id) async {
+  Future<void> fetchSubmissionList(int assignment_id) async {
     _isLoading = true;
     _isSuccess = false;
     _errorMessage = '';
@@ -37,7 +37,7 @@ class SubmissionRepository extends ChangeNotifier {
     try {
       final httpResponse = await http
           .get(
-            Uri.parse('$apiBaseUrl/submissions?assignment_id=$assignment_id'),
+            Uri.parse('$apiBaseUrl/assignments/$assignment_id/submissions'),
           )
           .timeout(const Duration(seconds: 30));
 
@@ -59,7 +59,7 @@ class SubmissionRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchAssignedList(num assignment_id) async {
+  Future<void> fetchAssignedList(int assignment_id) async {
     _isLoading = true;
     _isSuccess = false;
     _errorMessage = '';

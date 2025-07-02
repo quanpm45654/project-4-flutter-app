@@ -25,14 +25,15 @@ connection.getConnection((error) => {
   console.log("Connected to MySQL");
 });
 
-// GET ALL STUDENTS FROM CLASS
-app.get("/api/students", (req, res) => {
+// GET ALL STUDENTS IN A CLASS
+app.get("/api/classes/:class_id/students", (req, res) => {
+  const class_id = req.params.class_id;
   const query = `SELECT u.user_id, u.full_name, u.email, u.role, cs.joined_at
                 FROM users u
                 JOIN class_students cs ON u.user_id = cs.student_id
                 WHERE cs.class_id = ?;`;
 
-  connection.query(query, [req.query.class_id], (error, result) => {
+  connection.query(query, [class_id], (error, result) => {
     if (error) {
       console.error(error);
       res.status(500).json(error.code);
@@ -43,9 +44,10 @@ app.get("/api/students", (req, res) => {
   });
 });
 
-// ADD STUDENT TO CLASS
-app.post("/api/students", (req, res) => {
-  const { email, class_id } = req.body;
+// ADD A STUDENT TO A CLASS
+app.post("/api/classes/:class_id/students", (req, res) => {
+  const class_id = req.params.class_id;
+  const email = req.body;
   const queryStudent = "SELECT user_id FROM users WHERE email = ?";
 
   connection.query(queryStudent, [email], (error, result) => {
@@ -55,10 +57,10 @@ app.post("/api/students", (req, res) => {
       return;
     }
 
-    const user_id = result[0].user_id;
+    const student_id = result[0].user_id;
     const queryAddStudent = "INSERT INTO class_students (class_id, student_id) VALUES (?, ?)";
 
-    connection.query(queryAddStudent, [class_id, user_id], (error, result) => {
+    connection.query(queryAddStudent, [class_id, student_id], (error, result) => {
       if (error) {
         console.error(error);
         res.status(500).json(error.code);
@@ -70,9 +72,10 @@ app.post("/api/students", (req, res) => {
   });
 });
 
-// REMOVE STUDENT FROM CLASS
-app.delete("/api/students", (req, res) => {
-  const { class_id, student_id } = req.body;
+// REMOVE A STUDENT FROM A CLASS
+app.delete("/api/classes/:class_id/students/:student_id", (req, res) => {
+  const class_id = req.params.class_id;
+  const student_id = req.params.student_id;
   const query = "DELETE FROM class_students WHERE class_id = ? AND student_id = ?;";
 
   connection.query(query, [class_id, student_id], (error, result) => {
@@ -86,7 +89,7 @@ app.delete("/api/students", (req, res) => {
   });
 });
 
-// GET ALL CLASSES FOR LECTURER
+// GET ALL CLASSES FOR A LECTURER
 app.get("/api/classes", (req, res) => {
   const query = "SELECT * FROM classes WHERE lecturer_id = ?;";
 
@@ -101,7 +104,7 @@ app.get("/api/classes", (req, res) => {
   });
 });
 
-// CREATE NEW CLASS
+// CREATE A NEW CLASS
 app.post("/api/classes", (req, res) => {
   const { class_code, class_name, description, semester, lecturer_id } = req.body;
   const query = `INSERT INTO classes(class_code, class_name, description, semester, lecturer_id)
@@ -118,9 +121,9 @@ app.post("/api/classes", (req, res) => {
   });
 });
 
-// EDIT CLASS
+// EDIT A CLASS
 app.patch("/api/classes/:class_id", (req, res) => {
-  const class_id = parseInt(req.params.class_id);
+  const class_id = req.params.class_id;
   const { class_code, class_name, description, semester, lecturer_id } = req.body;
   const query = `UPDATE classes
                 SET
@@ -142,9 +145,9 @@ app.patch("/api/classes/:class_id", (req, res) => {
   });
 });
 
-// DELETE CLASS
+// DELETE A CLASS
 app.delete("/api/classes/:class_id", (req, res) => {
-  const class_id = parseInt(req.params.class_id);
+  const class_id = req.params.class_id;
   const query = `DELETE FROM classes WHERE class_id = ?;`;
 
   connection.query(query, [class_id], (error, result) => {
@@ -158,27 +161,16 @@ app.delete("/api/classes/:class_id", (req, res) => {
   });
 });
 
-// GET ALL ASSIGNMENTS FOR CLASS
-app.get("/api/assignments", (req, res) => {
-  const { class_id, lecturer_id } = req.query;
+// GET ALL ASSIGNMENTS IN A CLASS
+app.get("/api/classes/:class_id/assignments", (req, res) => {
+  const class_id = req.params.class_id;
   let query = `SELECT a.*, aa.file_url
               FROM assignments a
               JOIN classes c ON a.class_id = c.class_id
-              LEFT JOIN assignment_attachments aa ON a.assignment_id = aa.assignment_id`;
-  let queryParams = [];
+              LEFT JOIN assignment_attachments aa ON a.assignment_id = aa.assignment_id
+              WHERE a.class_id = ?;`;
 
-  if (class_id && lecturer_id) {
-    query += ` WHERE a.class_id = ? AND c.lecturer_id = ?;`;
-    queryParams = [class_id, lecturer_id];
-  } else if (lecturer_id) {
-    query += ` WHERE c.lecturer_id = ?;`;
-    queryParams = [lecturer_id];
-  } else if (class_id) {
-    query += ` WHERE a.class_id = ?;`;
-    queryParams = [class_id];
-  }
-
-  connection.query(query, queryParams, (error, result) => {
+  connection.query(query, [class_id], (error, result) => {
     if (error) {
       console.error(error);
       res.status(500).json(error.code);
@@ -189,7 +181,7 @@ app.get("/api/assignments", (req, res) => {
   });
 });
 
-// CREATE NEW ASSIGNMENT
+// CREATE A NEW ASSIGNMENT
 app.post("/api/assignments", (req, res) => {
   const { class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit, file_url } = req.body;
   const queryAssignment = `INSERT INTO assignments(class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit)
@@ -203,7 +195,6 @@ app.post("/api/assignments", (req, res) => {
     }
 
     var assignment_id = result.insertId;
-
     const queryAttachment = `INSERT INTO assignment_attachments(assignment_id, file_url)
                     VALUES(LAST_INSERT_ID(), ?);`;
 
@@ -219,9 +210,9 @@ app.post("/api/assignments", (req, res) => {
   });
 });
 
-// EDIT ASSIGNMENT
+// EDIT AN ASSIGNMENT
 app.patch("/api/assignments/:assignment_id", (req, res) => {
-  const assignment_id = parseInt(req.params.assignment_id);
+  const assignment_id = req.params.assignment_id;
   const { class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit, file_url } = req.body;
   const query = `START TRANSACTION;
 
@@ -256,7 +247,7 @@ app.patch("/api/assignments/:assignment_id", (req, res) => {
   });
 });
 
-// DELETE ASSIGNMENT
+// DELETE AN ASSIGNMENT
 app.delete("/api/assignments/:assignment_id", (req, res) => {
   const assignment_id = parseInt(req.params.assignment_id);
   const query = `DELETE FROM assignments WHERE assignment_id = ?;`;
@@ -272,15 +263,16 @@ app.delete("/api/assignments/:assignment_id", (req, res) => {
   });
 });
 
-// GET ALL SUBMISSIONS FOR ASSIGNMENT
-app.get("/api/submissions", (req, res) => {
+// GET ALL SUBMISSIONS FOR AN ASSIGNMENT
+app.get("/api/assignments/:assignment_id/submissions", (req, res) => {
+  const assignment_id = req.params.assignment_id;
   const query = `SELECT s.*, u.full_name
                 FROM submissions s
                 JOIN assignments a ON s.assignment_id = a.assignment_id
                 JOIN users u ON s.student_id = u.user_id
                 WHERE s.assignment_id = ?;`;
 
-  connection.query(query, [req.query.assignment_id], (error, result) => {
+  connection.query(query, [assignment_id], (error, result) => {
     if (error) {
       console.error(error);
       res.status(500).json(error.code);
@@ -293,7 +285,7 @@ app.get("/api/submissions", (req, res) => {
 
 // GRADE AND FEEDBACK STUDENT SUBMISSION
 app.patch("/api/submissions/:submission_id", (req, res) => {
-  const submission_id = parseInt(req.params.submission_id);
+  const submission_id = req.params.submission_id;
   const { score, feedback_text, graded_by } = req.body;
   const query = `UPDATE submissions
                 SET
@@ -314,7 +306,7 @@ app.patch("/api/submissions/:submission_id", (req, res) => {
   });
 });
 
-// GET ALL STUDENT ASSIGNMENT NOT SUBMITTED
+// GET ALL STUDENT WITH ASSIGNMENT NOT SUBMITTED
 app.get("/api/assignment-students", (req, res) => {
   const query = `SELECT u.user_id, u.full_name, u.email
                 FROM assignments a
