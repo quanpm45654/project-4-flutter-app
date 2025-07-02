@@ -56,7 +56,7 @@ class AssignmentWidget extends StatelessWidget {
           ),
           SelectableText(assignment.file_url ?? ''),
           const SizedBox(height: 8.0),
-
+          const Divider(),
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: assignment.assignment_type.name == 'individual'
