@@ -34,7 +34,7 @@ class StudentRepository extends ChangeNotifier {
     try {
       final httpResponse = await http
           .get(
-            Uri.parse('$apiBaseUrl/students?class_id=$class_id'),
+            Uri.parse('$apiBaseUrl/classes/$class_id/students'),
           )
           .timeout(const Duration(seconds: 30));
 
@@ -66,12 +66,12 @@ class StudentRepository extends ChangeNotifier {
     try {
       final httpResponse = await http
           .post(
-            Uri.parse('$apiBaseUrl/students'),
+            Uri.parse('$apiBaseUrl/classes/$class_id/students'),
             headers: <String, String>{
               HttpHeaders.authorizationHeader: 'token',
               HttpHeaders.contentTypeHeader: 'application/json',
             },
-            body: jsonEncode({'email': email, 'class_id': class_id}),
+            body: jsonEncode({'email': email}),
           )
           .timeout(const Duration(seconds: 30));
 
@@ -101,12 +101,11 @@ class StudentRepository extends ChangeNotifier {
     try {
       final httpResponse = await http
           .delete(
-            Uri.parse('$apiBaseUrl/students'),
+            Uri.parse('$apiBaseUrl/classes/$class_id/students/$student_id'),
             headers: <String, String>{
               HttpHeaders.authorizationHeader: 'token',
               HttpHeaders.contentTypeHeader: 'application/json',
             },
-            body: jsonEncode({'student_id': student_id, 'class_id': class_id}),
           )
           .timeout(const Duration(seconds: 30));
 
