@@ -315,7 +315,6 @@ app.patch("/api/submissions/:submission_id", (req, res) => {
 });
 
 // GET ALL STUDENT ASSIGNMENT NOT SUBMITTED
-app.get("/api/assignments-students", (req, res) => {
 app.get("/api/assignment-students", (req, res) => {
   const query = `SELECT u.user_id, u.full_name, u.email
                 FROM assignments a
