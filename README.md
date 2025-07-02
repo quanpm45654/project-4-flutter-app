@@ -24,8 +24,8 @@ app.get("/api/classes/:class_id/students", (req, res) => {
 ```
 app.post("/api/classes/:class_id/students", (req, res) => {
   const class_id = req.params.class_id;
-  const email = req.body;
-  const queryStudent = "SELECT user_id FROM users WHERE email = ?";
+  const email = req.body.email;
+  const queryStudent = "SELECT user_id FROM users WHERE email = ?;";
 
   connection.query(queryStudent, [email], (error, result) => {
     if (error) {
