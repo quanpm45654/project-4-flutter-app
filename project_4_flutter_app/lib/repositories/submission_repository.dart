@@ -69,7 +69,7 @@ class SubmissionRepository extends ChangeNotifier {
       final httpResponse = await http
           .get(
             Uri.parse(
-              '$apiBaseUrl/assignments-students?assignment_id=$assignment_id',
+              '$apiBaseUrl/assignment-students?assignment_id=$assignment_id',
             ),
           )
           .timeout(const Duration(seconds: 30));

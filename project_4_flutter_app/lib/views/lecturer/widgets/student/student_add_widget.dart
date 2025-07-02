@@ -36,7 +36,7 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
                   child: SingleChildScrollView(
-                    child: buildForm(),
+                    child: buildForm(studentRepository),
                   ),
                 ),
               ),
@@ -55,20 +55,20 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
           );
   }
 
-  Form buildForm() {
+  Form buildForm(StudentRepository studentRepository) {
     return Form(
       key: _formKey,
       child: Column(
         spacing: 16.0,
         children: [
           const SizedBox(),
-          buildEmailField(),
+          buildEmailField(studentRepository),
         ],
       ),
     );
   }
 
-  TextFormField buildEmailField() {
+  TextFormField buildEmailField(StudentRepository studentRepository) {
     return TextFormField(
       controller: _studentEmail,
       decoration: const InputDecoration(
@@ -77,16 +77,24 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
         label: Text('Student email'),
       ),
       validator: (value) {
-        return CustomValidator.combine([
+        var result = CustomValidator.combine([
           CustomValidator.required(value, 'Student email'),
           CustomValidator.email(value),
           CustomValidator.maxLength(value, 255),
         ]);
+        String? result2;
+        if (studentRepository.studentList.any((a) => a.email == value)) {
+          result2 = 'This student email has already added to this class';
+        }
+        return result ?? result2;
       },
     );
   }
 
-  SizedBox buildSubmitButton(BuildContext context, StudentRepository studentRepository) {
+  SizedBox buildSubmitButton(
+    BuildContext context,
+    StudentRepository studentRepository,
+  ) {
     return SizedBox(
       width: double.maxFinite,
       height: 48.0,
