@@ -1,0 +1,317 @@
+## App function
+
+### GET ALL STUDENTS IN A CLASS
+```
+app.get("/api/classes/:class_id/students", (req, res) => {
+  const class_id = req.params.class_id;
+  const query = `SELECT u.user_id, u.full_name, u.email, u.role, cs.joined_at
+                FROM users u
+                JOIN class_students cs ON u.user_id = cs.student_id
+                WHERE cs.class_id = ?;`;
+
+  connection.query(query, [class_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    res.status(200).json(result);
+  });
+});
+```
+### ADD A STUDENT TO A CLASS
+```
+app.post("/api/classes/:class_id/students", (req, res) => {
+  const class_id = req.params.class_id;
+  const email = req.body;
+  const queryStudent = "SELECT user_id FROM users WHERE email = ?";
+
+  connection.query(queryStudent, [email], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    const student_id = result[0].user_id;
+    const queryAddStudent = "INSERT INTO class_students (class_id, student_id) VALUES (?, ?)";
+
+    connection.query(queryAddStudent, [class_id, student_id], (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json(error.code);
+        return;
+      }
+
+      res.status(200).json(result);
+    });
+  });
+});
+```
+### REMOVE A STUDENT FROM A CLASS
+```
+app.delete("/api/classes/:class_id/students/:student_id", (req, res) => {
+  const class_id = req.params.class_id;
+  const student_id = req.params.student_id;
+  const query = "DELETE FROM class_students WHERE class_id = ? AND student_id = ?;";
+
+  connection.query(query, [class_id, student_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    res.status(200).json(result);
+  });
+});
+```
+### GET ALL CLASSES FOR A LECTURER
+```
+app.get("/api/classes", (req, res) => {
+  const query = "SELECT * FROM classes WHERE lecturer_id = ?;";
+
+  connection.query(query, [req.query.lecturer_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    res.status(200).json(result);
+  });
+});
+```
+### CREATE A NEW CLASS
+```
+app.post("/api/classes", (req, res) => {
+  const { class_code, class_name, description, semester, lecturer_id } = req.body;
+  const query = `INSERT INTO classes(class_code, class_name, description, semester, lecturer_id)
+                VALUES( ?, ?, ?, ?, ?);`;
+
+  connection.query(query, [class_code, class_name, description, semester, lecturer_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    res.status(200).json(result.insertId);
+  });
+});
+```
+### EDIT A CLASS
+```
+app.patch("/api/classes/:class_id", (req, res) => {
+  const class_id = req.params.class_id;
+  const { class_code, class_name, description, semester, lecturer_id } = req.body;
+  const query = `UPDATE classes
+                SET
+                  class_code = ?,
+                  class_name = ?,
+                  description = ?,
+                  semester = ?,
+                  lecturer_id = ?
+                WHERE class_id = ?;`;
+
+  connection.query(query, [class_code, class_name, description, semester, lecturer_id, class_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    res.status(200).json(result);
+  });
+});
+```
+### DELETE A CLASS
+```
+app.delete("/api/classes/:class_id", (req, res) => {
+  const class_id = req.params.class_id;
+  const query = `DELETE FROM classes WHERE class_id = ?;`;
+
+  connection.query(query, [class_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    res.status(200).json(result);
+  });
+});
+```
+### GET ALL ASSIGNMENTS IN A CLASS
+```
+app.get("/api/classes/:class_id/assignments", (req, res) => {
+  const class_id = req.params.class_id;
+  let query = `SELECT a.*, aa.file_url
+              FROM assignments a
+              JOIN classes c ON a.class_id = c.class_id
+              LEFT JOIN assignment_attachments aa ON a.assignment_id = aa.assignment_id
+              WHERE a.class_id = ?;`;
+
+  connection.query(query, [class_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    res.status(200).json(result);
+  });
+});
+```
+### CREATE A NEW ASSIGNMENT
+```
+app.post("/api/assignments", (req, res) => {
+  const { class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit, file_url } = req.body;
+  const queryAssignment = `INSERT INTO assignments(class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?);`;
+
+  connection.query(queryAssignment, [class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    var assignment_id = result.insertId;
+    const queryAttachment = `INSERT INTO assignment_attachments(assignment_id, file_url)
+                    VALUES(LAST_INSERT_ID(), ?);`;
+
+    connection.query(queryAttachment, [file_url], (error, result) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json(error.code);
+        return;
+      }
+
+      res.status(200).json(assignment_id);
+    });
+  });
+});
+```
+### EDIT AN ASSIGNMENT
+```
+app.patch("/api/assignments/:assignment_id", (req, res) => {
+  const assignment_id = req.params.assignment_id;
+  const { class_id, title, description, due_at, max_score, assignment_type, time_bound, allow_resubmit, file_url } = req.body;
+  const query = `START TRANSACTION;
+
+                UPDATE assignments 
+                SET
+                  class_id = ?,
+                  title = ?,
+                  description = ?,
+                  due_at = ?,
+                  max_score = ?,
+                  assignment_type = ?,
+                  allow_resubmit = ?,
+                  time_bound = ?
+                WHERE assignment_id = ?;
+
+                UPDATE assignment_attachments
+                SET
+                  file_url = ?,
+                  uploaded_at = NOW()
+                WHERE assignment_id = ?;
+
+                COMMIT;`;
+
+  connection.query(query, [class_id, title, description, due_at, max_score, assignment_type, allow_resubmit, time_bound, assignment_id, file_url, assignment_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    res.status(200).json(result);
+  });
+});
+```
+### DELETE AN ASSIGNMENT
+```
+app.delete("/api/assignments/:assignment_id", (req, res) => {
+  const assignment_id = parseInt(req.params.assignment_id);
+  const query = `DELETE FROM assignments WHERE assignment_id = ?;`;
+
+  connection.query(query, [assignment_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    res.status(200).json(result);
+  });
+});
+```
+### GET ALL SUBMISSIONS FOR AN ASSIGNMENT
+```
+app.get("/api/assignments/:assignment_id/submissions", (req, res) => {
+  const assignment_id = req.params.assignment_id;
+  const query = `SELECT s.*, u.full_name
+                FROM submissions s
+                JOIN assignments a ON s.assignment_id = a.assignment_id
+                JOIN users u ON s.student_id = u.user_id
+                WHERE s.assignment_id = ?;`;
+
+  connection.query(query, [assignment_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    res.status(200).json(result);
+  });
+});
+```
+### GRADE AND FEEDBACK STUDENT SUBMISSION
+```
+app.patch("/api/submissions/:submission_id", (req, res) => {
+  const submission_id = req.params.submission_id;
+  const { score, feedback_text, graded_by } = req.body;
+  const query = `UPDATE submissions
+                SET
+                    score = ?,
+                    feedback_text = ?,
+                    graded_by = ?,
+                    graded_at = NOW()
+                WHERE submission_id = ?;`;
+
+  connection.query(query, [score, feedback_text, graded_by, submission_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    res.status(200).json(result);
+  });
+});
+```
+### GET ALL STUDENT WITH ASSIGNMENT NOT SUBMITTED
+```
+app.get("/api/assignment-students", (req, res) => {
+  const query = `SELECT u.user_id, u.full_name, u.email
+                FROM assignments a
+                JOIN class_students cs ON a.class_id = cs.class_id
+                JOIN users u ON cs.student_id = u.user_id
+                LEFT JOIN submissions s ON s.assignment_id = a.assignment_id AND s.student_id = u.user_id
+                WHERE a.assignment_id = ? AND s.submission_id IS NULL;`;
+
+  connection.query(query, [req.query.assignment_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      res.status(500).json(error.code);
+      return;
+    }
+
+    res.status(200).json(result);
+  });
+});
+```
