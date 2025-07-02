@@ -1,3 +1,4 @@
+```
 // GET ALL STUDENTS IN A CLASS
 app.get("/api/classes/:class_id/students", (req, res) => {
   const class_id = req.params.class_id;
@@ -298,3 +299,4 @@ app.get("/api/assignment-students", (req, res) => {
     res.status(200).json(result);
   });
 });
+```
