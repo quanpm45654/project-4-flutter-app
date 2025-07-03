@@ -129,7 +129,9 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
           lastDate: DateTime(DateTime.now().year + 10),
         );
 
-        date != null ? _assignmentDueAt.text = CustomFormatter.formatDateTime(date) : _assignmentDueAt.text = '';
+        date != null
+            ? _assignmentDueAt.text = CustomFormatter.formatDateTime(date)
+            : _assignmentDueAt.text = '';
       },
       validator: (value) => CustomValidator.combine([
         CustomValidator.required(value, 'Due at'),
@@ -207,7 +209,8 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
       contentPadding: EdgeInsets.zero,
       leading: Checkbox(
         value: _assignmentTimeBound,
-        onChanged: (value) => setState(() => _assignmentTimeBound = value ?? false),
+        onChanged: (value) =>
+            setState(() => _assignmentTimeBound = value ?? false),
       ),
       title: const Text('Time bound'),
     );
@@ -218,16 +221,19 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
       contentPadding: EdgeInsets.zero,
       leading: Checkbox(
         value: _assignmentAllowResubmit,
-        onChanged: (value) => setState(() => _assignmentAllowResubmit = value ?? false),
+        onChanged: (value) =>
+            setState(() => _assignmentAllowResubmit = value ?? false),
       ),
       title: const Text('Allow resubmit'),
     );
   }
 
-  SizedBox buildSubmitButton(AssignmentRepository assignmentRepository, BuildContext context) {
+  SizedBox buildSubmitButton(
+    AssignmentRepository assignmentRepository,
+    BuildContext context,
+  ) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -286,7 +292,6 @@ class _AssignmentCreateWidgetState extends State<AssignmentCreateWidget> {
   SizedBox buildCancelButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: TextButton(
         onPressed: () => Navigator.pop(context),
         child: const Text('Cancel'),

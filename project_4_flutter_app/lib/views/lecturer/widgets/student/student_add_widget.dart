@@ -84,7 +84,7 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
         ]);
         String? result2;
         if (studentRepository.studentList.any((a) => a.email == value)) {
-          result2 = 'This student email has already added to this class';
+          result2 = 'This student has already added to this class';
         }
         return result ?? result2;
       },
@@ -97,7 +97,6 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
   ) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -138,7 +137,6 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
   SizedBox buildCancelButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: TextButton(
         onPressed: () => Navigator.pop(context),
         child: const Text('Cancel'),

@@ -16,9 +16,8 @@ class AssignmentWidget extends StatelessWidget {
         children: [
           ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: CircleAvatar(
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              child: const Icon(Icons.assignment_rounded),
+            leading: const CircleAvatar(
+              child: Icon(Icons.assignment_outlined),
             ),
             title: Text(
               assignment.title,

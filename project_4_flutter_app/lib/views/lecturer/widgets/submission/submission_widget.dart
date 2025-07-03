@@ -51,11 +51,7 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
                     const SizedBox(height: 16.0),
                     buildSubmitButton(submissionRepository, context),
                     const SizedBox(height: 16.0),
-                    SizedBox(
-                      width: double.maxFinite,
-                      height: 48.0,
-                      child: buildCancelButton(context),
-                    ),
+                    buildCancelButton(context),
                   ],
                 ),
               ),
@@ -194,7 +190,6 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
   ) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -232,10 +227,13 @@ class _SubmissionWidgetState extends State<SubmissionWidget> {
     );
   }
 
-  TextButton buildCancelButton(BuildContext context) {
-    return TextButton(
-      onPressed: () => Navigator.pop(context),
-      child: const Text('Cancel'),
+  SizedBox buildCancelButton(BuildContext context) {
+    return SizedBox(
+      width: double.maxFinite,
+      child: TextButton(
+        onPressed: () => Navigator.pop(context),
+        child: const Text('Cancel'),
+      ),
     );
   }
 }

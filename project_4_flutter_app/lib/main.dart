@@ -4,7 +4,6 @@ import 'package:project_4_flutter_app/repositories/class_repository.dart';
 import 'package:project_4_flutter_app/repositories/student_repository.dart';
 import 'package:project_4_flutter_app/repositories/submission_repository.dart';
 import 'package:project_4_flutter_app/states/lecturer_navigation_bar_state.dart';
-import 'package:project_4_flutter_app/utils/custom_theme.dart';
 import 'package:project_4_flutter_app/views/lecturer/pages/class/class_list_page.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +39,6 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: CustomTheme.lightTheme,
       home: const ClassListPage(),
     );
   }

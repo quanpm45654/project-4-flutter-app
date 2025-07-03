@@ -133,7 +133,6 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
   ) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -184,7 +183,6 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
   SizedBox buildCancelButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: TextButton(
         onPressed: () => Navigator.pop(context),
         child: const Text('Cancel'),
