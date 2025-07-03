@@ -249,7 +249,6 @@ class _AssignmentEditWidgetState extends State<AssignmentEditWidget> {
   ) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -308,7 +307,6 @@ class _AssignmentEditWidgetState extends State<AssignmentEditWidget> {
   SizedBox buildCancelButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: TextButton(
         onPressed: () => Navigator.pop(context),
         child: const Text('Cancel'),

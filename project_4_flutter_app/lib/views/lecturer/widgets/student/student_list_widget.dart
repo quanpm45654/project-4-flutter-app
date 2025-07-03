@@ -47,7 +47,6 @@ class _StudentListWidgetState extends State<StudentListWidget> {
   SizedBox buildAddButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: FilledButton(
         onPressed: () => Navigator.push(
           context,
@@ -142,9 +141,8 @@ class _StudentListWidgetState extends State<StudentListWidget> {
 
         return ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: CircleAvatar(
-            backgroundColor: Theme.of(context).colorScheme.secondary,
-            child: const Icon(Icons.person_outline_rounded),
+          leading: const CircleAvatar(
+            child: Icon(Icons.person_outline_rounded),
           ),
           title: Text(
             student.full_name,

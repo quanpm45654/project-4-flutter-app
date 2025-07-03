@@ -47,7 +47,6 @@ class _ClassListWidgetState extends State<ClassListWidget> {
   SizedBox buildCreateButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: FilledButton(
         onPressed: () => Navigator.push(
           context,
@@ -149,9 +148,8 @@ class _ClassListWidgetState extends State<ClassListWidget> {
             margin: const EdgeInsets.only(bottom: 16.0),
             child: ListTile(
               contentPadding: const EdgeInsets.all(16.0),
-              leading: CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.secondary,
-                child: const Icon(Icons.class_outlined),
+              leading: const CircleAvatar(
+                child: Icon(Icons.class_outlined),
               ),
               title: Text(
                 classObject.class_name,

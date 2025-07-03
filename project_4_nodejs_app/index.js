@@ -4,7 +4,7 @@ import express from "express";
 import mysql from "mysql2";
 
 const app = express();
-const port = 3000;
+const port = 8080;
 const connection = mysql.createPool({
   host: "localhost",
   user: "root",

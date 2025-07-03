@@ -50,7 +50,6 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
   SizedBox buildCreateButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: FilledButton(
         onPressed: () => Navigator.push(
           context,
@@ -156,9 +155,8 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
           ),
           child: ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: CircleAvatar(
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              child: const Icon(Icons.assignment_outlined),
+            leading: const CircleAvatar(
+              child: Icon(Icons.assignment_outlined),
             ),
             title: Text(
               assignment.title,

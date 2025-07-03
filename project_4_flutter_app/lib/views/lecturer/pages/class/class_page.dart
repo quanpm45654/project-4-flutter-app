@@ -46,10 +46,10 @@ class _ClassPageState extends State<ClassPage>
               controller: _tabController,
               tabs: [
                 const Tab(
-                  child: Text('Student'),
+                  child: Text('Assignment'),
                 ),
                 const Tab(
-                  child: Text('Assignment'),
+                  child: Text('Student'),
                 ),
               ],
             ),
@@ -58,8 +58,8 @@ class _ClassPageState extends State<ClassPage>
             child: TabBarView(
               controller: _tabController,
               children: [
-                StudentListWidget(class_id: widget.classObject.class_id),
                 AssignmentListWidget(class_id: widget.classObject.class_id),
+                StudentListWidget(class_id: widget.classObject.class_id),
               ],
             ),
           ),

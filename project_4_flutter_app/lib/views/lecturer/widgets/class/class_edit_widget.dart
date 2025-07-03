@@ -138,10 +138,12 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
     );
   }
 
-  SizedBox buildSubmitButton(ClassRepository classRepository, BuildContext context) {
+  SizedBox buildSubmitButton(
+    ClassRepository classRepository,
+    BuildContext context,
+  ) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: FilledButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -192,7 +194,6 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
   SizedBox buildCancelButton(BuildContext context) {
     return SizedBox(
       width: double.maxFinite,
-      height: 48.0,
       child: TextButton(
         onPressed: () => Navigator.pop(context),
         child: const Text('Cancel'),
