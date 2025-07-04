@@ -78,7 +78,7 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
                                   'Student email',
                                 ),
                                 CustomValidator.email(value),
-                                CustomValidator.maxLength(value, 255),
+                                CustomValidator.maxLength(value, 100),
                               ]);
                               String? result2;
                               if (studentRepository.studentList.any(
