@@ -1,8 +1,9 @@
 ## App function
 
 ### 1. GET ALL CLASSES FOR A TEACHER
-// GET /api/teacher/classes?teacher_id=?
-// class_list_widget.dart
+GET /api/teacher/classes?teacher_id=?
+
+class_list_widget.dart
 ```
 app.get("/api/teacher/classes", (request, response) => {
   const teacher_id = request.query.teacher_id;
@@ -21,8 +22,9 @@ app.get("/api/teacher/classes", (request, response) => {
 });
 ```
 ### 2. CREATE A NEW CLASS
-// POST /api/teacher/classes
-// class_create_widget.dart
+POST /api/teacher/classes
+
+class_create_widget.dart
 ```
 app.post("/api/teacher/classes", (request, response) => {
   const { class_name, teacher_id, code } = request.body;
@@ -40,8 +42,9 @@ app.post("/api/teacher/classes", (request, response) => {
 });
 ```
 ### 3. EDIT A CLASS
-// PATCH /api/teacher/classes/:class_id
-//class_edit_widget.dart
+PATCH /api/teacher/classes/:class_id
+
+class_edit_widget.dart
 ```
 app.patch("/api/teacher/classes/:class_id", (request, response) => {
   const class_id = request.params.class_id;
@@ -61,8 +64,9 @@ app.patch("/api/teacher/classes/:class_id", (request, response) => {
 });
 ```
 ### 4. DELETE A CLASS
-// DELETE /api/teacher/classes/:class_id
-// class_list_widget.dart
+DELETE /api/teacher/classes/:class_id
+
+class_list_widget.dart
 ```
 app.delete("/api/teacher/classes/:class_id", (request, response) => {
   const class_id = request.params.class_id;
@@ -80,8 +84,9 @@ app.delete("/api/teacher/classes/:class_id", (request, response) => {
 });
 ```
 ### 5. GET ALL STUDENTS IN A CLASS
-// GET /api/teacher/classes/:class_id/students
-// student_list_widget.dart
+GET /api/teacher/classes/:class_id/students
+
+student_list_widget.dart
 ```
 app.get("/api/teacher/classes/:class_id/students", (request, response) => {
   const class_id = request.params.class_id;
@@ -101,8 +106,9 @@ app.get("/api/teacher/classes/:class_id/students", (request, response) => {
 });
 ```
 ### 6. ADD A STUDENT TO A CLASS
-// POST /api/teacher/classes/:class_id/students
-// student_add_widget.dart
+POST /api/teacher/classes/:class_id/students
+
+student_add_widget.dart
 ```
 app.post("/api/teacher/classes/:class_id/students", (request, response) => {
   const class_id = request.params.class_id;
@@ -132,8 +138,9 @@ app.post("/api/teacher/classes/:class_id/students", (request, response) => {
 });
 ```
 ### 7. REMOVE A STUDENT IN A CLASS
-// DELETE /api/teacher/classes/:class_id/students/:student_id
-// student_list_widget.dart
+DELETE /api/teacher/classes/:class_id/students/:student_id
+
+student_list_widget.dart
 ```
 app.delete("/api/teacher/classes/:class_id/students/:student_id", (request, response) => {
   const class_id = request.params.class_id;
@@ -152,8 +159,9 @@ app.delete("/api/teacher/classes/:class_id/students/:student_id", (request, resp
 });
 ```
 ### 8. GET ALL ASSIGNMENTS IN A CLASS
-// GET /api/teacher/classes/:class_id/assignments
-// assignment_list_widget.dart
+GET /api/teacher/classes/:class_id/assignments
+
+assignment_list_widget.dart
 ```
 app.get("/api/teacher/classes/:class_id/assignments", (request, response) => {
   const class_id = request.params.class_id;
@@ -173,8 +181,9 @@ app.get("/api/teacher/classes/:class_id/assignments", (request, response) => {
 });
 ```
 ### 9. CREATE A NEW ASSIGNMENT IN A CLASS
-// POST /api/teacher/classes/:class_id/assignments
-// assignment_create_widget.dart
+POST /api/teacher/classes/:class_id/assignments
+
+assignment_create_widget.dart
 ```
 app.post("/api/teacher/classes/:class_id/assignments", (request, response) => {
   const class_id = request.params.class_id;
@@ -193,8 +202,9 @@ app.post("/api/teacher/classes/:class_id/assignments", (request, response) => {
 });
 ```
 ### 10. EDIT AN ASSIGNMENT IN A CLASS
-// PATCH /api/teacher/classes/:class_id/assignments/:assignment_id
-// assignment_edit_widget.dart
+PATCH /api/teacher/classes/:class_id/assignments/:assignment_id
+
+assignment_edit_widget.dart
 ```
 app.patch("/api/teacher/classes/:class_id/assignments/:assignment_id", (request, response) => {
   const class_id = request.params.class_id;
@@ -221,8 +231,9 @@ app.patch("/api/teacher/classes/:class_id/assignments/:assignment_id", (request,
 });
 ```
 ### 11. DELETE AN ASSIGNMENT
-// DELETE /api/teacher/assignments/:assignment_id
-// assignment_list_widget.dart
+DELETE /api/teacher/assignments/:assignment_id
+
+assignment_list_widget.dart
 ```
 app.delete("/api/teacher/assignments/:assignment_id", (request, response) => {
   const assignment_id = request.params.assignment_id;
@@ -240,8 +251,9 @@ app.delete("/api/teacher/assignments/:assignment_id", (request, response) => {
 });
 ```
 ### 12. GET ALL SUBMISSION WITH ASSIGNED, SUBMITTED, GRADED STATUS OF AN ASSIGNMENT
-// GET /api/teacher/assignments/:assignment_id/submissions
-// submission_list_widget.dart
+GET /api/teacher/assignments/:assignment_id/submissions
+
+submission_list_widget.dart
 ```
 app.get("/api/teacher/assignments/:assignment_id/submissions", (request, response) => {
   const assignment_id = request.params.assignment_id;
@@ -281,8 +293,9 @@ app.get("/api/teacher/assignments/:assignment_id/submissions", (request, respons
 });
 ```
 ### 13. FEEDBACK STUDENT SUBMISSION
-// PUT /api/teacher/feedbacks
-// submission_widget.dart
+PUT /api/teacher/feedbacks
+
+submission_widget.dart
 ```
 app.put("/api/teacher/feedbacks", (request, response) => {
   const { id, submission_id, score, comment } = request.body;
@@ -300,7 +313,7 @@ app.put("/api/teacher/feedbacks", (request, response) => {
 });
 ```
 ### 14. View assignment detail
-// assignment_widget.dart
+assignment_widget.dart
 
 ### 15. View submission detail
-// submission_widget.dart
+submission_widget.dart
