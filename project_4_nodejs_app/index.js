@@ -143,7 +143,7 @@ app.post("/api/teacher/classes/:class_id/students", (request, response) => {
   });
 });
 
-// REMOVE A STUDENT FROM A CLASS
+// REMOVE A STUDENT IN A CLASS
 // DELETE /api/teacher/classes/:class_id/students/:student_id
 app.delete("/api/teacher/classes/:class_id/students/:student_id", (request, response) => {
   const class_id = request.params.class_id;
@@ -180,7 +180,7 @@ app.get("/api/teacher/classes/:class_id/assignments", (request, response) => {
   });
 });
 
-// CREATE A NEW ASSIGNMENT
+// CREATE A NEW ASSIGNMENT IN A CLASS
 // POST /api/teacher/classes/:class_id/assignments
 app.post("/api/teacher/classes/:class_id/assignments", (request, response) => {
   const class_id = request.params.class_id;
@@ -194,11 +194,11 @@ app.post("/api/teacher/classes/:class_id/assignments", (request, response) => {
       response.status(500).json(error.code);
       return;
     }
-    response.status(200).json(assignment_id);
+    response.status(200).json(result.insertId);
   });
 });
 
-// EDIT AN ASSIGNMENT
+// EDIT AN ASSIGNMENT IN A CLASS
 // PATCH /api/teacher/classes/:class_id/assignments/:assignment_id
 app.patch("/api/teacher/classes/:class_id/assignments/:assignment_id", (request, response) => {
   const class_id = request.params.class_id;
@@ -241,13 +241,16 @@ app.delete("/api/teacher/assignments/:assignment_id", (request, response) => {
   });
 });
 
-// GET ALL STUDENT WITH ASSIGNED, SUBMITTED, GRADED STATUS OF AN ASSIGNMENT
-// GET /api/teacher/assignment-students?assignment_id=?
-app.get("/api/teacher/assignment-students", (request, response) => {
-  const assignment_id = request.query.assignment_id;
+// GET ALL SUBMISSION WITH ASSIGNED, SUBMITTED, GRADED STATUS OF AN ASSIGNMENT
+// GET /api/teacher/assignments/:assignment_id/submissions
+app.get("/api/teacher/assignments/:assignment_id/submissions", (request, response) => {
+  const assignment_id = request.params.assignment_id;
   const sql = `SELECT
-                 s.full_name AS student_name,
                  sub.id AS submission_id,
+                 a.id AS assignment_id,
+                 f.id AS feedback_id,
+                 s.full_name AS student_name,
+                 sub.note,
                  sub.submitted_at,
                  sub.file_path,
                  f.score,
@@ -255,11 +258,11 @@ app.get("/api/teacher/assignment-students", (request, response) => {
                  CASE 
                    WHEN sub.id IS NOT NULL THEN 'Submitted'
                    ELSE 'Assigned'
-                 END AS submission_status,
+                 END AS submit_status,
                  CASE 
                    WHEN f.id IS NOT NULL THEN 'Graded'
                    ELSE NULL
-                 END AS grading_status
+                 END AS grade_status
                FROM students s
                JOIN class_enrollments ce ON s.id = ce.student_id
                JOIN assignments a ON ce.class_id = a.class_id
@@ -278,13 +281,13 @@ app.get("/api/teacher/assignment-students", (request, response) => {
 });
 
 // FEEDBACK STUDENT SUBMISSION
-// POST /api/teacher/feedbacks
-app.post("/api/teacher/feedbacks", (request, response) => {
-  const { submission_id, score, comment, created_at } = request.body;
-  const sql = `INSERT INTO feedbacks(submission_id, score, comment, created_at) 
+// PUT /api/teacher/feedbacks
+app.put("/api/teacher/feedbacks", (request, response) => {
+  const { id, submission_id, score, comment } = request.body;
+  const sql = `REPLACE feedbacks(id, submission_id, score, comment) 
                VALUES (?, ?, ?, ?)`;
 
-  connection.query(sql, [submission_id, score, comment, created_at], (error, result) => {
+  connection.query(sql, [id, submission_id, score, comment], (error, result) => {
     if (error) {
       console.error(error);
       response.status(500).json(error.code);

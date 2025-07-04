@@ -32,21 +32,18 @@ class StudentRepository extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final httpResponse = await http
-          .get(
-            Uri.parse('$apiBaseUrl/classes/$class_id/students'),
-          )
+      final response = await http
+          .get(Uri.parse('$apiBaseUrl/api/teacher/classes/$class_id/students'))
           .timeout(const Duration(seconds: 30));
 
-      if (httpResponse.statusCode == 200) {
-        _studentList = (jsonDecode(httpResponse.body) as List)
+      if (response.statusCode == 200) {
+        _studentList = (jsonDecode(response.body) as List)
             .map((json) => Student.fromJson(json as Map<String, dynamic>))
             .toList();
-        _studentList.sort((a, b) => b.joined_at.compareTo(a.joined_at));
+        _studentList.sort((a, b) => b.enrollment_id.compareTo(a.enrollment_id));
         _isSuccess = true;
       } else {
-        _errorMessage =
-            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
+        _errorMessage = 'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
@@ -64,9 +61,9 @@ class StudentRepository extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final httpResponse = await http
+      final response = await http
           .post(
-            Uri.parse('$apiBaseUrl/classes/$class_id/students'),
+            Uri.parse('$apiBaseUrl/api/teacher/classes/$class_id/students'),
             headers: <String, String>{
               HttpHeaders.authorizationHeader: 'token',
               HttpHeaders.contentTypeHeader: 'application/json',
@@ -75,13 +72,13 @@ class StudentRepository extends ChangeNotifier {
           )
           .timeout(const Duration(seconds: 30));
 
-      if (httpResponse.statusCode == 200) {
+      if (response.statusCode == 200) {
         fetchClassStudentList(class_id);
-        _studentList.sort((a, b) => b.joined_at.compareTo(a.joined_at));
+        _studentList.sort((a, b) => b.enrollment_id.compareTo(a.enrollment_id));
         _isSuccess = true;
       } else {
         _errorMessageSnackBar =
-            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
+            'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -99,9 +96,11 @@ class StudentRepository extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final httpResponse = await http
+      final response = await http
           .delete(
-            Uri.parse('$apiBaseUrl/classes/$class_id/students/$student_id'),
+            Uri.parse(
+              '$apiBaseUrl/api/teacher/classes/$class_id/students/$student_id',
+            ),
             headers: <String, String>{
               HttpHeaders.authorizationHeader: 'token',
               HttpHeaders.contentTypeHeader: 'application/json',
@@ -109,12 +108,12 @@ class StudentRepository extends ChangeNotifier {
           )
           .timeout(const Duration(seconds: 30));
 
-      if (httpResponse.statusCode == 200) {
-        _studentList.removeWhere((a) => a.user_id == student_id);
+      if (response.statusCode == 200) {
+        _studentList.removeWhere((a) => a.id == student_id);
         _isSuccess = true;
       } else {
         _errorMessageSnackBar =
-            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
+            'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';

@@ -47,15 +47,15 @@ class CustomValidator {
     return null;
   }
 
-  static String? minValue(String? value, num minValue) {
-    if (value != null && num.parse(value) < minValue) {
+  static String? minValue(String? value, double minValue) {
+    if (value != null && value.isNotEmpty && double.parse(value) < minValue) {
       return 'Please enter a number greater than $minValue';
     }
     return null;
   }
 
-  static String? maxValue(String? value, num maxValue) {
-    if (value != null && num.parse(value) > maxValue) {
+  static String? maxValue(String? value, double maxValue) {
+    if (value != null && value.isNotEmpty && double.parse(value) > maxValue) {
       return 'Please enter a number less than $maxValue';
     }
     return null;

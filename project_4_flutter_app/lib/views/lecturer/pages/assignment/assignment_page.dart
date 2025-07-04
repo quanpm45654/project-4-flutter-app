@@ -14,8 +14,7 @@ class AssignmentPage extends StatefulWidget {
   State<AssignmentPage> createState() => _AssignmentPageState();
 }
 
-class _AssignmentPageState extends State<AssignmentPage>
-    with SingleTickerProviderStateMixin {
+class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -53,14 +52,8 @@ class _AssignmentPageState extends State<AssignmentPage>
             child: TabBarView(
               controller: _tabController,
               children: [
-                AssignmentWidget(
-                  assignment: assignmentRepository.assignmentList.firstWhere(
-                    (a) => a.assignment_id == widget.assignment.assignment_id,
-                  ),
-                ),
-                SubmissionListWidget(
-                  assignment_id: widget.assignment.assignment_id,
-                ),
+                AssignmentWidget(assignment: widget.assignment),
+                SubmissionListWidget(assignment_id: widget.assignment.id),
               ],
             ),
           ),

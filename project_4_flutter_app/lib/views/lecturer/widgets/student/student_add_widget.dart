@@ -16,19 +16,42 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
   final _formKey = GlobalKey<FormState>();
   final _studentEmail = TextEditingController();
 
-  @override
-  void dispose() {
-    super.dispose();
+  Future<void> addStudent(
+    StudentRepository studentRepository,
+    BuildContext context,
+  ) async {
+    int class_id = widget.class_id;
+    String email = _studentEmail.text;
+
+    await studentRepository.addStudentToClass(class_id, email);
+
+    if (context.mounted) {
+      if (studentRepository.isSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Student added successfully'),
+            showCloseIcon: true,
+          ),
+        );
+        Navigator.pop(context);
+      } else if (studentRepository.errorMessageSnackBar.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(studentRepository.errorMessageSnackBar),
+            showCloseIcon: true,
+          ),
+        );
+        Navigator.pop(context);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    var studentRepository = Provider.of<StudentRepository>(context);
+    final studentRepository = Provider.of<StudentRepository>(context);
 
     return studentRepository.isLoading
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
+        ? const Center(child: CircularProgressIndicator())
         : Column(
             spacing: 32.0,
             children: [
@@ -36,7 +59,40 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
                   child: SingleChildScrollView(
-                    child: buildForm(studentRepository),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          const SizedBox(),
+                          TextFormField(
+                            controller: _studentEmail,
+                            decoration: const InputDecoration(
+                              suffixIcon: Icon(Icons.mail_outline_rounded),
+                              border: OutlineInputBorder(),
+                              label: Text('Student email'),
+                            ),
+                            validator: (value) {
+                              var result = CustomValidator.combine([
+                                CustomValidator.required(
+                                  value,
+                                  'Student email',
+                                ),
+                                CustomValidator.email(value),
+                                CustomValidator.maxLength(value, 255),
+                              ]);
+                              String? result2;
+                              if (studentRepository.studentList.any(
+                                (a) => a.email == value,
+                              )) {
+                                result2 =
+                                    'This student has already been added to this class';
+                              }
+                              return result ?? result2;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -46,101 +102,28 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
                 child: Column(
                   spacing: 16.0,
                   children: [
-                    buildSubmitButton(context, studentRepository),
-                    buildCancelButton(context),
+                    SizedBox(
+                      width: double.maxFinite,
+                      child: FilledButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            addStudent(studentRepository, context);
+                          }
+                        },
+                        child: const Text('Add student'),
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.maxFinite,
+                      child: TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ],
           );
-  }
-
-  Form buildForm(StudentRepository studentRepository) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        spacing: 16.0,
-        children: [
-          const SizedBox(),
-          buildEmailField(studentRepository),
-        ],
-      ),
-    );
-  }
-
-  TextFormField buildEmailField(StudentRepository studentRepository) {
-    return TextFormField(
-      controller: _studentEmail,
-      decoration: const InputDecoration(
-        suffixIcon: Icon(Icons.mail_outline_rounded),
-        border: OutlineInputBorder(),
-        label: Text('Student email'),
-      ),
-      validator: (value) {
-        var result = CustomValidator.combine([
-          CustomValidator.required(value, 'Student email'),
-          CustomValidator.email(value),
-          CustomValidator.maxLength(value, 255),
-        ]);
-        String? result2;
-        if (studentRepository.studentList.any((a) => a.email == value)) {
-          result2 = 'This student has already added to this class';
-        }
-        return result ?? result2;
-      },
-    );
-  }
-
-  SizedBox buildSubmitButton(
-    BuildContext context,
-    StudentRepository studentRepository,
-  ) {
-    return SizedBox(
-      width: double.maxFinite,
-      child: FilledButton(
-        onPressed: () async {
-          if (_formKey.currentState!.validate()) {
-            var class_id = widget.class_id;
-            var email = _studentEmail.text;
-
-            await studentRepository.addStudentToClass(
-              class_id,
-              email,
-            );
-
-            if (context.mounted) {
-              if (studentRepository.isSuccess) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Student added successfully'),
-                    showCloseIcon: true,
-                  ),
-                );
-                Navigator.pop(context);
-              } else if (studentRepository.errorMessageSnackBar.isNotEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(studentRepository.errorMessageSnackBar),
-                    showCloseIcon: true,
-                  ),
-                );
-                Navigator.pop(context);
-              }
-            }
-          }
-        },
-        child: const Text('Add student'),
-      ),
-    );
-  }
-
-  SizedBox buildCancelButton(BuildContext context) {
-    return SizedBox(
-      width: double.maxFinite,
-      child: TextButton(
-        onPressed: () => Navigator.pop(context),
-        child: const Text('Cancel'),
-      ),
-    );
   }
 }

@@ -1,44 +1,29 @@
 class Class {
-  int class_id;
-  String class_code;
-  String class_name;
-  String description;
-  String semester;
-  int lecturer_id;
+  int id;
+  String? class_name;
+  int teacher_id;
+  String? code;
 
   Class(
-    this.class_id,
-    this.class_code,
+    this.id,
     this.class_name,
-    this.description,
-    this.semester,
-    this.lecturer_id,
+    this.teacher_id,
+    this.code,
   );
 
   Map<String, dynamic> toJson() => {
-    'class_id': class_id,
-    'class_code': class_code,
+    'id': id,
     'class_name': class_name,
-    'description': description,
-    'semester': semester,
-    'lecturer_id': lecturer_id,
+    'teacher_id': teacher_id,
+    'code': code,
   };
 
   factory Class.fromJson(Map<String, dynamic> json) {
-    var class_id = json['class_id'] as int;
-    var class_code = json['class_code'] as String;
-    var class_name = json['class_name'] as String;
-    var description = json['description'] as String;
-    var semester = json['semester'] as String;
-    var lecturer_id = json['lecturer_id'] as int;
+    final id = json['id'] as int;
+    final class_name = json['class_name'] as String?;
+    final teacher_id = json['teacher_id'] as int;
+    final code = json['code'] as String?;
 
-    return Class(
-      class_id,
-      class_code,
-      class_name,
-      description,
-      semester,
-      lecturer_id,
-    );
+    return Class(id, class_name, teacher_id, code);
   }
 }
