@@ -23,319 +23,241 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
         context,
         listen: false,
       ).fetchSubmissionList(widget.assignment_id);
-      Provider.of<SubmissionRepository>(
-        context,
-        listen: false,
-      ).fetchAssignedList(widget.assignment_id);
     });
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    var assignmentRepository = Provider.of<AssignmentRepository>(context);
+    final assignmentRepository = Provider.of<AssignmentRepository>(context);
 
     return Container(
       padding: const EdgeInsets.all(16.0),
-      child: buildConsumer(assignmentRepository),
-    );
-  }
+      child: Consumer<SubmissionRepository>(
+        builder: (context, submissionRepository, child) {
+          var gradedList = submissionRepository.submissionList
+              .where((a) => a.grade_status == 'Graded')
+              .toList();
+          var submissionList = submissionRepository.submissionList
+              .where((a) => a.submit_status == 'Submitted' && a.grade_status == null)
+              .toList();
+          var assignedList = submissionRepository.submissionList
+              .where((a) => a.submit_status == 'Assigned')
+              .toList();
 
-  Consumer<SubmissionRepository> buildConsumer(
-    AssignmentRepository assignmentRepository,
-  ) {
-    return Consumer<SubmissionRepository>(
-      builder: (context, submissionRepository, child) {
-        if (submissionRepository.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        if (submissionRepository.errorMessage.isNotEmpty) {
-          return buildErrorMessage(submissionRepository, context);
-        }
-
-        if (submissionRepository.submissionList.isEmpty &&
-            submissionRepository.assignedList.isEmpty) {
-          return const Center(
-            child: Text(
-              "You haven't assign this to any students yet",
-              textAlign: TextAlign.center,
-            ),
-          );
-        }
-
-        var submittedSubmissionList = submissionRepository.submissionList
-            .where((a) => a.score == null)
-            .toList();
-        var gradedSubmissionList = submissionRepository.submissionList
-            .where((a) => a.score != null)
-            .toList();
-
-        return RefreshIndicator(
-          onRefresh: () async {
-            await submissionRepository.fetchSubmissionList(
-              widget.assignment_id,
-            );
-            await submissionRepository.fetchAssignedList(widget.assignment_id);
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              gradedSubmissionList.isNotEmpty
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Graded",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w500,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        Text(
-                          '${gradedSubmissionList.length}',
-                          style: const TextStyle(fontSize: 16.0),
-                        ),
-                      ],
-                    )
-                  : const SizedBox(),
-              gradedSubmissionList.isNotEmpty
-                  ? const Divider(height: 10)
-                  : const SizedBox(),
-              buildGradedListView(
-                gradedSubmissionList,
-                assignmentRepository,
-              ),
-              gradedSubmissionList.isNotEmpty
-                  ? const SizedBox(height: 16.0)
-                  : const SizedBox(),
-              submittedSubmissionList.isNotEmpty
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Graded",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w500,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                        Text(
-                          '${submittedSubmissionList.where(
-                            (a) => a.score != null,
-                          ).length}',
-                          style: const TextStyle(fontSize: 16.0),
-                        ),
-                      ],
-                    )
-                  : const SizedBox(),
-              submittedSubmissionList.isNotEmpty
-                  ? const Divider(height: 10)
-                  : const SizedBox(),
-              buildSubmittedListView(
-                submittedSubmissionList,
-                assignmentRepository,
-              ),
-              submittedSubmissionList.isNotEmpty
-                  ? const SizedBox(height: 16.0)
-                  : const SizedBox(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          if (submissionRepository.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (submissionRepository.errorMessage.isNotEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Assigned",
+                    submissionRepository.errorMessage,
                     style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context).colorScheme.error,
+                      fontSize: 18.0,
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                  Text(
-                    '${submissionRepository.assignedList.length}',
-                    style: const TextStyle(fontSize: 16.0),
+                  TextButton(
+                    onPressed: () async {
+                      await submissionRepository.fetchSubmissionList(widget.assignment_id);
+                    },
+                    child: const Text(
+                      'Retry',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
                   ),
                 ],
               ),
-              const Divider(height: 10),
-              buildAssignedListView(submissionRepository),
-            ],
-          ),
-        );
-      },
-    );
-  }
+            );
+          }
+          if (submissionRepository.submissionList.isEmpty) {
+            return const Center(
+              child: Text(
+                "You haven't assign this to any students yet",
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
 
-  Center buildErrorMessage(
-    SubmissionRepository submissionRepository,
-    BuildContext context,
-  ) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            submissionRepository.errorMessage,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.error,
-              fontSize: 20.0,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          TextButton(
-            onPressed: () async {
-              await submissionRepository.fetchSubmissionList(
-                widget.assignment_id,
-              );
-              await submissionRepository.fetchAssignedList(
-                widget.assignment_id,
-              );
+          return RefreshIndicator(
+            onRefresh: () async {
+              await submissionRepository.fetchSubmissionList(widget.assignment_id);
             },
-            child: const Text(
-              'Retry',
-              style: TextStyle(fontSize: 20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Graded",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    Text(
+                      '${gradedList.length}',
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: gradedList.length,
+                  itemBuilder: (context, index) {
+                    Submission submission = gradedList[index];
+
+                    return GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (context) => SubmissionPage(submission: submission),
+                        ),
+                      ),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(
+                          submission.student_name ?? '',
+                          style: const TextStyle(fontSize: 18.0),
+                        ),
+                        subtitle:
+                            submission.submitted_at!.isAfter(
+                              assignmentRepository.assignmentList
+                                  .firstWhere(
+                                    (a) => a.id == submission.assignment_id,
+                                  )
+                                  .due_date,
+                            )
+                            ? Text(
+                                'Done late',
+                                style: TextStyle(
+                                  color: Colors.red.shade900,
+                                ),
+                              )
+                            : Text(
+                                'Submitted',
+                                style: TextStyle(color: Colors.green.shade900),
+                              ),
+                        trailing: Text(
+                          '${submission.score}/10',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.green.shade900,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Submitted",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    Text(
+                      '${submissionList.length}',
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: submissionList.length,
+                  itemBuilder: (context, index) {
+                    Submission submission = submissionList[index];
+
+                    return GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (context) => SubmissionPage(submission: submission),
+                        ),
+                      ),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(
+                          submission.student_name ?? '',
+                          style: const TextStyle(fontSize: 18.0),
+                        ),
+                        subtitle:
+                            submission.submitted_at!.isAfter(
+                              assignmentRepository.assignmentList
+                                  .firstWhere((a) => a.id == submission.assignment_id)
+                                  .due_date,
+                            )
+                            ? Text(
+                                'Done late',
+                                style: TextStyle(color: Colors.red.shade900),
+                              )
+                            : Text(
+                                'Submitted',
+                                style: TextStyle(color: Colors.green.shade900),
+                              ),
+                        trailing: Text(
+                          'Not graded',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.green.shade900,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Assigned",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    Text(
+                      '${assignedList.length}',
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: assignedList.length,
+                  itemBuilder: (context, index) {
+                    Submission assigned = assignedList[index];
+
+                    return ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        '${assigned.student_name}',
+                        style: const TextStyle(fontSize: 18.0),
+                      ),
+                      subtitle: const Text('Not submitted'),
+                    );
+                  },
+                ),
+              ],
             ),
-          ),
-        ],
+          );
+        },
       ),
-    );
-  }
-
-  ListView buildGradedListView(
-    List<Submission> gradedSubmissionList,
-    AssignmentRepository assignmentRepository,
-  ) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: gradedSubmissionList.length,
-      itemBuilder: (context, index) {
-        var submission = gradedSubmissionList.toList()[index];
-
-        return GestureDetector(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => SubmissionPage(submission: submission),
-            ),
-          ),
-          child: ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(
-              submission.student_name ?? '',
-              style: const TextStyle(fontSize: 20.0),
-            ),
-            subtitle:
-                submission.submitted_at.isAfter(
-                  assignmentRepository.assignmentList
-                      .firstWhere(
-                        (a) => a.assignment_id == submission.assignment_id,
-                      )
-                      .due_at,
-                )
-                ? Text(
-                    'Done late',
-                    style: TextStyle(
-                      color: Colors.red.shade900,
-                    ),
-                  )
-                : Text(
-                    'Turned in',
-                    style: TextStyle(color: Colors.green.shade900),
-                  ),
-            trailing: Text(
-              '${submission.score ?? '...'}/${assignmentRepository.assignmentList.firstWhere(
-                (a) => a.assignment_id == submission.assignment_id,
-              ).max_score}',
-              style: TextStyle(
-                fontSize: 20.0,
-                color: Colors.green.shade900,
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  ListView buildSubmittedListView(
-    List<Submission> submittedSubmissionList,
-    AssignmentRepository assignmentRepository,
-  ) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: submittedSubmissionList.length,
-      itemBuilder: (context, index) {
-        var submission = submittedSubmissionList[index];
-
-        return GestureDetector(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => SubmissionPage(submission: submission),
-            ),
-          ),
-          child: ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(
-              submission.student_name ?? '',
-              style: const TextStyle(fontSize: 20.0),
-            ),
-            subtitle:
-                submission.submitted_at.isAfter(
-                  assignmentRepository.assignmentList
-                      .firstWhere(
-                        (a) => a.assignment_id == submission.assignment_id,
-                      )
-                      .due_at,
-                )
-                ? Text(
-                    'Done late',
-                    style: TextStyle(
-                      color: Colors.red.shade900,
-                    ),
-                  )
-                : const Text(
-                    'Turned in',
-                    style: TextStyle(color: Colors.green),
-                  ),
-            trailing: Text(
-              '${submission.score ?? '...'}/${assignmentRepository.assignmentList.firstWhere(
-                (a) => a.assignment_id == submission.assignment_id,
-              ).max_score}',
-              style: const TextStyle(
-                fontSize: 20.0,
-                color: Colors.green,
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  ListView buildAssignedListView(SubmissionRepository submissionRepository) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: submissionRepository.assignedList.length,
-      itemBuilder: (context, index) {
-        var assigned = submissionRepository.assignedList[index];
-
-        return ListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text(
-            '${assigned['full_name']}',
-            style: const TextStyle(fontSize: 20.0),
-          ),
-          subtitle: const Text('Not turned in'),
-        );
-      },
     );
   }
 }

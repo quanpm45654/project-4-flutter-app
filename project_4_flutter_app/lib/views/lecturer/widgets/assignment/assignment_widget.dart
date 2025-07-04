@@ -20,72 +20,38 @@ class AssignmentWidget extends StatelessWidget {
               child: Icon(Icons.assignment_outlined),
             ),
             title: Text(
-              assignment.title,
-              style: const TextStyle(fontSize: 20.0),
+              assignment.title ?? '',
+              style: const TextStyle(fontSize: 18.0),
             ),
           ),
           const SizedBox(height: 8.0),
           Text(
-            'Due ${CustomFormatter.formatDateTime(assignment.due_at)}',
-            style: DateTime.now().isAfter(assignment.due_at)
+            'Due ${CustomFormatter.formatDateTime(assignment.due_date)}',
+            style: DateTime.now().isAfter(assignment.due_date)
                 ? TextStyle(color: Colors.red.shade900)
                 : const TextStyle(),
           ),
-          const SizedBox(height: 8.0),
-          Text('${assignment.max_score} point'),
-          const SizedBox(height: 8.0),
+          const Divider(),
           Text(
             'Description',
             style: TextStyle(
-              fontSize: 20.0,
+              fontSize: 18.0,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
-          Text(assignment.description),
+          Text(assignment.description ?? ''),
           const SizedBox(height: 8.0),
-
           Text(
             'Attachment',
             style: TextStyle(
-              fontSize: 20.0,
+              fontSize: 18.0,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.primary,
             ),
           ),
-          SelectableText(assignment.file_url ?? ''),
+          SelectableText(assignment.attached_file ?? ''),
           const SizedBox(height: 8.0),
-          const Divider(),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: assignment.assignment_type.name == 'individual'
-                ? const Icon(
-                    Icons.person_rounded,
-                    size: 32,
-                  )
-                : const Icon(
-                    Icons.groups_rounded,
-                    size: 32,
-                  ),
-            title: Text(assignment.assignment_type.name.toUpperCase()),
-          ),
-          const SizedBox(),
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            leading: assignment.time_bound
-                ? Icon(
-                    Icons.check_rounded,
-                    color: Colors.green.shade900,
-                    size: 32,
-                  )
-                : Icon(
-                    Icons.close_rounded,
-                    color: Colors.red.shade900,
-                    size: 32,
-                  ),
-            title: const Text('Time bound'),
-          ),
-          const SizedBox(),
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: assignment.allow_resubmit

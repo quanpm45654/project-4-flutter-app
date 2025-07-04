@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_4_flutter_app/repositories/assignment_repository.dart';
 import 'package:project_4_flutter_app/repositories/class_repository.dart';
+import 'package:project_4_flutter_app/repositories/feedback_repository.dart';
 import 'package:project_4_flutter_app/repositories/student_repository.dart';
 import 'package:project_4_flutter_app/repositories/submission_repository.dart';
 import 'package:project_4_flutter_app/states/lecturer_navigation_bar_state.dart';
@@ -26,6 +27,9 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => SubmissionRepository(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => FeedbackRepository(),
+        ),
       ],
       child: const MainApp(),
     ),
@@ -38,7 +42,21 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Assignment App',
       debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.light,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.light,
+        ),
+      ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
+        ),
+      ),
       home: const ClassListPage(),
     );
   }

@@ -32,23 +32,18 @@ class AssignmentRepository extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final httpResponse = await http
-          .get(
-            Uri.parse('$apiBaseUrl/classes/$class_id/assignments'),
-          )
+      final response = await http
+          .get(Uri.parse('$apiBaseUrl/api/teacher/classes/$class_id/assignments'))
           .timeout(const Duration(seconds: 30));
 
-      if (httpResponse.statusCode == 200) {
-        _assignmentList = (jsonDecode(httpResponse.body) as List<dynamic>)
+      if (response.statusCode == 200) {
+        _assignmentList = (jsonDecode(response.body) as List<dynamic>)
             .map((json) => Assignment.fromJson(json as Map<String, dynamic>))
             .toList();
-        _assignmentList.sort(
-          (a, b) => b.assignment_id.compareTo(a.assignment_id),
-        );
+        _assignmentList.sort((a, b) => b.id.compareTo(a.id));
         _isSuccess = true;
       } else {
-        _errorMessage =
-            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
+        _errorMessage = 'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
       _errorMessage = 'An error has occurred, please try again';
@@ -66,9 +61,9 @@ class AssignmentRepository extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final httpResponse = await http
+      final response = await http
           .post(
-            Uri.parse('$apiBaseUrl/assignments'),
+            Uri.parse('$apiBaseUrl/api/teacher/classes/${assignment.class_id}/assignments'),
             headers: <String, String>{
               HttpHeaders.authorizationHeader: 'token',
               HttpHeaders.contentTypeHeader: 'application/json',
@@ -77,16 +72,14 @@ class AssignmentRepository extends ChangeNotifier {
           )
           .timeout(const Duration(seconds: 30));
 
-      if (httpResponse.statusCode == 200) {
-        assignment.assignment_id = jsonDecode(httpResponse.body) as int;
+      if (response.statusCode == 200) {
+        assignment.id = jsonDecode(response.body) as int;
         _assignmentList.add(assignment);
-        _assignmentList.sort(
-          (a, b) => b.assignment_id.compareTo(a.assignment_id),
-        );
+        _assignmentList.sort((a, b) => b.id.compareTo(a.id));
         _isSuccess = true;
       } else {
         _errorMessageSnackBar =
-            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
+            'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -104,9 +97,11 @@ class AssignmentRepository extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final httpResponse = await http
+      final response = await http
           .patch(
-            Uri.parse('$apiBaseUrl/assignments/${assignment.assignment_id}'),
+            Uri.parse(
+              '$apiBaseUrl/api/teacher/classes/${assignment.class_id}/assignments/${assignment.id}',
+            ),
             headers: <String, String>{
               HttpHeaders.authorizationHeader: 'token',
               HttpHeaders.contentTypeHeader: 'application/json',
@@ -115,9 +110,9 @@ class AssignmentRepository extends ChangeNotifier {
           )
           .timeout(const Duration(seconds: 30));
 
-      if (httpResponse.statusCode == 200) {
+      if (response.statusCode == 200) {
         int index = _assignmentList.indexWhere(
-          (a) => a.assignment_id == assignment.assignment_id,
+          (a) => a.id == assignment.id,
         );
         if (index != -1) {
           _assignmentList[index] = assignment;
@@ -125,7 +120,7 @@ class AssignmentRepository extends ChangeNotifier {
         _isSuccess = true;
       } else {
         _errorMessageSnackBar =
-            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
+            'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';
@@ -143,21 +138,21 @@ class AssignmentRepository extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final httpResponse = await http
+      final response = await http
           .delete(
-            Uri.parse('$apiBaseUrl/assignments/$assignment_id'),
+            Uri.parse('$apiBaseUrl/api/teacher/assignments/$assignment_id'),
             headers: <String, String>{
               HttpHeaders.authorizationHeader: 'token',
             },
           )
           .timeout(const Duration(seconds: 30));
 
-      if (httpResponse.statusCode == 200) {
-        _assignmentList.removeWhere((a) => a.assignment_id == assignment_id);
+      if (response.statusCode == 200) {
+        _assignmentList.removeWhere((a) => a.id == assignment_id);
         _isSuccess = true;
       } else {
         _errorMessageSnackBar =
-            'An error has occurred: ${jsonDecode(httpResponse.body)}, please try again';
+            'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
       _errorMessageSnackBar = 'An error has occurred, please try again';

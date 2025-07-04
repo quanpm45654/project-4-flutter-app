@@ -15,8 +15,7 @@ class ClassPage extends StatefulWidget {
   State<ClassPage> createState() => _ClassPageState();
 }
 
-class _ClassPageState extends State<ClassPage>
-    with SingleTickerProviderStateMixin {
+class _ClassPageState extends State<ClassPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -37,11 +36,7 @@ class _ClassPageState extends State<ClassPage>
       builder: (context, classRepository, child) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(
-              classRepository.classList
-                  .firstWhere((a) => a.class_id == widget.classObject.class_id)
-                  .class_name,
-            ),
+            title: Text(widget.classObject.class_name ?? ''),
             bottom: TabBar(
               controller: _tabController,
               tabs: [
@@ -58,8 +53,8 @@ class _ClassPageState extends State<ClassPage>
             child: TabBarView(
               controller: _tabController,
               children: [
-                AssignmentListWidget(class_id: widget.classObject.class_id),
-                StudentListWidget(class_id: widget.classObject.class_id),
+                AssignmentListWidget(class_id: widget.classObject.id),
+                StudentListWidget(class_id: widget.classObject.id),
               ],
             ),
           ),
