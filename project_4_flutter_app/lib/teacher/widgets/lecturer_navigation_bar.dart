@@ -36,6 +36,7 @@ class LecturerNavigationBar extends StatelessWidget {
           icon: Icon(Icons.person_outline_rounded),
           selectedIcon: Icon(Icons.person_rounded),
           label: 'Profile',
+          enabled: false,
         ),
       ],
     );
