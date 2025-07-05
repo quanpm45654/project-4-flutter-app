@@ -5,8 +5,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:project_4_flutter_app/teacher/models/class.dart';
-import 'package:project_4_flutter_app/teacher/utils/constants.dart';
+
+import '../models/class.dart';
+import '../utils/constants.dart';
 
 class ClassRepository extends ChangeNotifier {
   List<Class> _classList = [];
@@ -43,9 +44,11 @@ class ClassRepository extends ChangeNotifier {
         _classList.sort((a, b) => b.id.compareTo(a.id));
         _isSuccess = true;
       } else {
+        _isSuccess = false;
         _errorMessage = 'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
+      _isSuccess = false;
       _errorMessage = 'An error has occurred, please try again';
       developer.log(error.toString());
     } finally {
@@ -78,10 +81,12 @@ class ClassRepository extends ChangeNotifier {
         _classList.sort((a, b) => b.id.compareTo(a.id));
         _isSuccess = true;
       } else {
+        _isSuccess = false;
         _errorMessageSnackBar =
             'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
+      _isSuccess = false;
       _errorMessageSnackBar = 'An error has occurred, please try again';
       developer.log(error.toString());
     } finally {
@@ -90,7 +95,7 @@ class ClassRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> updateClass(Class classObject) async {
+  Future<void> editClass(Class classObject) async {
     _isLoading = true;
     _isSuccess = false;
     _errorMessageSnackBar = '';
@@ -115,10 +120,12 @@ class ClassRepository extends ChangeNotifier {
         }
         _isSuccess = true;
       } else {
+        _isSuccess = false;
         _errorMessageSnackBar =
             'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
+      _isSuccess = false;
       _errorMessageSnackBar = 'An error has occurred, please try again';
       developer.log(error.toString());
     } finally {

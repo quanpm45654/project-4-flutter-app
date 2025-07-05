@@ -24,6 +24,79 @@ connection.getConnection((error) => {
   console.log("Connected to MySQL");
 });
 
+// GET A TEACHER INFO
+// GET /api/teachers/:teacher_id
+app.get("/api/teachers/:teacher_id", (request, response) => {
+  const teacher_id = request.params.teacher_id;
+  const sql = `SELECT id, full_name, email
+               FROM teachers 
+               WHERE id = ?
+               LIMIT 1;`;
+
+  connection.query(sql, [teacher_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      response.status(500).json(error.code);
+      return;
+    }
+    response.status(200).json(result[0]);
+  });
+});
+
+// EDIT A TEACHER
+// PATCH /api/teachers/:teacher_id
+app.patch("/api/teachers/:teacher_id", (request, response) => {
+  const teacher_id = request.params.teacher_id;
+  const { full_name } = request.body;
+  const sql = `UPDATE teachers
+               SET full_name = ?
+               WHERE id = ?;`;
+
+  connection.query(sql, [full_name, teacher_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      response.status(500).json(error.code);
+      return;
+    }
+    response.status(200).json(result);
+  });
+});
+
+// CHANGE A TEACHER PASSWORD
+// PATCH /api/teachers/:teacher_id/password
+app.patch("/api/teachers/:teacher_id/password", (request, response) => {
+  const teacher_id = request.params.teacher_id;
+  const { old_password, new_password } = request.body;
+  const sql1 = `SELECT password 
+                FROM teachers
+                WHERE id = ?
+                LIMIT 1;`;
+
+  connection.query(sql1, [teacher_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      response.status(500).json(error.code);
+      return;
+    }
+    if (old_password != result[0].password) {
+      response.status(400).json("Old password is incorrect");
+      return;
+    }
+    const sql2 = `UPDATE teachers
+                  SET password = ?
+                  WHERE id = ?;`;
+
+    connection.query(sql2, [new_password, teacher_id], (error, result) => {
+      if (error) {
+        console.error(error);
+        response.status(500).json(error.code);
+        return;
+      }
+      response.status(200).json(result);
+    });
+  });
+});
+
 // GET ALL CLASSES FOR A TEACHER
 // GET /api/teacher/classes?teacher_id=?
 app.get("/api/teacher/classes", (request, response) => {
@@ -126,6 +199,10 @@ app.post("/api/teacher/classes/:class_id/students", (request, response) => {
     if (error) {
       console.error(error);
       response.status(500).json(error.code);
+      return;
+    }
+    if (result.length == 0) {
+      response.status(404).json("Student not found");
       return;
     }
     const student_id = result[0].id;

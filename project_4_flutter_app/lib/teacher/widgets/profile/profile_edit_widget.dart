@@ -1,69 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/class.dart';
-import '../../repositories/class_repository.dart';
-import '../../utils/shared_preference_service.dart';
+import '../../models/teacher.dart';
+import '../../repositories/teacher_repository.dart';
 import '../../utils/validator.dart';
 
-class ClassEditWidget extends StatefulWidget {
-  const ClassEditWidget({super.key, required this.classObject});
+class ProfileEditWidget extends StatefulWidget {
+  const ProfileEditWidget({super.key, this.teacher});
 
-  final Class classObject;
+  final Teacher? teacher;
 
   @override
-  State<ClassEditWidget> createState() => _ClassEditWidgetState();
+  State<ProfileEditWidget> createState() => _ProfileEditWidget();
 }
 
-class _ClassEditWidgetState extends State<ClassEditWidget> {
+class _ProfileEditWidget extends State<ProfileEditWidget> {
   final _formKey = GlobalKey<FormState>();
-  final _className = TextEditingController();
-  final _code = TextEditingController();
+  final _fullName = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _className.text = widget.classObject.class_name ?? '';
-    _code.text = widget.classObject.code ?? '';
+    _fullName.text = widget.teacher?.full_name ?? '';
   }
 
-  Future<void> editClass(
-    ClassRepository classRepository,
-    BuildContext context,
-  ) async {
-    int id = widget.classObject.id;
-    String class_name = _className.text;
-    int teacher_id = await SharedPreferenceService.getUserId() ?? 1001;
-    String code = _code.text;
-    Class inputClass = Class(id, class_name, teacher_id, code);
+  Future<void> editProfile(TeacherRepository teacherRepository, BuildContext context) async {
+    int id = widget.teacher?.id ?? 0;
+    String full_name = _fullName.text;
+    Teacher teacher = Teacher(id, full_name, '');
 
-    await classRepository.editClass(inputClass);
+    await teacherRepository.editProfile(teacher);
+    await teacherRepository.fetchTeacher(id);
 
     if (context.mounted) {
-      if (classRepository.isSuccess) {
+      if (teacherRepository.isSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Class edited successfully'),
+            content: Text('Profile edited successfully'),
             showCloseIcon: true,
           ),
         );
         Navigator.pop(context);
-      } else {
+      } else if (teacherRepository.errorMessageSnackBar.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(classRepository.errorMessageSnackBar),
+            content: Text(teacherRepository.errorMessageSnackBar),
             showCloseIcon: true,
           ),
         );
+        Navigator.pop(context);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final classRepository = Provider.of<ClassRepository>(context);
+    final teacherRepository = Provider.of<TeacherRepository>(context);
 
-    return classRepository.isLoading
+    return teacherRepository.isLoading
         ? const Center(child: CircularProgressIndicator())
         : Column(
             children: [
@@ -74,29 +68,17 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
                     child: Form(
                       key: _formKey,
                       child: Column(
-                        spacing: 16.0,
                         children: [
                           const SizedBox(),
                           TextFormField(
-                            controller: _className,
+                            controller: _fullName,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
-                              label: Text('Class name*'),
+                              label: Text('Full name'),
                             ),
                             validator: (value) => CustomValidator.combine([
-                              CustomValidator.required(value, 'Class name'),
+                              CustomValidator.required(value, 'Full name'),
                               CustomValidator.maxLength(value, 100),
-                            ]),
-                          ),
-                          TextFormField(
-                            controller: _code,
-                            decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              label: Text('Code*'),
-                            ),
-                            validator: (value) => CustomValidator.combine([
-                              CustomValidator.required(value, 'Code'),
-                              CustomValidator.maxLength(value, 10),
                             ]),
                           ),
                         ],
@@ -106,8 +88,8 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(16.0),
                 color: Theme.of(context).colorScheme.surfaceContainer,
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   spacing: 16.0,
                   children: [
@@ -116,10 +98,10 @@ class _ClassEditWidgetState extends State<ClassEditWidget> {
                       child: FilledButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            editClass(classRepository, context);
+                            editProfile(teacherRepository, context);
                           }
                         },
-                        child: const Text('Edit class'),
+                        child: const Text('Edit profile'),
                       ),
                     ),
                     SizedBox(

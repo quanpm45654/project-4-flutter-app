@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/models/assignment.dart';
-import 'package:project_4_flutter_app/teacher/pages/assignment/assignment_create_page.dart';
-import 'package:project_4_flutter_app/teacher/pages/assignment/assignment_edit_page.dart';
-import 'package:project_4_flutter_app/teacher/pages/assignment/assignment_page.dart';
-import 'package:project_4_flutter_app/teacher/repositories/assignment_repository.dart';
-import 'package:project_4_flutter_app/teacher/utils/functions.dart';
 import 'package:provider/provider.dart';
+
+import '../../models/assignment.dart';
+import '../../pages/assignment/assignment_create_page.dart';
+import '../../pages/assignment/assignment_edit_page.dart';
+import '../../pages/assignment/assignment_page.dart';
+import '../../repositories/assignment_repository.dart';
+import '../../utils/functions.dart';
 
 class AssignmentListWidget extends StatefulWidget {
   const AssignmentListWidget({super.key, required this.class_id});
@@ -46,7 +47,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
               onPressed: () => Navigator.pop(context),
               child: const Text('Cancel'),
             ),
-            TextButton(
+            FilledButton(
               onPressed: () async {
                 await deleteAssignment(
                   assignmentRepository,
@@ -119,12 +120,12 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
               List<Assignment> assignmentList = assignmentRepository.assignmentList;
 
               if (assignmentRepository.isLoading) {
-                return const Flexible(
+                return const Expanded(
                   child: Center(child: CircularProgressIndicator()),
                 );
               }
               if (assignmentRepository.errorMessage.isNotEmpty) {
-                return Flexible(
+                return Expanded(
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -137,10 +138,12 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        TextButton(
+                        const SizedBox(height: 16.0),
+                        OutlinedButton.icon(
                           onPressed: () async =>
                               await assignmentRepository.fetchAssignmentList(widget.class_id),
-                          child: const Text(
+                          icon: const Icon(Icons.refresh_outlined),
+                          label: const Text(
                             'Retry',
                             style: TextStyle(fontSize: 18.0),
                           ),
@@ -151,7 +154,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
                 );
               }
               if (assignmentList.isEmpty) {
-                return const Flexible(
+                return const Expanded(
                   child: Center(
                     child: Text(
                       "You haven't created any assignments in this class yet",
@@ -162,7 +165,7 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
                 );
               }
 
-              return Flexible(
+              return Expanded(
                 child: RefreshIndicator(
                   onRefresh: () async =>
                       await assignmentRepository.fetchAssignmentList(widget.class_id),
@@ -171,55 +174,52 @@ class _AssignmentListWidgetState extends State<AssignmentListWidget> {
                     itemBuilder: (context, index) {
                       Assignment assignment = assignmentList[index];
 
-                      return GestureDetector(
+                      return ListTile(
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute<void>(
                             builder: (context) => AssignmentPage(assignment: assignment),
                           ),
                         ),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: const CircleAvatar(
-                            child: Icon(Icons.assignment_outlined),
+                        contentPadding: EdgeInsets.zero,
+                        leading: const CircleAvatar(
+                          child: Icon(Icons.assignment_outlined),
+                        ),
+                        title: Text(
+                          assignment.title ?? '',
+                          style: const TextStyle(fontSize: 18.0),
+                        ),
+                        subtitle: Text(
+                          'Due ${CustomFormatter.formatDateTime(assignment.due_date)}',
+                          style: DateTime.now().isAfter(assignment.due_date)
+                              ? TextStyle(color: Colors.red.shade900)
+                              : const TextStyle(),
+                        ),
+                        trailing: MenuAnchor(
+                          builder: (context, controller, child) => IconButton(
+                            onPressed: () =>
+                                controller.isOpen ? controller.close() : controller.open(),
+                            icon: const Icon(Icons.more_vert_rounded),
                           ),
-                          title: Text(
-                            assignment.title ?? '',
-                            style: const TextStyle(fontSize: 18.0),
-                          ),
-                          subtitle: Text(
-                            'Due ${CustomFormatter.formatDateTime(assignment.due_date)}',
-                            style: DateTime.now().isAfter(assignment.due_date)
-                                ? TextStyle(color: Colors.red.shade900)
-                                : const TextStyle(),
-                          ),
-                          trailing: MenuAnchor(
-                            builder: (context, controller, child) => IconButton(
-                              onPressed: () =>
-                                  controller.isOpen ? controller.close() : controller.open(),
-                              icon: const Icon(Icons.more_vert_rounded),
+                          menuChildren: [
+                            MenuItemButton(
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute<void>(
+                                  builder: (context) => AssignmentEditPage(assignment: assignment),
+                                ),
+                              ),
+                              child: const Text('Edit'),
                             ),
-                            menuChildren: [
-                              MenuItemButton(
-                                onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute<void>(
-                                    builder: (context) =>
-                                        AssignmentEditPage(assignment: assignment),
-                                  ),
-                                ),
-                                child: const Text('Edit'),
+                            MenuItemButton(
+                              onPressed: () async =>
+                                  buildDialog(context, assignmentRepository, assignment),
+                              child: Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.red.shade900),
                               ),
-                              MenuItemButton(
-                                onPressed: () async =>
-                                    buildDialog(context, assignmentRepository, assignment),
-                                child: Text(
-                                  'Delete',
-                                  style: TextStyle(color: Colors.red.shade900),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       );
                     },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/widgets/student/student_add_widget.dart';
+
+import '../../widgets/student/student_add_widget.dart';
 
 class StudentAddPage extends StatelessWidget {
   const StudentAddPage({super.key, required this.class_id});

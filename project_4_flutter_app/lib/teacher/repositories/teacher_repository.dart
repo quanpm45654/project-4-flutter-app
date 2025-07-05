@@ -6,17 +6,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/student.dart';
+import '../models/teacher.dart';
 import '../utils/constants.dart';
 
-class StudentRepository extends ChangeNotifier {
-  List<Student> _studentList = [];
+class TeacherRepository extends ChangeNotifier {
+  Teacher? _teacher;
   bool _isLoading = false;
   bool _isSuccess = false;
   String _errorMessage = '';
   String _errorMessageSnackBar = '';
 
-  List<Student> get studentList => _studentList;
+  Teacher? get teacher => _teacher;
 
   bool get isLoading => _isLoading;
 
@@ -26,7 +26,7 @@ class StudentRepository extends ChangeNotifier {
 
   String get errorMessageSnackBar => _errorMessageSnackBar;
 
-  Future<void> fetchClassStudentList(int class_id) async {
+  Future<void> fetchTeacher(int teacher_id) async {
     _isLoading = true;
     _isSuccess = false;
     _errorMessage = '';
@@ -34,21 +34,16 @@ class StudentRepository extends ChangeNotifier {
 
     try {
       final response = await http
-          .get(Uri.parse('$apiBaseUrl/api/teacher/classes/$class_id/students'))
+          .get(Uri.parse('$apiBaseUrl/api/teachers/$teacher_id'))
           .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
-        _studentList = (jsonDecode(response.body) as List)
-            .map((json) => Student.fromJson(json as Map<String, dynamic>))
-            .toList();
-        _studentList.sort((a, b) => b.enrollment_id.compareTo(a.enrollment_id));
+        _teacher = Teacher.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
         _isSuccess = true;
       } else {
-        _isSuccess = false;
         _errorMessage = 'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
-      _isSuccess = false;
       _errorMessage = 'An error has occurred, please try again';
       developer.log(error.toString());
     } finally {
@@ -57,7 +52,7 @@ class StudentRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> addStudentToClass(int class_id, String email) async {
+  Future<void> editProfile(Teacher teacher) async {
     _isLoading = true;
     _isSuccess = false;
     _errorMessageSnackBar = '';
@@ -65,19 +60,17 @@ class StudentRepository extends ChangeNotifier {
 
     try {
       final response = await http
-          .post(
-            Uri.parse('$apiBaseUrl/api/teacher/classes/$class_id/students'),
+          .patch(
+            Uri.parse('$apiBaseUrl/api/teachers/${teacher.id}'),
             headers: <String, String>{
               HttpHeaders.authorizationHeader: 'token',
               HttpHeaders.contentTypeHeader: 'application/json',
             },
-            body: jsonEncode({'email': email}),
+            body: jsonEncode(teacher.toJson()),
           )
           .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
-        fetchClassStudentList(class_id);
-        _studentList.sort((a, b) => b.enrollment_id.compareTo(a.enrollment_id));
         _isSuccess = true;
       } else {
         _isSuccess = false;
@@ -94,7 +87,7 @@ class StudentRepository extends ChangeNotifier {
     }
   }
 
-  Future<void> removeStudentFromClass(int class_id, int student_id) async {
+  Future<void> changePassword(String old_password, String new_password, int teacher_id) async {
     _isLoading = true;
     _isSuccess = false;
     _errorMessageSnackBar = '';
@@ -102,19 +95,17 @@ class StudentRepository extends ChangeNotifier {
 
     try {
       final response = await http
-          .delete(
-            Uri.parse(
-              '$apiBaseUrl/api/teacher/classes/$class_id/students/$student_id',
-            ),
+          .patch(
+            Uri.parse('$apiBaseUrl/api/teachers/$teacher_id/password'),
             headers: <String, String>{
               HttpHeaders.authorizationHeader: 'token',
               HttpHeaders.contentTypeHeader: 'application/json',
             },
+            body: jsonEncode({'old_password': old_password, 'new_password': new_password}),
           )
           .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
-        _studentList.removeWhere((a) => a.id == student_id);
         _isSuccess = true;
       } else {
         _isSuccess = false;

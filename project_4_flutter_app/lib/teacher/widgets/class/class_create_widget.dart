@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/models/class.dart';
-import 'package:project_4_flutter_app/teacher/repositories/class_repository.dart';
-import 'package:project_4_flutter_app/teacher/utils/shared_preference_service.dart';
-import 'package:project_4_flutter_app/teacher/utils/validator.dart';
 import 'package:provider/provider.dart';
+
+import '../../models/class.dart';
+import '../../repositories/class_repository.dart';
+import '../../utils/shared_preference_service.dart';
+import '../../utils/validator.dart';
 
 class ClassCreateWidget extends StatefulWidget {
   const ClassCreateWidget({super.key});
@@ -23,7 +24,7 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
   ) async {
     int id = 0;
     String class_name = _className.text;
-    int teacher_id = await SharedPreferenceService.getUserId() ?? 0;
+    int teacher_id = await SharedPreferenceService.getUserId() ?? 1001;
     String code = _code.text;
     Class inputClass = Class(id, class_name, teacher_id, code);
 
@@ -45,7 +46,6 @@ class _ClassCreateWidgetState extends State<ClassCreateWidget> {
             showCloseIcon: true,
           ),
         );
-        Navigator.pop(context);
       }
     }
   }

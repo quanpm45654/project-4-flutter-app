@@ -1,4 +1,4 @@
-import 'package:project_4_flutter_app/teacher/utils/functions.dart';
+import '../utils/functions.dart';
 
 class Assignment {
   int id;

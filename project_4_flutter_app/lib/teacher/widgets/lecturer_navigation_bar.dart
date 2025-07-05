@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/pages/class/class_list_page.dart';
-import 'package:project_4_flutter_app/teacher/states/lecturer_navigation_bar_state.dart';
 import 'package:provider/provider.dart';
+
+import '../pages/class/class_list_page.dart';
+import '../pages/profile/profile_page.dart';
+import '../states/lecturer_navigation_bar_state.dart';
 
 class LecturerNavigationBar extends StatelessWidget {
   const LecturerNavigationBar({super.key});
 
   static const List<Widget> _pageList = [
     ClassListPage(),
+    ProfilePage(),
   ];
 
   @override
@@ -36,7 +39,6 @@ class LecturerNavigationBar extends StatelessWidget {
           icon: Icon(Icons.person_outline_rounded),
           selectedIcon: Icon(Icons.person_rounded),
           label: 'Profile',
-          enabled: false,
         ),
       ],
     );

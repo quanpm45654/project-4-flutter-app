@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/widgets/class/class_create_widget.dart';
+
+import '../../widgets/class/class_create_widget.dart';
 
 class ClassCreatePage extends StatelessWidget {
   const ClassCreatePage({super.key});

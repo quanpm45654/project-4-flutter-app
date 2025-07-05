@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/models/assignment.dart';
-import 'package:project_4_flutter_app/teacher/repositories/assignment_repository.dart';
-import 'package:project_4_flutter_app/teacher/utils/functions.dart';
-import 'package:project_4_flutter_app/teacher/utils/validator.dart';
 import 'package:provider/provider.dart';
+
+import '../../models/assignment.dart';
+import '../../repositories/assignment_repository.dart';
+import '../../utils/functions.dart';
+import '../../utils/validator.dart';
 
 class AssignmentEditWidget extends StatefulWidget {
   const AssignmentEditWidget({super.key, required this.assignment});
@@ -71,7 +72,6 @@ class _AssignmentEditWidgetState extends State<AssignmentEditWidget> {
             showCloseIcon: true,
           ),
         );
-        Navigator.pop(context);
       }
     }
   }

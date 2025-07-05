@@ -5,8 +5,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:project_4_flutter_app/teacher/models/assignment.dart';
-import 'package:project_4_flutter_app/teacher/utils/constants.dart';
+
+import '../models/assignment.dart';
+import '../utils/constants.dart';
 
 class AssignmentRepository extends ChangeNotifier {
   List<Assignment> _assignmentList = [];
@@ -43,9 +44,11 @@ class AssignmentRepository extends ChangeNotifier {
         _assignmentList.sort((a, b) => b.id.compareTo(a.id));
         _isSuccess = true;
       } else {
+        _isSuccess = false;
         _errorMessage = 'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
+      _isSuccess = false;
       _errorMessage = 'An error has occurred, please try again';
       developer.log(error.toString());
     } finally {
@@ -78,10 +81,12 @@ class AssignmentRepository extends ChangeNotifier {
         _assignmentList.sort((a, b) => b.id.compareTo(a.id));
         _isSuccess = true;
       } else {
+        _isSuccess = false;
         _errorMessageSnackBar =
             'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
+      _isSuccess = false;
       _errorMessageSnackBar = 'An error has occurred, please try again';
       developer.log(error.toString());
     } finally {
@@ -119,10 +124,12 @@ class AssignmentRepository extends ChangeNotifier {
         }
         _isSuccess = true;
       } else {
+        _isSuccess = false;
         _errorMessageSnackBar =
             'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
+      _isSuccess = false;
       _errorMessageSnackBar = 'An error has occurred, please try again';
       developer.log(error.toString());
     } finally {
@@ -151,10 +158,12 @@ class AssignmentRepository extends ChangeNotifier {
         _assignmentList.removeWhere((a) => a.id == assignment_id);
         _isSuccess = true;
       } else {
+        _isSuccess = false;
         _errorMessageSnackBar =
             'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
+      _isSuccess = false;
       _errorMessageSnackBar = 'An error has occurred, please try again';
       developer.log(error.toString());
     } finally {

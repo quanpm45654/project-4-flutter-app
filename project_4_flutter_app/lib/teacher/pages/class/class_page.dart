@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/models/class.dart';
-import 'package:project_4_flutter_app/teacher/repositories/class_repository.dart';
-import 'package:project_4_flutter_app/teacher/widgets/assignment/assignment_list_widget.dart';
-import 'package:project_4_flutter_app/teacher/widgets/lecturer_navigation_bar.dart';
-import 'package:project_4_flutter_app/teacher/widgets/student/student_list_widget.dart';
 import 'package:provider/provider.dart';
+
+import '../../models/class.dart';
+import '../../repositories/class_repository.dart';
+import '../../widgets/assignment/assignment_list_widget.dart';
+import '../../widgets/lecturer_navigation_bar.dart';
+import '../../widgets/student/student_list_widget.dart';
 
 class ClassPage extends StatefulWidget {
   const ClassPage({super.key, required this.classObject});

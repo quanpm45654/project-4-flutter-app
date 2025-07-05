@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/models/student.dart';
-import 'package:project_4_flutter_app/teacher/pages/student/student_add_page.dart';
-import 'package:project_4_flutter_app/teacher/repositories/student_repository.dart';
 import 'package:provider/provider.dart';
+
+import '../../models/student.dart';
+import '../../pages/student/student_add_page.dart';
+import '../../repositories/student_repository.dart';
 
 class StudentListWidget extends StatefulWidget {
   const StudentListWidget({super.key, required this.class_id});
@@ -42,7 +43,7 @@ class _StudentListWidgetState extends State<StudentListWidget> {
               child: const Text('Cancel'),
             ),
             FilledButton(
-              onPressed: () async => removeStudent,
+              onPressed: () async => removeStudent(student, studentRepository, context),
               style: ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll<Color>(
                   Colors.red.shade900,
@@ -111,12 +112,12 @@ class _StudentListWidgetState extends State<StudentListWidget> {
               List<Student> studentList = studentRepository.studentList;
 
               if (studentRepository.isLoading) {
-                return const Flexible(
+                return const Expanded(
                   child: Center(child: CircularProgressIndicator()),
                 );
               }
               if (studentRepository.errorMessage.isNotEmpty) {
-                return Flexible(
+                return Expanded(
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -129,10 +130,12 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        TextButton(
+                        const SizedBox(height: 16.0),
+                        OutlinedButton.icon(
                           onPressed: () async =>
                               await studentRepository.fetchClassStudentList(widget.class_id),
-                          child: const Text(
+                          icon: const Icon(Icons.refresh_outlined),
+                          label: const Text(
                             'Retry',
                             style: TextStyle(fontSize: 18.0),
                           ),
@@ -143,7 +146,7 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                 );
               }
               if (studentList.isEmpty) {
-                return const Flexible(
+                return const Expanded(
                   child: Center(
                     child: Text(
                       "You haven't added any students to this class yet",
@@ -154,14 +157,14 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                 );
               }
 
-              return Flexible(
+              return Expanded(
                 child: RefreshIndicator(
                   onRefresh: () async =>
                       await studentRepository.fetchClassStudentList(widget.class_id),
                   child: ListView.builder(
                     itemCount: studentList.length,
                     itemBuilder: (context, index) {
-                      var student = studentList[index];
+                      Student student = studentList[index];
 
                       return ListTile(
                         contentPadding: EdgeInsets.zero,
@@ -181,7 +184,8 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                           ),
                           menuChildren: [
                             MenuItemButton(
-                              onPressed: () async => buildDialog,
+                              onPressed: () async =>
+                                  buildDialog(context, studentRepository, student),
                               child: Text(
                                 'Remove from class',
                                 style: TextStyle(color: Colors.red.shade900),

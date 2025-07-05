@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart' hide Feedback;
-import 'package:project_4_flutter_app/teacher/models/feedback.dart';
-import 'package:project_4_flutter_app/teacher/models/submission.dart';
-import 'package:project_4_flutter_app/teacher/repositories/assignment_repository.dart';
-import 'package:project_4_flutter_app/teacher/repositories/feedback_repository.dart';
-import 'package:project_4_flutter_app/teacher/repositories/submission_repository.dart';
-import 'package:project_4_flutter_app/teacher/utils/validator.dart';
 import 'package:provider/provider.dart';
+
+import '../../models/feedback.dart';
+import '../../models/submission.dart';
+import '../../repositories/assignment_repository.dart';
+import '../../repositories/feedback_repository.dart';
+import '../../repositories/submission_repository.dart';
+import '../../utils/validator.dart';
 
 class SubmissionWidget extends StatefulWidget {
   const SubmissionWidget({super.key, required this.submission});
