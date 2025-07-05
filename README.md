@@ -1,9 +1,91 @@
 ## App function
 
-### 1. GET ALL CLASSES FOR A TEACHER
+### 1. GET A TEACHER INFO
+GET /api/teachers/:teacher_id
+
+profile_page.dart
+```
+app.get("/api/teachers/:teacher_id", (request, response) => {
+  const teacher_id = request.params.teacher_id;
+  const sql = `SELECT id, full_name, email
+               FROM teachers 
+               WHERE id = ?
+               LIMIT 1;`;
+
+  connection.query(sql, [teacher_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      response.status(500).json(error.code);
+      return;
+    }
+    response.status(200).json(result[0]);
+  });
+});
+```
+### 2. EDIT A TEACHER
+PATCH /api/teachers/:teacher_id
+
+profile_edit_page.dart
+```
+app.patch("/api/teachers/:teacher_id", (request, response) => {
+  const teacher_id = request.params.teacher_id;
+  const { full_name } = request.body;
+  const sql = `UPDATE teachers
+               SET full_name = ?
+               WHERE id = ?;`;
+
+  connection.query(sql, [full_name, teacher_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      response.status(500).json(error.code);
+      return;
+    }
+    response.status(200).json(result);
+  });
+});
+```
+### 3. CHANGE A TEACHER PASSWORD
+PATCH /api/teachers/:teacher_id/password
+
+change_password_page.dart
+```
+app.patch("/api/teachers/:teacher_id/password", (request, response) => {
+  const teacher_id = request.params.teacher_id;
+  const { old_password, new_password } = request.body;
+  const sql1 = `SELECT password 
+                FROM teachers
+                WHERE id = ?
+                LIMIT 1;`;
+
+  connection.query(sql1, [teacher_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      response.status(500).json(error.code);
+      return;
+    }
+    if (old_password != result[0].password) {
+      response.status(400).json("Old password is incorrect");
+      return;
+    }
+    const sql2 = `UPDATE teachers
+                  SET password = ?
+                  WHERE id = ?;`;
+
+    connection.query(sql2, [new_password, teacher_id], (error, result) => {
+      if (error) {
+        console.error(error);
+        response.status(500).json(error.code);
+        return;
+      }
+      response.status(200).json(result);
+    });
+  });
+});
+```
+### 4. GET ALL CLASSES FOR A TEACHER
 GET /api/teacher/classes?teacher_id=?
 
-class_list_widget.dart
+class_list_page.dart
 ```
 app.get("/api/teacher/classes", (request, response) => {
   const teacher_id = request.query.teacher_id;
@@ -21,10 +103,10 @@ app.get("/api/teacher/classes", (request, response) => {
   });
 });
 ```
-### 2. CREATE A NEW CLASS
+### 5. CREATE A NEW CLASS
 POST /api/teacher/classes
 
-class_create_widget.dart
+class_create_page.dart
 ```
 app.post("/api/teacher/classes", (request, response) => {
   const { class_name, teacher_id, code } = request.body;
@@ -41,10 +123,10 @@ app.post("/api/teacher/classes", (request, response) => {
   });
 });
 ```
-### 3. EDIT A CLASS
+### 6. EDIT A CLASS
 PATCH /api/teacher/classes/:class_id
 
-class_edit_widget.dart
+class_edit_page.dart
 ```
 app.patch("/api/teacher/classes/:class_id", (request, response) => {
   const class_id = request.params.class_id;
@@ -63,10 +145,10 @@ app.patch("/api/teacher/classes/:class_id", (request, response) => {
   });
 });
 ```
-### 4. DELETE A CLASS
+### 7. DELETE A CLASS
 DELETE /api/teacher/classes/:class_id
 
-class_list_widget.dart
+class_list_page.dart
 ```
 app.delete("/api/teacher/classes/:class_id", (request, response) => {
   const class_id = request.params.class_id;
@@ -83,10 +165,10 @@ app.delete("/api/teacher/classes/:class_id", (request, response) => {
   });
 });
 ```
-### 5. GET ALL STUDENTS IN A CLASS
+### 8. GET ALL STUDENTS IN A CLASS
 GET /api/teacher/classes/:class_id/students
 
-student_list_widget.dart
+student_list_page.dart
 ```
 app.get("/api/teacher/classes/:class_id/students", (request, response) => {
   const class_id = request.params.class_id;
@@ -105,10 +187,10 @@ app.get("/api/teacher/classes/:class_id/students", (request, response) => {
   });
 });
 ```
-### 6. ADD A STUDENT TO A CLASS
+### 9. ADD A STUDENT TO A CLASS
 POST /api/teacher/classes/:class_id/students
 
-student_add_widget.dart
+student_add_page.dart
 ```
 app.post("/api/teacher/classes/:class_id/students", (request, response) => {
   const class_id = request.params.class_id;
@@ -120,6 +202,10 @@ app.post("/api/teacher/classes/:class_id/students", (request, response) => {
     if (error) {
       console.error(error);
       response.status(500).json(error.code);
+      return;
+    }
+    if (result.length == 0) {
+      response.status(404).json("Student not found");
       return;
     }
     const student_id = result[0].id;
@@ -137,10 +223,10 @@ app.post("/api/teacher/classes/:class_id/students", (request, response) => {
   });
 });
 ```
-### 7. REMOVE A STUDENT IN A CLASS
+### 10. REMOVE A STUDENT IN A CLASS
 DELETE /api/teacher/classes/:class_id/students/:student_id
 
-student_list_widget.dart
+student_list_page.dart
 ```
 app.delete("/api/teacher/classes/:class_id/students/:student_id", (request, response) => {
   const class_id = request.params.class_id;
@@ -158,7 +244,7 @@ app.delete("/api/teacher/classes/:class_id/students/:student_id", (request, resp
   });
 });
 ```
-### 8. GET ALL ASSIGNMENTS IN A CLASS
+### 11. GET ALL ASSIGNMENTS IN A CLASS
 GET /api/teacher/classes/:class_id/assignments
 
 assignment_list_widget.dart
@@ -180,10 +266,10 @@ app.get("/api/teacher/classes/:class_id/assignments", (request, response) => {
   });
 });
 ```
-### 9. CREATE A NEW ASSIGNMENT IN A CLASS
+### 12. CREATE A NEW ASSIGNMENT IN A CLASS
 POST /api/teacher/classes/:class_id/assignments
 
-assignment_create_widget.dart
+assignment_create_page.dart
 ```
 app.post("/api/teacher/classes/:class_id/assignments", (request, response) => {
   const class_id = request.params.class_id;
@@ -201,10 +287,10 @@ app.post("/api/teacher/classes/:class_id/assignments", (request, response) => {
   });
 });
 ```
-### 10. EDIT AN ASSIGNMENT IN A CLASS
+### 13. EDIT AN ASSIGNMENT IN A CLASS
 PATCH /api/teacher/classes/:class_id/assignments/:assignment_id
 
-assignment_edit_widget.dart
+assignment_edit_page.dart
 ```
 app.patch("/api/teacher/classes/:class_id/assignments/:assignment_id", (request, response) => {
   const class_id = request.params.class_id;
@@ -230,10 +316,10 @@ app.patch("/api/teacher/classes/:class_id/assignments/:assignment_id", (request,
   });
 });
 ```
-### 11. DELETE AN ASSIGNMENT
+### 14. DELETE AN ASSIGNMENT
 DELETE /api/teacher/assignments/:assignment_id
 
-assignment_list_widget.dart
+assignment_list_page.dart
 ```
 app.delete("/api/teacher/assignments/:assignment_id", (request, response) => {
   const assignment_id = request.params.assignment_id;
@@ -250,7 +336,7 @@ app.delete("/api/teacher/assignments/:assignment_id", (request, response) => {
   });
 });
 ```
-### 12. GET ALL SUBMISSION WITH ASSIGNED, SUBMITTED, GRADED STATUS OF AN ASSIGNMENT
+### 15. GET ALL SUBMISSION WITH ASSIGNED, SUBMITTED, GRADED STATUS OF AN ASSIGNMENT
 GET /api/teacher/assignments/:assignment_id/submissions
 
 submission_list_widget.dart
@@ -292,10 +378,10 @@ app.get("/api/teacher/assignments/:assignment_id/submissions", (request, respons
   });
 });
 ```
-### 13. FEEDBACK STUDENT SUBMISSION
+### 16. FEEDBACK STUDENT SUBMISSION
 PUT /api/teacher/feedbacks
 
-submission_widget.dart
+submission_page.dart
 ```
 app.put("/api/teacher/feedbacks", (request, response) => {
   const { id, submission_id, score, comment } = request.body;
@@ -312,8 +398,8 @@ app.put("/api/teacher/feedbacks", (request, response) => {
   });
 });
 ```
-### 14. View assignment detail
-assignment_widget.dart
+### 17. View assignment detail
+assignment_page.dart
 
-### 15. View submission detail
-submission_widget.dart
+### 18. View submission detail
+submission_page.dart
