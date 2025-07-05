@@ -61,30 +61,35 @@ class _StudentAddWidgetState extends State<StudentAddWidget> {
                   child: SingleChildScrollView(
                     child: Form(
                       key: _formKey,
-                      child: TextFormField(
-                        controller: _studentEmail,
-                        decoration: const InputDecoration(
-                          suffixIcon: Icon(Icons.mail_outline_rounded),
-                          border: OutlineInputBorder(),
-                          label: Text('Student email'),
-                        ),
-                        validator: (value) {
-                          var result = CustomValidator.combine([
-                            CustomValidator.required(
-                              value,
-                              'Student email',
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 16.0),
+                          TextFormField(
+                            controller: _studentEmail,
+                            decoration: const InputDecoration(
+                              suffixIcon: Icon(Icons.mail_outline_rounded),
+                              border: OutlineInputBorder(),
+                              label: Text('Student email'),
                             ),
-                            CustomValidator.email(value),
-                            CustomValidator.maxLength(value, 100),
-                          ]);
-                          String? result2;
-                          if (studentRepository.studentList.any(
-                            (a) => a.email == value,
-                          )) {
-                            result2 = 'This student has already been added to this class';
-                          }
-                          return result ?? result2;
-                        },
+                            validator: (value) {
+                              var result = CustomValidator.combine([
+                                CustomValidator.required(
+                                  value,
+                                  'Student email',
+                                ),
+                                CustomValidator.email(value),
+                                CustomValidator.maxLength(value, 100),
+                              ]);
+                              String? result2;
+                              if (studentRepository.studentList.any(
+                                (a) => a.email == value,
+                              )) {
+                                result2 = 'This student has already been added to this class';
+                              }
+                              return result ?? result2;
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),

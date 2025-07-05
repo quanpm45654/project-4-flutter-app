@@ -63,6 +63,7 @@ class _ChangePasswordWidgetState extends State<ChangePasswordWidget> {
                       key: _formKey,
                       child: Column(
                         children: [
+                          const SizedBox(height: 16.0),
                           TextFormField(
                             controller: _oldPassword,
                             obscureText: _isOldPasswordObscured,

@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 
 import '../pages/class/class_list_page.dart';
 import '../pages/profile/profile_page.dart';
-import '../states/lecturer_navigation_bar_state.dart';
+import '../states/teacher_navigation_bar_state.dart';
 
-class LecturerNavigationBar extends StatelessWidget {
-  const LecturerNavigationBar({super.key});
+class TeacherNavigationBar extends StatelessWidget {
+  const TeacherNavigationBar({super.key});
 
   static const List<Widget> _pageList = [
     ClassListPage(),
@@ -15,7 +15,7 @@ class LecturerNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navigationBarState = Provider.of<LecturerNavigationBarState>(context);
+    final navigationBarState = Provider.of<TeacherNavigationBarState>(context);
 
     return NavigationBar(
       selectedIndex: navigationBarState.index,

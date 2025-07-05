@@ -69,7 +69,7 @@ class _ProfileEditWidget extends State<ProfileEditWidget> {
                       key: _formKey,
                       child: Column(
                         children: [
-                          const SizedBox(),
+                          const SizedBox(height: 16.0),
                           TextFormField(
                             controller: _fullName,
                             decoration: const InputDecoration(

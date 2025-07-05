@@ -8,14 +8,14 @@ import 'teacher/repositories/feedback_repository.dart';
 import 'teacher/repositories/student_repository.dart';
 import 'teacher/repositories/submission_repository.dart';
 import 'teacher/repositories/teacher_repository.dart';
-import 'teacher/states/lecturer_navigation_bar_state.dart';
+import 'teacher/states/teacher_navigation_bar_state.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => LecturerNavigationBarState(),
+          create: (context) => TeacherNavigationBarState(),
         ),
         ChangeNotifierProvider(
           create: (context) => AssignmentRepository(),
