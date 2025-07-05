@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import '../../models/class.dart';
 import '../../repositories/class_repository.dart';
 import '../../widgets/assignment/assignment_list_widget.dart';
-import '../../widgets/lecturer_navigation_bar.dart';
 import '../../widgets/student/student_list_widget.dart';
+import '../../widgets/teacher_navigation_bar.dart';
 
 class ClassPage extends StatefulWidget {
   const ClassPage({super.key, required this.classObject});
@@ -59,7 +59,7 @@ class _ClassPageState extends State<ClassPage> with SingleTickerProviderStateMix
               ],
             ),
           ),
-          bottomNavigationBar: const LecturerNavigationBar(),
+          bottomNavigationBar: const TeacherNavigationBar(),
         );
       },
     );

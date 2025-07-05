@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../widgets/class/class_list_widget.dart';
-import '../../widgets/lecturer_navigation_bar.dart';
+import '../../widgets/teacher_navigation_bar.dart';
 
 class ClassListPage extends StatelessWidget {
   const ClassListPage({super.key});
@@ -15,7 +15,7 @@ class ClassListPage extends StatelessWidget {
       body: const SafeArea(
         child: ClassListWidget(),
       ),
-      bottomNavigationBar: const LecturerNavigationBar(),
+      bottomNavigationBar: const TeacherNavigationBar(),
     );
   }
 }

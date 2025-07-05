@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class LecturerNavigationBarState extends ChangeNotifier {
+class TeacherNavigationBarState extends ChangeNotifier {
   int _index = 0;
 
   int get index => _index;
