@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/pages/class/class_list_page.dart';
-import 'package:project_4_flutter_app/teacher/repositories/assignment_repository.dart';
-import 'package:project_4_flutter_app/teacher/repositories/class_repository.dart';
-import 'package:project_4_flutter_app/teacher/repositories/feedback_repository.dart';
-import 'package:project_4_flutter_app/teacher/repositories/student_repository.dart';
-import 'package:project_4_flutter_app/teacher/repositories/submission_repository.dart';
-import 'package:project_4_flutter_app/teacher/states/lecturer_navigation_bar_state.dart';
 import 'package:provider/provider.dart';
+
+import 'teacher/pages/class/class_list_page.dart';
+import 'teacher/repositories/assignment_repository.dart';
+import 'teacher/repositories/class_repository.dart';
+import 'teacher/repositories/feedback_repository.dart';
+import 'teacher/repositories/student_repository.dart';
+import 'teacher/repositories/submission_repository.dart';
+import 'teacher/repositories/teacher_repository.dart';
+import 'teacher/states/lecturer_navigation_bar_state.dart';
 
 void main() {
   runApp(
@@ -23,6 +25,9 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (context) => StudentRepository(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TeacherRepository(),
         ),
         ChangeNotifierProvider(
           create: (context) => SubmissionRepository(),
@@ -44,7 +49,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       title: 'Assignment App',
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.system,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.deepPurple,

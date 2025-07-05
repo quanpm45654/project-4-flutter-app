@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/models/submission.dart';
-import 'package:project_4_flutter_app/teacher/pages/submission/submission_page.dart';
-import 'package:project_4_flutter_app/teacher/repositories/assignment_repository.dart';
-import 'package:project_4_flutter_app/teacher/repositories/submission_repository.dart';
 import 'package:provider/provider.dart';
+
+import '../../models/submission.dart';
+import '../../pages/submission/submission_page.dart';
+import '../../repositories/assignment_repository.dart';
+import '../../repositories/submission_repository.dart';
 
 class SubmissionListWidget extends StatefulWidget {
   const SubmissionListWidget({super.key, required this.assignment_id});
@@ -34,13 +35,13 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
       padding: const EdgeInsets.all(16.0),
       child: Consumer<SubmissionRepository>(
         builder: (context, submissionRepository, child) {
-          var gradedList = submissionRepository.submissionList
+          List<Submission> gradedList = submissionRepository.submissionList
               .where((a) => a.grade_status == 'Graded')
               .toList();
-          var submissionList = submissionRepository.submissionList
+          List<Submission> submissionList = submissionRepository.submissionList
               .where((a) => a.submit_status == 'Submitted' && a.grade_status == null)
               .toList();
-          var assignedList = submissionRepository.submissionList
+          List<Submission> assignedList = submissionRepository.submissionList
               .where((a) => a.submit_status == 'Assigned')
               .toList();
 
@@ -60,11 +61,12 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  TextButton(
-                    onPressed: () async {
-                      await submissionRepository.fetchSubmissionList(widget.assignment_id);
-                    },
-                    child: const Text(
+                  const SizedBox(height: 16.0),
+                  OutlinedButton.icon(
+                    onPressed: () async =>
+                        await submissionRepository.fetchSubmissionList(widget.assignment_id),
+                    icon: const Icon(Icons.refresh_outlined),
+                    label: const Text(
                       'Retry',
                       style: TextStyle(fontSize: 18.0),
                     ),
@@ -86,41 +88,41 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
             onRefresh: () async {
               await submissionRepository.fetchSubmissionList(widget.assignment_id);
             },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Graded",
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    Text(
-                      '${gradedList.length}',
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
-                  ],
-                ),
-                const Divider(),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: gradedList.length,
-                  itemBuilder: (context, index) {
-                    Submission submission = gradedList[index];
-
-                    return GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (context) => SubmissionPage(submission: submission),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Graded",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
-                      child: ListTile(
+                      Text(
+                        '${gradedList.length}',
+                        style: const TextStyle(fontSize: 16.0),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: gradedList.length,
+                    itemBuilder: (context, index) {
+                      Submission submission = gradedList[index];
+
+                      return ListTile(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (context) => SubmissionPage(submission: submission),
+                          ),
+                        ),
                         contentPadding: EdgeInsets.zero,
                         title: Text(
                           submission.student_name ?? '',
@@ -151,43 +153,41 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
                             color: Colors.green.shade900,
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Submitted",
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    Text(
-                      '${submissionList.length}',
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
-                  ],
-                ),
-                const Divider(),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: submissionList.length,
-                  itemBuilder: (context, index) {
-                    Submission submission = submissionList[index];
-
-                    return GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (context) => SubmissionPage(submission: submission),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 32.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Submitted",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
-                      child: ListTile(
+                      Text(
+                        '${submissionList.length}',
+                        style: const TextStyle(fontSize: 16.0),
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: submissionList.length,
+                    itemBuilder: (context, index) {
+                      Submission submission = submissionList[index];
+
+                      return ListTile(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (context) => SubmissionPage(submission: submission),
+                          ),
+                        ),
                         contentPadding: EdgeInsets.zero,
                         title: Text(
                           submission.student_name ?? '',
@@ -214,46 +214,46 @@ class _SubmissionListWidgetState extends State<SubmissionListWidget> {
                             color: Colors.green.shade900,
                           ),
                         ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 32.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Assigned",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 16.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Assigned",
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.primary,
+                      Text(
+                        '${assignedList.length}',
+                        style: const TextStyle(fontSize: 16.0),
                       ),
-                    ),
-                    Text(
-                      '${assignedList.length}',
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
-                  ],
-                ),
-                const Divider(),
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: assignedList.length,
-                  itemBuilder: (context, index) {
-                    Submission assigned = assignedList[index];
+                    ],
+                  ),
+                  const Divider(),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: assignedList.length,
+                    itemBuilder: (context, index) {
+                      Submission assigned = assignedList[index];
 
-                    return ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      title: Text(
-                        '${assigned.student_name}',
-                        style: const TextStyle(fontSize: 18.0),
-                      ),
-                      subtitle: const Text('Not submitted'),
-                    );
-                  },
-                ),
-              ],
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(
+                          '${assigned.student_name}',
+                          style: const TextStyle(fontSize: 18.0),
+                        ),
+                        subtitle: const Text('Not submitted'),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           );
         },

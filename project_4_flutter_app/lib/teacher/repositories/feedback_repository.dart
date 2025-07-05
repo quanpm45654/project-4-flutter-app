@@ -4,8 +4,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart' hide Feedback;
 import 'package:http/http.dart' as http;
-import 'package:project_4_flutter_app/teacher/models/feedback.dart';
-import 'package:project_4_flutter_app/teacher/utils/constants.dart';
+
+import '../models/feedback.dart';
+import '../utils/constants.dart';
 
 class FeedbackRepository extends ChangeNotifier {
   bool _isLoading = false;
@@ -39,10 +40,12 @@ class FeedbackRepository extends ChangeNotifier {
       if (response.statusCode == 200) {
         _isSuccess = true;
       } else {
+        _isSuccess = false;
         _errorMessageSnackBar =
             'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (e) {
+      _isSuccess = false;
       _errorMessageSnackBar = 'An error has occurred, please try again';
       developer.log(e.toString());
     } finally {

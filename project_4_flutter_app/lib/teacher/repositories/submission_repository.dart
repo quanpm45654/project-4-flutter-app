@@ -4,8 +4,9 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:project_4_flutter_app/teacher/models/submission.dart';
-import 'package:project_4_flutter_app/teacher/utils/constants.dart';
+
+import '../models/submission.dart';
+import '../utils/constants.dart';
 
 class SubmissionRepository extends ChangeNotifier {
   List<Submission> _submissionList = [];
@@ -38,9 +39,11 @@ class SubmissionRepository extends ChangeNotifier {
             .toList();
         _isSuccess = true;
       } else {
+        _isSuccess = false;
         _errorMessage = 'An error has occurred: ${jsonDecode(response.body)}, please try again';
       }
     } catch (error) {
+      _isSuccess = false;
       _errorMessage = 'An error has occurred, please try again';
       developer.log(error.toString());
     } finally {

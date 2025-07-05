@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/models/submission.dart';
-import 'package:project_4_flutter_app/teacher/widgets/submission/submission_widget.dart';
+
+import '../../models/submission.dart';
+import '../../widgets/submission/submission_widget.dart';
 
 class SubmissionPage extends StatelessWidget {
   const SubmissionPage({super.key, required this.submission});

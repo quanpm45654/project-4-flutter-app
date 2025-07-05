@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/models/assignment.dart';
-import 'package:project_4_flutter_app/teacher/widgets/assignment/assignment_edit_widget.dart';
+
+import '../../models/assignment.dart';
+import '../../widgets/assignment/assignment_edit_widget.dart';
 
 class AssignmentEditPage extends StatelessWidget {
   const AssignmentEditPage({super.key, required this.assignment});

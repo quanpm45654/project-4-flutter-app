@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/models/assignment.dart';
-import 'package:project_4_flutter_app/teacher/utils/functions.dart';
+
+import '../../models/assignment.dart';
+import '../../utils/functions.dart';
 
 class AssignmentWidget extends StatelessWidget {
   const AssignmentWidget({super.key, required this.assignment});

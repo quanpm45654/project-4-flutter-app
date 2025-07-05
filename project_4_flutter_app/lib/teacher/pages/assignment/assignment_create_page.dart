@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/widgets/assignment/assignment_create_widget.dart';
+
+import '../../widgets/assignment/assignment_create_widget.dart';
 
 class AssignmentCreatePage extends StatelessWidget {
   const AssignmentCreatePage({super.key, required this.class_id});

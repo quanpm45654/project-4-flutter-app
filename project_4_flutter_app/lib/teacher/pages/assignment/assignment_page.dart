@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:project_4_flutter_app/teacher/models/assignment.dart';
-import 'package:project_4_flutter_app/teacher/repositories/assignment_repository.dart';
-import 'package:project_4_flutter_app/teacher/widgets/assignment/assignment_widget.dart';
-import 'package:project_4_flutter_app/teacher/widgets/submission/submission_list_widget.dart';
 import 'package:provider/provider.dart';
+
+import '../../models/assignment.dart';
+import '../../repositories/assignment_repository.dart';
+import '../../widgets/assignment/assignment_widget.dart';
+import '../../widgets/submission/submission_list_widget.dart';
 
 class AssignmentPage extends StatefulWidget {
   const AssignmentPage({super.key, required this.assignment});
@@ -43,7 +44,7 @@ class _AssignmentPageState extends State<AssignmentPage> with SingleTickerProvid
                   child: Text('Instruction'),
                 ),
                 const Tab(
-                  child: Text('Submission'),
+                  child: Text('Student work'),
                 ),
               ],
             ),
